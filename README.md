@@ -3,4 +3,5 @@ Python steampunk street fighter game for MSc Programming project
 
 
 ## Dependancies
-pygame
+- pygame
+- json
