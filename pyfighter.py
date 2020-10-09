@@ -1,5 +1,4 @@
-'''
-Pyfighter (working title)
+''' Pyfighter (working title)
 
 A Steampunk 2D streetfighting game built with PyGame.
 
@@ -27,6 +26,11 @@ blue = 0, 0, 255
 screen_height, screen_width = 500, 700
 game_name = 'PyFighter (working title)'
 fps = 60
+
+'''
+Note - The above variables could eventually be dumped in a JSON and loaded
+on loading of the program.  Could make the code look neater :)
+'''
 
 
 ### Setting up Screen and clock
