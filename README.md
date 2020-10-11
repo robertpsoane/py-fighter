@@ -9,7 +9,6 @@ S. Mistrey and R. Danevicius
 ## Dependencies
 This game has the following dependencies. If they are not yet installed on your computer, they can be installed with `pip install [package-name]`:
 - pygame
-- json (built-in)
 
 Alternatively, dependencies can be installed by executing the following in root project directory:
 ```
