@@ -23,7 +23,7 @@ blue = 0, 0, 255
 
 
 # Setting up screen variables
-screen_height, screen_width = 500, 700
+screen_height, screen_width = 700, 900
 game_name = 'PyFighter (working title)'
 fps = 60
 
