@@ -6,7 +6,12 @@
 Produced as an MSc Computer Science project by R. Soane,
 S. Mistrey and R. Danevicius
 
-## Dependencies
+## Help
+### How To Play
+
+[How to play instructions with screenshots to go here.  To be linked from within game 'help' on menu screen]
+
+### Dependencies
 This game has the following dependencies. If they are not yet installed on your computer, they can be installed with `pip install [package-name]`:
 - pygame
 
