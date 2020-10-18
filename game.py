@@ -11,6 +11,7 @@ S. Mistrey and R. Danevicius
 ### Library Imports
 import pygame
 import json
+from classes.displaystring import DisplayString
 
 def pyfighterGame():
 
@@ -28,17 +29,19 @@ def pyfighterGame():
     game_name = 'PyFighter (working title)'
     fps = 60
 
+    # Font Size Data
+    title_size = 70
+    subtitle_size = 40
+    text_size = 15
     '''
     Note - The above variables could eventually be dumped in a JSON and loaded
     on loading of the program.  Could make the code look neater :)
     '''
 
-
     ### Setting up Screen and clock
     game_screen = pygame.display.set_mode((screen_width, screen_height))
     pygame.display.set_caption(game_name)
     clock = pygame.time.Clock()
-
 
     ### Setting up game loop
     run_me = True
@@ -56,10 +59,16 @@ def pyfighterGame():
                 # break loop and quit screen.
                 run_me = False
             
+
             
 
         # Refresh screen
         game_screen.fill(black)
 
-        ### Code to re-display items on screen will go here
+        ### Code to re-display items on screen will go here ###
+        
 
+
+
+        # Flip to display
+        pygame.display.flip()
