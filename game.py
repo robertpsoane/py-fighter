@@ -14,29 +14,20 @@ import json
 from classes.displaystring import DisplayString
 
 def pyfighterGame():
+    ### Important Game Variables from JSON
+    with open('json/config.JSON') as config_file:
+        config = json.load(config_file)
 
-    ### Important Game Variables
-    # Colours
-    black = 0, 0, 0
-    white = 255, 255, 255
-    red = 255, 0, 0
-    green = 0, 255, 0
-    blue = 0, 0, 255
+    # Colour tuples and font sizes
+    colour = config['colour']
+    font_size = config['font_size']
 
+    # Important screen variables
+    screen_width = config['screen_dims'][0]
+    screen_height = config['screen_dims'][1]
+    max_fps = config['max_fps']
+    game_name = config['game_name']
 
-    # Setting up screen variables
-    screen_height, screen_width = 700, 900
-    game_name = 'PyFighter (working title)'
-    fps = 60
-
-    # Font Size Data
-    title_size = 70
-    subtitle_size = 40
-    text_size = 15
-    '''
-    Note - The above variables could eventually be dumped in a JSON and loaded
-    on loading of the program.  Could make the code look neater :)
-    '''
 
     ### Setting up Screen and clock
     game_screen = pygame.display.set_mode((screen_width, screen_height))
@@ -48,7 +39,7 @@ def pyfighterGame():
 
     while run_me:
         # Limit frame rate
-        clock.tick(fps)
+        clock.tick(max_fps)
 
         # Get/action events
         for event in pygame.event.get():
@@ -63,7 +54,7 @@ def pyfighterGame():
             
 
         # Refresh screen
-        game_screen.fill(blue)
+        game_screen.fill(colour['blue'])
 
         ### Code to re-display items on screen will go here ###
         

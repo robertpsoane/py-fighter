@@ -22,33 +22,25 @@ from game import pyfighterGame
 from classes.menu import StartMenu
 from classes.displaystring import DisplayString
 
-### Important Game Variables
-# Colours
-black = 0, 0, 0
-white = 255, 255, 255
-red = 255, 0, 0
-green = 0, 255, 0
-blue = 0, 0, 255
+### Important Game Variables from JSON
+with open('json/config.JSON') as config_file:
+    config = json.load(config_file)
 
-# Setting up screen variables
-screen_height, screen_width = 700, 900
-game_name = 'PyFighter'
-fps = 60
+# Colour tuples and font sizes
+colour = config['colour']
+font_size = config['font_size']
 
-# Font Size Data
-title_size = 70
-subtitle_size = 40
-text_size = 15
-'''
-Note - The above variables could eventually be dumped in a JSON and loaded
-on loading of the program.  Could make the code look neater :)
-'''
+# Important screen variables
+screen_width = config['screen_dims'][0]
+screen_height = config['screen_dims'][1]
+max_fps = config['max_fps']
+game_name = config['game_name']
+
 
 ### Setting up Screen and clock
 menu_screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption(game_name)
 clock = pygame.time.Clock()
-
 
 ### Setting up Menu objects
 # String names
@@ -62,30 +54,28 @@ midpoint = screen_width // 2
 height_unit = screen_height // 9
 
 # Creating pygame string objects
-title_obj = DisplayString(menu_screen, midpoint, height_unit, title_size,
-                        menu_title, green)
-play_obj = DisplayString(menu_screen, midpoint, 3*height_unit, subtitle_size, 
-                        option_1, white)
-help_obj = DisplayString(menu_screen, midpoint, 5*height_unit, subtitle_size, 
-                        option_2, white)
-quit_obj = DisplayString(menu_screen, midpoint, 7*height_unit, subtitle_size, 
-                        option_3, white)
+title_obj = DisplayString(menu_screen, midpoint, height_unit,
+                        font_size['title'], menu_title, colour['green'])
+play_obj = DisplayString(menu_screen, midpoint, 3*height_unit, 
+                        font_size['subtitle'], option_1, colour['white'])
+help_obj = DisplayString(menu_screen, midpoint, 5*height_unit,
+                        font_size['subtitle'], option_2, colour['white'])
+quit_obj = DisplayString(menu_screen, midpoint, 7*height_unit,
+                        font_size['subtitle'], option_3, colour['white'])
 
 # Initialising StartMenu class
 start_menu = StartMenu(menu_screen, title_obj, play_obj, help_obj, quit_obj,
                         pyfighterGame)
 
 
-### Setting up game loop
-
+### Main Game Loop
 while start_menu.playing:
     # Limit frame rate
-    clock.tick(fps)
+    clock.tick(max_fps)
 
     # Get/action events
     for event in pygame.event.get():
         
-
         if event.type == pygame.QUIT:
             # Detecting user pressing quit button, if X pressed,
             # break loop and quit screen.
@@ -97,7 +87,7 @@ while start_menu.playing:
         
         
     # Refresh screen
-    menu_screen.fill(black)
+    menu_screen.fill(colour['black'])
 
 
     ### Code to re-display items on screen will go here
