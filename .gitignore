@@ -3,3 +3,4 @@
 /.idea
 JSONgenerating.py
 __pycache__
+*.log
