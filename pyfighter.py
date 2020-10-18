@@ -36,7 +36,6 @@ screen_height = config['screen_dims'][1]
 max_fps = config['max_fps']
 game_name = config['game_name']
 
-
 ### Setting up Screen and clock
 menu_screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption(game_name)
@@ -67,7 +66,6 @@ quit_obj = DisplayString(menu_screen, midpoint, 7*height_unit,
 start_menu = StartMenu(menu_screen, title_obj, play_obj, help_obj, quit_obj,
                         pyfighterGame)
 
-
 ### Main Game Loop
 while start_menu.playing:
     # Limit frame rate
@@ -85,10 +83,8 @@ while start_menu.playing:
             # If key pressed, start menu to action chosen option.
             start_menu.do(event.unicode)
         
-        
     # Refresh screen
     menu_screen.fill(colour['black'])
-
 
     ### Code to re-display items on screen will go here
     start_menu.display()

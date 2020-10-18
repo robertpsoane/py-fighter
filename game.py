@@ -28,7 +28,6 @@ def pyfighterGame():
     max_fps = config['max_fps']
     game_name = config['game_name']
 
-
     ### Setting up Screen and clock
     game_screen = pygame.display.set_mode((screen_width, screen_height))
     pygame.display.set_caption(game_name)
@@ -44,15 +43,11 @@ def pyfighterGame():
         # Get/action events
         for event in pygame.event.get():
             
-
             if event.type == pygame.QUIT:
                 # Detecting user pressing quit button, if X pressed,
                 # break loop and quit screen.
                 run_me = False
             
-
-            
-
         # Refresh screen
         game_screen.fill(colour['blue'])
 
