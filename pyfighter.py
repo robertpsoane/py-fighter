@@ -6,11 +6,21 @@ A Steampunk 2D streetfighting game built with PyGame.
 
 Produced as an MSc Computer Science project by R. Soane, 
 S. Mistrey and R. Danevicius
+
+##############################################################################
+
+This file forms a start menu for the game.  When selected, the game function 
+is loaded as a new instance of pygame within the same window.  Implemented in
+this way so that whenever the player quits the game, it goes back to the menu.
+
 '''
 
 ### Library Imports
 import pygame
 import json
+from game import pyfighterGame
+from classes.menu import Menu
+from classes.displaystring import DisplayString
 
 
 ### Important Game Variables
@@ -34,9 +44,12 @@ on loading of the program.  Could make the code look neater :)
 
 
 ### Setting up Screen and clock
-game_screen = pygame.display.set_mode((screen_width, screen_height))
+menu_screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption(game_name)
 clock = pygame.time.Clock()
+
+### Setting up Menu objects
+menu_title = game_name
 
 
 ### Setting up game loop
@@ -58,7 +71,12 @@ while run_me:
         
 
     # Refresh screen
-    game_screen.fill(black)
+    menu_screen.fill(black)
 
     ### Code to re-display items on screen will go here
+    
+
+
+    # Display everything on screen
+    pygame.display.flip()
 
