@@ -1,3 +1,6 @@
 .vscode
 *.pyc
 /.idea
+JSONgenerating.py
+__pycache__
+*.log
