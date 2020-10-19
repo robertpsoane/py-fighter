@@ -1,0 +1,17 @@
+{
+    "colour": {
+        "black": [0, 0, 0],
+        "white": [255, 255, 255],
+        "red": [255, 0, 0],
+        "green": [0, 255, 0],
+        "blue": [0, 0, 255]
+        },
+    "font_size": {
+        "title": 70,
+        "subtitle": 40,
+        "normal": 15
+        },
+    "screen_dims": [900, 700],
+    "max_fps": 60,
+    "game_name": "PyFighter"
+}
