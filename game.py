@@ -13,11 +13,20 @@ import pygame
 import json
 from classes.displaystring import DisplayString
 
-######################### DELETE WHEN PLAYER CLASS IS MADE ###################
-player_image = pygame.image.load('graphics/char_idle/idler1.png')
-##############################################################################
+######################### DELETE WHEN PLAYER CONTROLER CLASS IS MADE ###################
+from pygame.locals import * # <<<<<<<FOR FUTURE REF KEYDOWN/KEYUP WONT WORK WIHTOUT THIS
+########################################################################################
 
 def pyfighterGame():
+
+###################### DELETE WHEN PLAYER CONTROLER CLASS IS MADE #####################
+	move_right = False
+	move_left = False
+	player_image = pygame.image.load('graphics/char_idle/idler1.png')
+	player_gravity = 0
+###################### DELETE WHEN PLAYER CONTROLER CLASS IS MADE #####################
+
+	player_loc = [50,50]
 	### Important Game Variables from JSON
 	with open('json/config.JSON') as config_file:
 		config = json.load(config_file)
@@ -52,15 +61,39 @@ def pyfighterGame():
 				# break loop and quit screen.
 				run_me = False
 
+	############ TEMP MOVEMENT CONTROL FOR CHAR - REMOVE WHEN CHAR/CONTROL CLASS IS CREATED ######
+			if event.type == KEYDOWN:
+				if event.key == K_RIGHT:
+					move_right = True
+				if event.key == K_LEFT:
+					move_left = True
+			if event.type == KEYUP:
+				if event.key == K_RIGHT:
+					move_right = False
+				if event.key == K_LEFT:
+					move_left = False
+	#############################################################################################
+
 		# Refresh screen
 		game_screen.fill(colour['blue'])
 
 		### Code to re-display items on screen will go here ###
 
 
-		######################### DELETE WHEN PLAYER CLASS IS MADE ###################
-		game_screen.blit(player_image, (50, 50))
+	############################# DELETE WHEN PLAYER CLASS IS MADE ###################
+		game_screen.blit(player_image, player_loc)
 
-		##############################################################################
+		if player_loc[1] > screen_height-player_image.get_height():
+			player_gravity = 0
+		else:
+			player_gravity += 0.15
+		player_loc[1] += player_gravity
+
+
+		if move_right == True:
+			player_loc[0] += 4
+		if move_left == True:
+			player_loc[0] -= 4
+	##################################################################################
 		# Flip to display
 		pygame.display.flip()
