@@ -1,62 +1,73 @@
-'''
-Pyfighter Playground
+''' Pyfighter (working title)
 
-A script for testing objects in isolation.
+A Steampunk 2D streetfighting game built with PyGame.
+
+[ More details to go here before release :), big it up and that! ]
+
+Produced as an MSc Computer Science project by R. Soane, 
+S. Mistrey and R. Danevicius
 '''
 
 ### Library Imports
 import pygame
 import json
+from classes.displaystring import DisplayString
+from classes.player import Player
+
+def pyfighter_playground():
+    ### Important Game Variables from JSON
+    with open('json/config.JSON') as config_file:
+        config = json.load(config_file)
+
+    # Colour tuples and font sizes
+    colour = config['colour']
+    font_size = config['font_size']
+
+    # Important screen variables
+    screen_width = config['screen_dims'][0]
+    screen_height = config['screen_dims'][1]
+    max_fps = config['max_fps']
+    game_name = config['game_name']
+
+    ### Setting up Screen and clock
+    game_screen = pygame.display.set_mode((screen_width, screen_height))
+    pygame.display.set_caption(game_name)
+    clock = pygame.time.Clock()
+
+    ### Setting up game loop
+    run_me = True
 
 
-### Important Game Variables
-# Colours
-black = 0, 0, 0
-white = 255, 255, 255
-red = 255, 0, 0
-green = 0, 255, 0
-blue = 0, 0, 255
+    ##########################################################################
+    # Testing Player
+
+    player = Player(game_screen, 100, 100)
 
 
-# Setting up screen variables
-screen_height, screen_width = 500, 700
-game_name = 'PyFighter (working title)'
-fps = 60
+    ##########################################################################
+
+    while run_me:
+        # Limit frame rate
+        clock.tick(max_fps)
+
+        # Get/action events
+        for event in pygame.event.get():
+            
+            if event.type == pygame.QUIT:
+                # Detecting user pressing quit button, if X pressed,
+                # break loop and quit screen.
+                run_me = False
+            
+        # Refresh screen
+        game_screen.fill(colour['black'])
+
+        ### Code to re-display items on screen will go here ###
+        player.startMove('l')
+        player.display()
 
 
-### Setting up Screen and clock
-game_screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption(game_name)
-clock = pygame.time.Clock()
-
-'''
-Initialise your objects here
-'''
+        # Flip to display
+        pygame.display.flip()
 
 
-### Setting up game loop
-run_me = True
-
-while run_me:
-    # Limit frame rate
-    clock.tick(fps)
-
-    # Get/action events
-    for event in pygame.event.get():
-        
-
-        if event.type == pygame.QUIT:
-            # Detecting user pressing quit button, if X pressed,
-            # break loop and quit screen.
-            run_me = False
-        
-        
-
-    # Refresh screen
-    game_screen.fill(black)
-
-    ### Code to re-display items on screen will go here
-    '''
-    Blit your objects to the screen here
-    '''
-
+pyfighter_playground()
