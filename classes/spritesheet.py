@@ -32,7 +32,12 @@ class SpriteSheet:
     def image_at(self, position, size , colorkey = None):
         """Load a specific image from a specific rectangle."""
         # Loads image from x, y, x+offset, y+offset.
-        rectangle = (position[0], position[1], size[0], size[1])
+
+        # Position is a grid position, we need to multiply that by size to 
+        # extract correct position
+        y = position[0] * size[0]
+        x = position[1] * size[1]
+        rectangle = (x, y, size[0], size[1])
         rect = pygame.Rect(rectangle)
         image = pygame.Surface(rect.size).convert()
         image.blit(self.sheet, (0, 0), rect)
