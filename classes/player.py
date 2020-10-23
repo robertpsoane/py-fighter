@@ -20,13 +20,15 @@ class Player(Character):
             'right': [(2, 0), (3, 0)]
         }
         
-        self.image_data = {
+        self.char_data = {
             'running': running,
             'idle': idle,
             'path': 'graphics/spritesheets/basic-character.png',
             'background': (0, 255, 0),
             'gridsize': (4, 9),
-            'charsize': (32, 32)
+            'charsize': (32, 32),
+            'speed': 1,
+            'gravity': 1
 
         }
 

@@ -17,7 +17,7 @@ coordinates for an idle png.
 -- path: [string containing relative path to .png sprite sheet]
 -- background: [tuple containing RGB code for background colour
 -- gridsize: [tuple containing grid size - indexing from zero eg (4, 4) is a 5x5 grid]
--- charsize: [tuple containgin size of character in pixels
+-- charsize: [tuple containing size of character in pixels]
 
 
 -- Basic Character --

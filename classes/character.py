@@ -4,10 +4,23 @@
 '''
 import pygame
 
-class Character:
+class Character(pygame.sprite.Sprite):
     
-    def setup(self, img_data):
+    def setup(self, character_data):
+        # Unpacking some key JSON dictionary into variables
+        self.speed = character_data['speed']
+        self.gravity = character_data['gravity']
+        
         self.spritesheet = pygame.image.load(img_data['path'])
+
+        self.images = {
+            'running': {
+                'left': [],
+                'right': []
+            },
+            'idle': 
+        }
+
 
     
         
