@@ -18,7 +18,12 @@ coordinates for an idle png.
 -- background: [tuple containing RGB code for background colour
 -- gridsize: [tuple containing grid size - indexing from zero eg (4, 4) is a 5x5 grid]
 -- charsize: [tuple containing size of character in pixels]
-
+-- scaledsize: [tuple containing size of scaled character]
+-- speed: [int containing characters default speed in pixels per frame]
+-- gravity: [int of default gravitational pull experienced by character in pixels per frame]
+-- refresh: [int of number of frames between refresh of character]
+-- initialstate: [list of 2 elements, one giving state/action of character, the other
+					giving the direction of travel]
 
 -- Basic Character --
 Size: 32x32 px

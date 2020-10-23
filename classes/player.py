@@ -5,9 +5,9 @@
 from classes.character import Character
 
 class Player(Character):
-    def __init__(self):
+    def __init__(self, screen, x_position, y_position):
         ### Setting up mapping from sprite sheet to images
-        ### This can become a JSON
+        ### This will become a JSON
         running = {
             'left': [(0, 0), (0, 1), (0, 2), (0, 3), (0, 0),
                     (0, 4), (0, 5), (0, 6)],
@@ -20,18 +20,23 @@ class Player(Character):
             'right': [(2, 0), (3, 0)]
         }
         
-        self.char_data = {
+        self.character_data = {
+            'actions': ['running','idle'],
+            'directions': ['left','right'],
             'running': running,
             'idle': idle,
             'path': 'graphics/spritesheets/basic-character.png',
             'background': (0, 255, 0),
             'gridsize': (4, 9),
             'charsize': (32, 32),
+            'scaledsize': (128, 128),
             'speed': 1,
-            'gravity': 1
+            'gravity': 1,
+            'refresh': 10,
+            'initialstate': ['running','right']
 
         }
 
-        self.setup(self.image_data)
+        Character.__init__(self, screen, x_position, y_position)
 
     
