@@ -53,7 +53,7 @@ class Character(pygame.sprite.Sprite):
         image_directions = character_data['directions']
 
         self.images = {}
-        
+
         # Importing images into self.images dictionary
         for image_type in image_types:
             self.images[image_type] = {}
@@ -85,6 +85,9 @@ class Character(pygame.sprite.Sprite):
         if self.refresh_counter % self.refresh_rate == 0:
             self.incrementImage()
         
+        # Updating positions subject to gravity
+        
+
     def incrementImage(self):
         ''' Increment Image functino
         Increments image by 1, and resets counting variable
@@ -99,9 +102,6 @@ class Character(pygame.sprite.Sprite):
         n_images = len(self.image)
         if self.image_index == n_images:
             self.image_index = 0
-
-        
-    
     
     
     def move(self,direction):
