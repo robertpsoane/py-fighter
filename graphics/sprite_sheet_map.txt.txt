@@ -1,0 +1,67 @@
+Sprite Sheet Data File
+
+Tables mapping describing locations on sprite sheet.  To be encoded for computer, however
+this particular file is for human interpretation
+
+-- JSON File --
+Each spritesheet for moveable characters has a corresponding JSON file.  Please set out
+the JSON file using the following structure to ensure the game will interpret the character
+correctly.  Please don't leave any lists empty.  Where there is no image, please enter the
+coordinates for an idle png.
+
+Structure:
+-- actions: [list of actions possible, such as running and idle.*]
+-- directions: ['list of directions possible, such as left and right*]
+-- running
+	-- left: [list of lists with picture coords]
+	-- right: [list of lists with picture coords]
+-- idle
+	-- left: [list of lists with picture coords]
+	-- right: [list of lists with picture coords]
+-- path: [string containing relative path to .png sprite sheet]
+-- background: [list containing RGB code for background colour
+-- gridsize: [list containing grid size - indexing from zero eg (4, 4) is a 5x5 grid]
+-- charsize: [list containing size of character in pixels]
+-- scaledsize: [list containing size of scaled character]
+-- speed: [int containing characters default speed in pixels per frame]
+-- gravity: [int of default gravitational pull experienced by character in pixels per frame]
+-- refresh: [int of number of frames between refresh of character]
+-- initialstate: [list of 2 elements, one giving state/action of character, the other
+					giving the direction of travel]
+					
+* Note: While most properties can be controlled from within the JSON, do not modify these
+outside of specified scope, as it could have unforseen consequences.
+Currently actions only supports the values: running, idle, and the directions only supports
+the values left and right.
+
+-- Basic Character --
+Size: 32x32 px
+Sheet: 320 x 160 px
+
+Notes: 
+Idle Left 1 == Run Left 1 == Run Left 5
+Idle Right 1 == Run Right 1 == Run Right 5
+
+######################################################################################
+#####	0	#	1	#	2	#	3	#	4	#	5	#	6	#	7	#	8	#   9	#
+######################################################################################
+#   # Idle 	#  Run	#  Run	#  Run	#  Run	#  Run	#  Run	#		#		#		#
+# 0 # Left 	# Left	# Left	# Left	# Left	# Left	# Left	#		#		#		#
+#   #  1   	#   2	#	3	#	4	#	6	#	7	#	8	#		#		#		#
+######################################################################################
+#   # Idle 	#		#		#		#		#		#		#		#		#		#
+# 1 # Left 	#		#		#		#		#		#		#		#		#		#
+#   #  2   	#		#		#		#		#		#		#		#		#		#
+######################################################################################
+#   # Idle 	#  Run	#  Run	#  Run	#  Run	#  Run	#  Run	#		#		#		#
+# 2 # Right	# Right	# Right	# Right	# Right	# Right	# Right	#		#		#		#
+#   #  1   	#	2	#	3	#	4	#	6	#	7	#	8	#		#		#		#
+######################################################################################
+#   # Idle 	#		#		#		#		#		#		#		#		#		#
+# 3 # Right	#		#		#		#		#		#		#		#		#		#
+#   #  2   	#		#		#		#		#		#		#		#		#		#
+######################################################################################
+#   # 	 	#		#		#		#		#		#		#		#		#		#
+# 4 #	  	#		#		#		#		#		#		#		#		#		#
+#   #    	#		#		#		#		#		#		#		#		#		#
+######################################################################################
