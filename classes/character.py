@@ -185,7 +185,7 @@ class Character(pygame.sprite.Sprite):
             self.state = ['running', 'left']
         elif direction == 'r':
             # Moving one speed step right
-            self.moveX(-1 * speed)
+            self.moveX(-1 * self.speed)
             self.state = ['running', 'right']
         elif direction == 'u':
             pass
