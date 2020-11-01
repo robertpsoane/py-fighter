@@ -27,6 +27,7 @@ def pyfighterGame():
     screen_height = config['screen_dims'][1]
     max_fps = config['max_fps']
     game_name = config['game_name']
+    WINDOW_SIZE = (screen_width, screen_height)
 
     ### Setting up Screen and clock
     game_screen = pygame.display.set_mode((screen_width, screen_height))
@@ -50,12 +51,11 @@ def pyfighterGame():
                 run_me = False
 
         # Refresh screen
-        game_screen.fill(colour['blue'])
+        game_display.fill(colour['blue'])
 
         ### Code to re-display items on screen will go here ###
 
-
-
-
+        helper1 = pygame.transform.scale(game_display, WINDOW_SIZE)
+        game_screen.blit(helper1, (0, 0))
         # Flip to display
         pygame.display.flip()
