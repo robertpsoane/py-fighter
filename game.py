@@ -4,7 +4,7 @@ A Steampunk 2D streetfighting game built with PyGame.
 
 [ More details to go here before release :), big it up and that! ]
 
-Produced as an MSc Computer Science project by R. Soane, 
+Produced as an MSc Computer Science project by R. Soane,
 S. Mistrey and R. Danevicius
 '''
 
@@ -30,6 +30,7 @@ def pyfighterGame():
 
     ### Setting up Screen and clock
     game_screen = pygame.display.set_mode((screen_width, screen_height))
+    game_display = pygame.Surface((screen_width, screen_height))
     pygame.display.set_caption(game_name)
     clock = pygame.time.Clock()
 
@@ -42,17 +43,17 @@ def pyfighterGame():
 
         # Get/action events
         for event in pygame.event.get():
-            
+
             if event.type == pygame.QUIT:
                 # Detecting user pressing quit button, if X pressed,
                 # break loop and quit screen.
                 run_me = False
-            
+
         # Refresh screen
         game_screen.fill(colour['blue'])
 
         ### Code to re-display items on screen will go here ###
-        
+
 
 
 
