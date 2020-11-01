@@ -3,7 +3,10 @@
 
 '''
 
-class NPC:
+import json
+from classes.character import Character
+
+class NPC(Character):
     def __init__(self, screen, x_position, y_position):
         # Loading player data json, and converitng to python dictionary
         with open('json/basic_enemy.JSON') as player_json:
