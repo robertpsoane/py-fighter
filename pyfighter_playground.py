@@ -14,6 +14,7 @@ import json
 from classes.displaystring import DisplayString
 from classes.player import Player
 
+from classes.map import Map
 
 def pyfighter_playground():
     ### Important Game Variables from JSON
@@ -33,7 +34,7 @@ def pyfighter_playground():
 
     ### Setting up Screen and clock
     game_screen = pygame.display.set_mode((screen_width, screen_height))
-    game_display = pygame.Surface((screen_width / 2, screen_height / 2))
+    game_display = pygame.Surface((screen_width / 1, screen_height / 1))
     pygame.display.set_caption(game_name)
     clock = pygame.time.Clock()
 
@@ -48,6 +49,10 @@ def pyfighter_playground():
     player_loc = [50, 50]
     player_gravity = 0
 
+    tile_1 = pygame.image.load('graphics/map_tiles/tile1.png')
+    tile_2 = pygame.image.load('graphics/map_tiles/tile2.png')
+
+    game_map = Map(tile_1, tile_2, game_display)
     ##########################################################################
 
     while run_me:
@@ -80,7 +85,9 @@ def pyfighter_playground():
         ### Code to re-display items on screen will go here ###
 
         ############################TEMP PLAYER##################################################
+        game_map.generateMap()
         game_display.blit(player, player_loc)
+
         if move_R == True:
             player_loc[0] += 4
         if move_L == True:
