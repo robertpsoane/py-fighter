@@ -11,7 +11,7 @@
         "subtitle": 40,
         "normal": 15
         },
-    "screen_dims": [900, 700],
+    "screen_dims": [800, 600],
     "max_fps": 60,
     "game_name": "PyFighter"
 }

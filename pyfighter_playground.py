@@ -4,7 +4,7 @@ A Steampunk 2D streetfighting game built with PyGame.
 
 [ More details to go here before release :), big it up and that! ]
 
-Produced as an MSc Computer Science project by R. Soane, 
+Produced as an MSc Computer Science project by R. Soane,
 S. Mistrey and R. Danevicius
 '''
 
@@ -13,6 +13,7 @@ import pygame
 import json
 from classes.displaystring import DisplayString
 from classes.player import Player
+
 
 def pyfighter_playground():
     ### Important Game Variables from JSON
@@ -28,21 +29,24 @@ def pyfighter_playground():
     screen_height = config['screen_dims'][1]
     max_fps = config['max_fps']
     game_name = config['game_name']
+    screen_dims = (config['screen_dims'])
 
     ### Setting up Screen and clock
     game_screen = pygame.display.set_mode((screen_width, screen_height))
+    game_display = pygame.Surface((screen_width / 2, screen_height / 2))
     pygame.display.set_caption(game_name)
     clock = pygame.time.Clock()
 
     ### Setting up game loop
     run_me = True
 
-
-    ##########################################################################
+    ############################TEMP PLAYER##############################################
     # Testing Player
-
-    player = Player(game_screen, 100, 100)
-
+    player = pygame.image.load('graphics/char_idle/idler1.png')
+    move_R = False
+    move_L = False
+    player_loc = [50, 50]
+    player_gravity = 0
 
     ##########################################################################
 
@@ -52,20 +56,45 @@ def pyfighter_playground():
 
         # Get/action events
         for event in pygame.event.get():
-            
+
             if event.type == pygame.QUIT:
                 # Detecting user pressing quit button, if X pressed,
                 # break loop and quit screen.
                 run_me = False
-            
+
+           #####################TEMP PLAYER##########################################
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
+                    move_R = True
+                if event.key == pygame.K_LEFT:
+                    move_L = True
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_RIGHT:
+                    move_R = False
+                if event.key == pygame.K_LEFT:
+                    move_L = False
+            ##############################################################
         # Refresh screen
-        game_screen.fill(colour['black'])
+        game_display.fill(colour['black'])
 
         ### Code to re-display items on screen will go here ###
-        player.startMove('l')
-        player.display()
 
+        ############################TEMP PLAYER##################################################
+        game_display.blit(player, player_loc)
+        if move_R == True:
+            player_loc[0] += 4
+        if move_L == True:
+            player_loc[0] -= 4
+        if player_loc[1] > screen_height - player.get_height():
+            player_gravity = -player_gravity
+        else:
+            player_gravity += 0.2
+        player_loc[1] += player_gravity
 
+        #################################################################################
+
+        scaled_surf = pygame.transform.scale(game_display, screen_dims)
+        game_screen.blit(scaled_surf, (0, 0))
         # Flip to display
         pygame.display.flip()
 
