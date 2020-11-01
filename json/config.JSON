@@ -13,5 +13,6 @@
         },
     "screen_dims": [800, 640],
     "max_fps": 60,
-    "game_name": "PyFighter"
+    "game_name": "PyFighter",
+    "logo_location": "graphics/logo/logo.png"
 }
