@@ -41,6 +41,10 @@ menu_screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption(game_name)
 clock = pygame.time.Clock()
 
+### Setting Icon
+logo_image = pygame.image.load(config['logo_location'])
+pygame.display.set_icon(logo_image)
+
 ### Setting up Menu objects
 # String names
 menu_title = game_name
