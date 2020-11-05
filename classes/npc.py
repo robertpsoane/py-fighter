@@ -3,6 +3,24 @@
 
 '''
 
-class NPC:
-    def __init__():
-        pass
+import json
+from classes.character import Character
+
+class NPC(Character):
+
+    ''' NPC Class - Used to display and animate computer controlled characters
+    on the screen.  A type needs to be chosen to match the enemy json in the 
+    json folder.
+    '''
+
+    def __init__(self, screen, x_position, y_position, type = 'basic'):
+        # Loading player data json, and converitng to python dictionary
+        json_location = f'json/{type}_enemy.JSON'
+        try:
+            with open(json_location) as player_json:
+                character_data = json.load(player_json)
+        except:
+            err_string = "Bad Enemy Name.  Please input an enemy which has a corresponding JSON"
+            raise Exception(err_string)
+        # Initialising Character class
+        Character.__init__(self, character_data, screen, x_position, y_position)

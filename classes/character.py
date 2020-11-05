@@ -57,6 +57,11 @@ from classes.spritesheet import SpriteSheet
 
 class Character(pygame.sprite.Sprite):
     
+    ''' Character Class - Used to display and animate sprites from sprite
+    sheets on screen.  Usually won't be initialised directly, rather its two
+    child classes (Player and NPC) will be called.
+    '''
+
     def __init__(self, character_data, screen, x_position, y_position):
         # Declaring self to be a sprite
         pygame.sprite.Sprite.__init__(self)
@@ -76,15 +81,17 @@ class Character(pygame.sprite.Sprite):
         # Load sprite sheet and extract frames to dictionary
         self.loadSpriteSheets(character_data)
 
-
-        # Adding screen to object
+        # Adding screen to object, and object to screen
         self.screen = screen
         self.image = self.images[self.state[0]][self.state[1]]
         self.image_index = 0
         self.rect = self.image[self.image_index].get_rect()
         self.rect.center = self.position
         self.refresh_counter = 0
-        
+
+        # Storing dimension variables to self
+        self.screen_dims = (screen.get_width(), screen.get_height())
+        self.height = self.rect.height
         
 
     def loadSpriteSheets(self, character_data):
@@ -126,6 +133,11 @@ class Character(pygame.sprite.Sprite):
         every n times it switches to the next image.  This is to animate
         the image.
         '''
+        #########################################################
+        # If necessary, update state
+        self.image = self.images[self.state[0]][self.state[1]]
+        #########################################################
+
         # Displaying current image at current position
         self.screen.blit(self.image[self.image_index], self.rect)
 
@@ -134,7 +146,15 @@ class Character(pygame.sprite.Sprite):
         if self.refresh_counter % self.refresh_rate == 0:
             self.incrementImage()
         
+        '''
+        Note: Once a working map has been pushed into the master to test with,
+        gravity needs to be re-worked.
+        '''
+
         # Updating positions subject to gravity
+        is_falling = self.position[1] + (0.5*self.height) < self.screen_dims[1] 
+        if is_falling:
+            self.position[1] += self.gravity
         
 
     def incrementImage(self):
@@ -181,14 +201,19 @@ class Character(pygame.sprite.Sprite):
         '''
         if direction == 'l':
             # Moving one speed step left
-            self.moveX(self.speed)
+            move_speed = -1 * self.speed
+            self.moveX(move_speed)
             self.state = ['running', 'left']
         elif direction == 'r':
             # Moving one speed step right
-            self.moveX(-1 * self.speed)
+            self.moveX(self.speed)
             self.state = ['running', 'right']
         elif direction == 'u':
             pass
+        '''
+        Note: Once a working map has been pushed into the master to test with,
+        moving needs to be re-worked.
+        '''
     
     def stopMove(self):
         ''' stopMove()
