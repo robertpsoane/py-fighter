@@ -57,6 +57,11 @@ from classes.spritesheet import SpriteSheet
 
 class Character(pygame.sprite.Sprite):
     
+    ''' Character Class - Used to display and animate sprites from sprite
+    sheets on screen.  Usually won't be initialised directly, rather its two
+    child classes (Player and NPC) will be called.
+    '''
+
     def __init__(self, character_data, screen, x_position, y_position):
         # Declaring self to be a sprite
         pygame.sprite.Sprite.__init__(self)
@@ -84,7 +89,10 @@ class Character(pygame.sprite.Sprite):
         self.rect = self.image[self.image_index].get_rect()
         self.rect.center = self.position
         self.refresh_counter = 0
-        
+
+        # Storing dimension variables to self
+        self.screen_dims = (screen.get_width(), screen.get_height())
+        self.height = self.rect.height
         
 
     def loadSpriteSheets(self, character_data):
@@ -134,7 +142,15 @@ class Character(pygame.sprite.Sprite):
         if self.refresh_counter % self.refresh_rate == 0:
             self.incrementImage()
         
+        '''
+        Note: Once a working map has been pushed into the master to test with,
+        gravity needs to be re-worked.
+        '''
+
         # Updating positions subject to gravity
+        is_falling = self.position[1] - self.height < self.screen_dims[1] 
+        if is_falling:
+            self.position[1] += self.gravity
         
 
     def incrementImage(self):
@@ -189,6 +205,10 @@ class Character(pygame.sprite.Sprite):
             self.state = ['running', 'right']
         elif direction == 'u':
             pass
+        '''
+        Note: Once a working map has been pushed into the master to test with,
+        moving needs to be re-worked.
+        '''
     
     def stopMove(self):
         ''' stopMove()

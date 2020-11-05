@@ -7,9 +7,15 @@ import json
 from classes.character import Character
 
 class NPC(Character):
+
+    ''' NPC Class - Used to display and animate computer controlled characters
+    on the screen.  A type needs to be chosen to match the enemy json in the 
+    json folder.
+    '''
+
     def __init__(self, screen, x_position, y_position, type = 'basic'):
         # Loading player data json, and converitng to python dictionary
-        json_location = 'json/{}_enemy.JSON'
+        json_location = f'json/{type}_enemy.JSON'
         try:
             with open(json_location) as player_json:
                 character_data = json.load(player_json)
