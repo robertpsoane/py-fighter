@@ -81,8 +81,7 @@ class Character(pygame.sprite.Sprite):
         # Load sprite sheet and extract frames to dictionary
         self.loadSpriteSheets(character_data)
 
-
-        # Adding screen to object
+        # Adding screen to object, and object to screen
         self.screen = screen
         self.image = self.images[self.state[0]][self.state[1]]
         self.image_index = 0
@@ -134,6 +133,11 @@ class Character(pygame.sprite.Sprite):
         every n times it switches to the next image.  This is to animate
         the image.
         '''
+        #########################################################
+        # If necessary, update state
+        self.image = self.images[self.state[0]][self.state[1]]
+        #########################################################
+
         # Displaying current image at current position
         self.screen.blit(self.image[self.image_index], self.rect)
 
@@ -148,7 +152,7 @@ class Character(pygame.sprite.Sprite):
         '''
 
         # Updating positions subject to gravity
-        is_falling = self.position[1] - self.height < self.screen_dims[1] 
+        is_falling = self.position[1] + (0.5*self.height) < self.screen_dims[1] 
         if is_falling:
             self.position[1] += self.gravity
         
@@ -197,11 +201,12 @@ class Character(pygame.sprite.Sprite):
         '''
         if direction == 'l':
             # Moving one speed step left
-            self.moveX(self.speed)
+            move_speed = -1 * self.speed
+            self.moveX(move_speed)
             self.state = ['running', 'left']
         elif direction == 'r':
             # Moving one speed step right
-            self.moveX(-1 * self.speed)
+            self.moveX(self.speed)
             self.state = ['running', 'right']
         elif direction == 'u':
             pass
