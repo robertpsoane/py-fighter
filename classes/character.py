@@ -93,7 +93,6 @@ class Character(pygame.sprite.Sprite):
         self.screen_dims = (screen.get_width(), screen.get_height())
         self.height = self.rect.height
         
-
     def loadSpriteSheets(self, character_data):
         ''' loadSpriteSheets(self, character_data)
         Procedure which loads spritesheet from path given, and extracts each
@@ -124,7 +123,6 @@ class Character(pygame.sprite.Sprite):
                     
                     self.images[image_type][image_direction] += [specific_image]
 
-
     def display(self):
         ''' Display function
         
@@ -133,11 +131,10 @@ class Character(pygame.sprite.Sprite):
         every n times it switches to the next image.  This is to animate
         the image.
         '''
-        #########################################################
-        # If necessary, update state
+        
+        # Update state
         self.image = self.images[self.state[0]][self.state[1]]
-        #########################################################
-
+        
         # Displaying current image at current position
         self.screen.blit(self.image[self.image_index], self.rect)
 
@@ -156,9 +153,8 @@ class Character(pygame.sprite.Sprite):
         if is_falling:
             self.position[1] += self.gravity
         
-
     def incrementImage(self):
-        ''' Increment Image functino
+        ''' Increment Image function
         Increments image by 1, and resets counting variable
         '''
         # Resetting refresh counter
@@ -194,7 +190,6 @@ class Character(pygame.sprite.Sprite):
         self.position[1] += step
         self.rect.center = self.position
 
-    
     def startMove(self,direction):
         ''' startMove(direction)
         Input 'l' or 'r' for horizontal movement, 'u' for jump

@@ -62,7 +62,7 @@ def pyfighter_playground():
         game_screen.fill(colour['black'])
 
         ### Code to re-display items on screen will go here ###
-        player.startMove('r')
+        player.startMove('l')
         player.display()
 
 
