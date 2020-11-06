@@ -127,7 +127,10 @@ class Character(pygame.sprite.Sprite):
                     
                     self.images[image_type][image_direction] += [specific_image]
 
-        
+    def addTarget(self, target):
+        ''' addTarget - Used to lock character onto a target to attack
+        '''
+        self.target = target
 
     def display(self):
         ''' Display function

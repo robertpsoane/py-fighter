@@ -28,7 +28,7 @@ class NPC(Character):
     def addTarget(self,target):
         ''' addTarget - Used to lock NPC onto a target to attack
         '''
-        self.target = target
+        Character.addTarget(self, target)
 
         # Centre to centre width
         self.c2c_width = 0.5 * (self.width + self.target.width)
