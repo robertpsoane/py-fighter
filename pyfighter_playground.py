@@ -92,8 +92,6 @@ def pyfighter_playground():
             player_loc[0] += 4
         if move_L == True:
             player_loc[0] -= 4
-        if player_loc[1] > screen_height - player.get_height():
-            player_gravity = -player_gravity
         else:
             player_gravity += 0.2
         player_loc[1] += player_gravity
