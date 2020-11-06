@@ -63,7 +63,7 @@ class Character(pygame.sprite.Sprite):
     '''
 
     def __init__(self, character_data, screen, x_position, y_position):
-        # Declaring self to be a sprite
+        # Initi for sprite
         pygame.sprite.Sprite.__init__(self)
 
         # Assigning character data to self.charactar_data
@@ -91,7 +91,6 @@ class Character(pygame.sprite.Sprite):
 
         # Storing dimension variables to self
         self.screen_dims = (screen.get_width(), screen.get_height())
-        self.height = self.rect.height
         
     def loadSpriteSheets(self, character_data):
         ''' loadSpriteSheets(self, character_data)
@@ -101,11 +100,16 @@ class Character(pygame.sprite.Sprite):
         '''
         self.spritesheet = SpriteSheet(character_data['path'])
         char_size = character_data['charsize']
-        scaled_size = character_data['scaledsize']
+        scale_factor = character_data['scale_factor']
+        scaled_size = [char_size[0] * scale_factor, char_size[1] * scale_factor]
         background_colour = character_data['background']
         
         image_types = character_data['actions']
         image_directions = character_data['directions']
+
+        graphic_dims = character_data['graphic_dims']
+        self.width = graphic_dims[0] * scale_factor
+        self.height = graphic_dims[1] * scale_factor
 
         self.images = {}
 
@@ -123,6 +127,8 @@ class Character(pygame.sprite.Sprite):
                     
                     self.images[image_type][image_direction] += [specific_image]
 
+        
+
     def display(self):
         ''' Display function
         
@@ -131,28 +137,31 @@ class Character(pygame.sprite.Sprite):
         every n times it switches to the next image.  This is to animate
         the image.
         '''
+        # Updating position subject to gravity
+        self.applyGravity()
         
         # Update state
         self.image = self.images[self.state[0]][self.state[1]]
         
-        # Displaying current image at current position
-        self.screen.blit(self.image[self.image_index], self.rect)
-
         # Updating counter, and if necessary incrementing image
         self.refresh_counter += 1
         if self.refresh_counter % self.refresh_rate == 0:
-            self.incrementImage()
-        
-        '''
-        Note: Once a working map has been pushed into the master to test with,
-        gravity needs to be re-worked.
-        '''
+            self.incrementImage()   
 
+        # Displaying current image at current position
+        self.screen.blit(self.image[self.image_index], self.rect)             
+        
+    def applyGravity(self):
+        ''' applyGravity
+        Updates position subject to gravity.
+
+        Once a working map has been pushed into the master, will need to redo.
+        '''
         # Updating positions subject to gravity
         is_falling = self.position[1] + (0.5*self.height) < self.screen_dims[1] 
         if is_falling:
-            self.position[1] += self.gravity
-        
+            self.moveY(self.gravity)
+
     def incrementImage(self):
         ''' Increment Image function
         Increments image by 1, and resets counting variable
