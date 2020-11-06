@@ -14,5 +14,10 @@
     "screen_dims": [900, 700],
     "max_fps": 60,
     "game_name": "PyFighter",
-    "logo_location": "graphics/logo/logo.png"
+    "logo_location": "graphics/logo/logo.png",
+    "map_keys": {
+        "0":"soft",
+        "1":"hard",
+        "2":"hard"
+    }
 }
