@@ -62,7 +62,7 @@ class Character(pygame.sprite.Sprite):
     child classes (Player and NPC) will be called.
     '''
 
-    def __init__(self, character_data, screen, x_position, y_position):
+    def __init__(self, character_data, background, screen, x_position, y_position):
         # Initi for sprite
         pygame.sprite.Sprite.__init__(self)
 
@@ -91,7 +91,24 @@ class Character(pygame.sprite.Sprite):
 
         # Storing dimension variables to self
         self.screen_dims = (screen.get_width(), screen.get_height())
-        
+
+        # Referencing important background variables
+        self.changeMap(background)
+
+        ##### TO GO TO JSON
+        self.is_falling = True
+    
+    def changeMap(self, background):
+        ''' changeBackground
+
+        Function to update player with new background.  Call this on player 
+        when new map produced, map refers to class containing sprite group of 
+        tiles, and map_matrix
+        '''
+        self.background = background
+        self.map_matrix = background.map_matrix
+        self.tiles_group = background.map_group
+
     def loadSpriteSheets(self, character_data):
         ''' loadSpriteSheets(self, character_data)
         Procedure which loads spritesheet from path given, and extracts each
@@ -153,17 +170,32 @@ class Character(pygame.sprite.Sprite):
 
         # Displaying current image at current position
         self.screen.blit(self.image[self.image_index], self.rect)             
-        
+    
+    def collisionWithGround(self):
+        ''' Collision Detection
+        Detects collision with the ground - if colliding with ground,
+        returns True
+        '''
+        collisions = pygame.sprite.spritecollide(self,
+                                                    self.tiles_group,
+                                                    False)
+        if len(collisions) != 0:
+            self.is_falling = False
+            return True
+        else:
+            return False
+
     def applyGravity(self):
         ''' applyGravity
         Updates position subject to gravity.
-
-        Once a working map has been pushed into the master, will need to redo.
+        Checks whether self.is_falling is true, if self is falling, then move
+        down by gravity.  Then checks for collisions with tiles to update
+        falling status.
         '''
         # Updating positions subject to gravity
-        is_falling = self.position[1] + (0.5*self.height) < self.screen_dims[1] 
-        if is_falling:
+        if self.is_falling:
             self.moveY(self.gravity)
+            self.collisionWithGround()
 
     def incrementImage(self):
         ''' Increment Image function

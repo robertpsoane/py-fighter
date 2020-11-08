@@ -44,8 +44,8 @@ def pyfighterGame():
     ######## Will go in controller init!
 
     game_background = Background(game_screen, screen_dims, 32)
-    player = Player(game_screen, 600, 100)
-    enemy = NPC(game_screen, 100, 100)
+    player = Player(game_screen, game_background, 600, 100)
+    enemy = NPC(game_screen, game_background, 100, 100)
     enemy.addTarget(player)
 
     ########
