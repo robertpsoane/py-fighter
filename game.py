@@ -64,7 +64,24 @@ def pyfighterGame():
                 # Detecting user pressing quit button, if X pressed,
                 # break loop and quit screen.
                 run_me = False
+            
+            ##################### TEMPORARY - GOING IN CONTROLLER
 
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_w:
+                    player.startMove('u')
+                if event.key == pygame.K_d:
+                    player.startMove('r')
+                if event.key == pygame.K_a:
+                    player.startMove('l')
+            if event.type == pygame.KEYUP:
+                if (event.key == pygame.K_d):
+                    player.stopMove('right')
+                elif (event.key == pygame.K_a):
+                    player.stopMove('left')
+                    
+
+            ######################################################
         # Refresh screen
         game_screen.fill(colour['blue'])
 
