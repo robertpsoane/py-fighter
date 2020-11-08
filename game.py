@@ -81,5 +81,5 @@ def pyfighterGame():
         # Flip to display
         pygame.display.flip()
 
-
+#### COMMENT BELOW OUT - only here for testing purposes now :)
 pyfighterGame()
