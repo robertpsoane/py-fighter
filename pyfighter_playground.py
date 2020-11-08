@@ -13,7 +13,6 @@ import pygame
 import json
 from classes.displaystring import DisplayString
 from classes.player import Player
-from classes.npc import NPC
 
 def pyfighter_playground():
     ### Important Game Variables from JSON
@@ -42,9 +41,8 @@ def pyfighter_playground():
     ##########################################################################
     # Testing Player
 
-    player = Player(game_screen, 600, 100)
-    npc = NPC(game_screen, 100, 100)
-    npc.addTarget(player)
+    player = Player(game_screen, 100, 100)
+
 
     ##########################################################################
 
@@ -59,15 +57,13 @@ def pyfighter_playground():
                 # Detecting user pressing quit button, if X pressed,
                 # break loop and quit screen.
                 run_me = False
-
+            
         # Refresh screen
         game_screen.fill(colour['black'])
 
         ### Code to re-display items on screen will go here ###
-        
         player.startMove('l')
         player.display()
-        npc.display()
 
 
         # Flip to display

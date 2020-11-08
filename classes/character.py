@@ -57,13 +57,8 @@ from classes.spritesheet import SpriteSheet
 
 class Character(pygame.sprite.Sprite):
     
-    ''' Character Class - Used to display and animate sprites from sprite
-    sheets on screen.  Usually won't be initialised directly, rather its two
-    child classes (Player and NPC) will be called.
-    '''
-
     def __init__(self, character_data, screen, x_position, y_position):
-        # Initi for sprite
+        # Declaring self to be a sprite
         pygame.sprite.Sprite.__init__(self)
 
         # Assigning character data to self.charactar_data
@@ -81,17 +76,17 @@ class Character(pygame.sprite.Sprite):
         # Load sprite sheet and extract frames to dictionary
         self.loadSpriteSheets(character_data)
 
-        # Adding screen to object, and object to screen
+
+        # Adding screen to object
         self.screen = screen
         self.image = self.images[self.state[0]][self.state[1]]
         self.image_index = 0
         self.rect = self.image[self.image_index].get_rect()
         self.rect.center = self.position
         self.refresh_counter = 0
-
-        # Storing dimension variables to self
-        self.screen_dims = (screen.get_width(), screen.get_height())
         
+        
+
     def loadSpriteSheets(self, character_data):
         ''' loadSpriteSheets(self, character_data)
         Procedure which loads spritesheet from path given, and extracts each
@@ -100,16 +95,11 @@ class Character(pygame.sprite.Sprite):
         '''
         self.spritesheet = SpriteSheet(character_data['path'])
         char_size = character_data['charsize']
-        scale_factor = character_data['scale_factor']
-        scaled_size = [char_size[0] * scale_factor, char_size[1] * scale_factor]
+        scaled_size = character_data['scaledsize']
         background_colour = character_data['background']
         
         image_types = character_data['actions']
         image_directions = character_data['directions']
-
-        graphic_dims = character_data['graphic_dims']
-        self.width = graphic_dims[0] * scale_factor
-        self.height = graphic_dims[1] * scale_factor
 
         self.images = {}
 
@@ -127,10 +117,6 @@ class Character(pygame.sprite.Sprite):
                     
                     self.images[image_type][image_direction] += [specific_image]
 
-    def addTarget(self, target):
-        ''' addTarget - Used to lock character onto a target to attack
-        '''
-        self.target = target
 
     def display(self):
         ''' Display function
@@ -140,33 +126,19 @@ class Character(pygame.sprite.Sprite):
         every n times it switches to the next image.  This is to animate
         the image.
         '''
-        # Updating position subject to gravity
-        self.applyGravity()
-        
-        # Update state
-        self.image = self.images[self.state[0]][self.state[1]]
-        
+        # Displaying current image at current position
+        self.screen.blit(self.image[self.image_index], self.rect)
+
         # Updating counter, and if necessary incrementing image
         self.refresh_counter += 1
         if self.refresh_counter % self.refresh_rate == 0:
-            self.incrementImage()   
-
-        # Displaying current image at current position
-        self.screen.blit(self.image[self.image_index], self.rect)             
+            self.incrementImage()
         
-    def applyGravity(self):
-        ''' applyGravity
-        Updates position subject to gravity.
-
-        Once a working map has been pushed into the master, will need to redo.
-        '''
         # Updating positions subject to gravity
-        is_falling = self.position[1] + (0.5*self.height) < self.screen_dims[1] 
-        if is_falling:
-            self.moveY(self.gravity)
+        
 
     def incrementImage(self):
-        ''' Increment Image function
+        ''' Increment Image functino
         Increments image by 1, and resets counting variable
         '''
         # Resetting refresh counter
@@ -202,25 +174,21 @@ class Character(pygame.sprite.Sprite):
         self.position[1] += step
         self.rect.center = self.position
 
+    
     def startMove(self,direction):
         ''' startMove(direction)
         Input 'l' or 'r' for horizontal movement, 'u' for jump
         '''
         if direction == 'l':
             # Moving one speed step left
-            move_speed = -1 * self.speed
-            self.moveX(move_speed)
+            self.moveX(self.speed)
             self.state = ['running', 'left']
         elif direction == 'r':
             # Moving one speed step right
-            self.moveX(self.speed)
+            self.moveX(-1 * self.speed)
             self.state = ['running', 'right']
         elif direction == 'u':
             pass
-        '''
-        Note: Once a working map has been pushed into the master to test with,
-        moving needs to be re-worked.
-        '''
     
     def stopMove(self):
         ''' stopMove()
