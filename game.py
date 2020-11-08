@@ -13,11 +13,6 @@ import pygame
 import json
 from classes.displaystring import DisplayString
 
-### THESE IMPORTS ARE NEEDED IN CONTROLLER
-from classes.background import Background
-from classes.player import Player
-from classes.npc import NPC
-
 
 def pyfighterGame():
     ### Important Game Variables from JSON
@@ -41,15 +36,6 @@ def pyfighterGame():
     pygame.display.set_caption(game_name)
     clock = pygame.time.Clock()
 
-    ######## Will go in controller init!
-
-    game_background = Background(game_screen, screen_dims, 32)
-    player = Player(game_screen, 600, 100)
-    enemy = NPC(game_screen, 100, 100)
-    enemy.addTarget(player)
-
-    ########
-
     ### Setting up game loop
     run_me = True
 
@@ -66,20 +52,13 @@ def pyfighterGame():
                 run_me = False
 
         # Refresh screen
-        game_screen.fill(colour['blue'])
+        game_display.fill(colour['blue'])
 
         ### Code to re-display items on screen will go here ###
 
-        game_background.display()
-        player.display()
-        enemy.display()
-
         # Blits the scaled game_display to game_screen, move to controller when ready #
-        #scaled_surf = pygame.transform.scale(game_display, screen_dims)
-        #game_screen.blit(scaled_surf, (0, 0))
+        scaled_surf = pygame.transform.scale(game_display, screen_dims)
+        game_screen.blit(scaled_surf, (0, 0))
         ##############################################################################
         # Flip to display
         pygame.display.flip()
-
-#### COMMENT BELOW OUT - only here for testing purposes now :)
-pyfighterGame()
