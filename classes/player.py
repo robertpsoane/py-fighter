@@ -12,12 +12,17 @@ import json
 from classes.character import Character
 
 class Player(Character):
-    def __init__(self, screen, x_position, y_position):
+
+    ''' Player Class - Used to display and animate human controlled characters
+    on the screen.
+    '''
+
+    def __init__(self, screen, background, x_position, y_position):
         # Loading player data json, and converitng to python dictionary
         with open('json/basic_character.JSON') as player_json:
             character_data = json.load(player_json)
 
         # Initialising Character class
-        Character.__init__(self, character_data, screen, x_position, y_position)
+        Character.__init__(self, character_data, background, screen, x_position, y_position)
 
     

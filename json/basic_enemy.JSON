@@ -22,7 +22,7 @@
         "right": [[2, 0], [3, 0]]
         },
 
-    "path": "graphics/spritesheets/basic-character.png",
+    "path": "graphics/spritesheets/basic-enemy.png",
     "background": [0, 255, 0],
     "gridsize": [4, 9],
     "charsize": [32, 32],

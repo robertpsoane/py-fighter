@@ -5,9 +5,9 @@ Takes input of character data, screen, x position, and y position.
 
 Has functions to make move.
 
-- character_data takes the form of a Python dictionary with all key components 
+- character_data takes the form of a Python dictionary with all key components
 and data for character.  This is usually stored in a JSON. We have decided
-to implement like this as it allows us to add future characters or make 
+to implement like this as it allows us to add future characters or make
 significant changes to the characters without having to edit the python code.
 
 character_data follows the following structure:
@@ -19,7 +19,7 @@ character_data follows the following structure:
     "running": {
         "left": [[0, 0], [0, 1], [0, 2], [0, 3], [0, 0], [0, 4], [0, 5], [0, 6]],
         "right": [[2, 0], [2, 1], [2, 2], [2, 3], [2, 0], [2, 4], [2, 5], [2, 6]]
-        },  
+        },
 
     "idle": {
         "left": [[0, 0], [1, 0]],
@@ -56,9 +56,14 @@ import pygame
 from classes.spritesheet import SpriteSheet
 
 class Character(pygame.sprite.Sprite):
-    
-    def __init__(self, character_data, screen, x_position, y_position):
-        # Declaring self to be a sprite
+
+    ''' Character Class - Used to display and animate sprites from sprite
+    sheets on screen.  Usually won't be initialised directly, rather its two
+    child classes (Player and NPC) will be called.
+    '''
+
+    def __init__(self, character_data, background, screen, x_position, y_position):
+        # Initi for sprite
         pygame.sprite.Sprite.__init__(self)
 
         # Assigning character data to self.charactar_data
@@ -67,12 +72,13 @@ class Character(pygame.sprite.Sprite):
         ### Unpacking some important JSON dictionary into variables
         self.speed = character_data['speed']
         self.gravity = character_data['gravity']
+        self.jump_speed = character_data['jump_speed']
         self.state = character_data['initialstate']
         self.refresh_rate = character_data['refresh']
 
         # Character Position
         self.position = [x_position, y_position]
-        
+
         # Load sprite sheet and extract frames to dictionary
         self.loadSpriteSheets(character_data)
 
@@ -84,8 +90,27 @@ class Character(pygame.sprite.Sprite):
         self.rect = self.image[self.image_index].get_rect()
         self.rect.center = self.position
         self.refresh_counter = 0
-        
-        
+        self.x_y_moving = False
+
+        # Storing dimension variables to self
+        self.screen_dims = (screen.get_width(), screen.get_height())
+
+        # Referencing important background variables
+        self.changeMap(background)
+
+        ##### TO GO TO JSON
+        self.is_falling = True
+
+    def changeMap(self, background):
+        ''' changeBackground
+
+        Function to update player with new background.  Call this on player
+        when new map produced, map refers to class containing sprite group of
+        tiles, and map_matrix
+        '''
+        self.background = background
+        self.map_matrix = background.map_matrix
+        self.tiles_group = background.map_group
 
     def loadSpriteSheets(self, character_data):
         ''' loadSpriteSheets(self, character_data)
@@ -97,7 +122,7 @@ class Character(pygame.sprite.Sprite):
         char_size = character_data['charsize']
         scaled_size = character_data['scaledsize']
         background_colour = character_data['background']
-        
+
         image_types = character_data['actions']
         image_directions = character_data['directions']
 
@@ -114,28 +139,84 @@ class Character(pygame.sprite.Sprite):
                             scaled_size
                             )
                     specific_image.set_colorkey(background_colour)
-                    
+
                     self.images[image_type][image_direction] += [specific_image]
 
 
     def display(self):
         ''' Display function
-        
-        Specific display function for characters.  Keeps track of number of 
-        times display has been called.  Depending on the refresh attribute, 
+
+        Specific display function for characters.  Keeps track of number of
+        times display has been called.  Depending on the refresh attribute,
         every n times it switches to the next image.  This is to animate
         the image.
         '''
-        # Displaying current image at current position
-        self.screen.blit(self.image[self.image_index], self.rect)
+        # Update verticle subject to jumping
+        if self.state[0] == 'jumping':
+            self.applyJump()
+
+        # Updating position subject to gravity
+        if self.is_falling:
+            self.applyGravity()
+
+        # Update x/y subject to status
+        if self.x_y_moving == True:
+            if self.state[1] == 'right':
+                self.moveX(self.speed)
+            if self.state[1] == 'left':
+                move_speed = -1 * self.speed
+                self.moveX(move_speed)
+
+        # Update state image
+        self.image = self.images[self.state[0]][self.state[1]]
 
         # Updating counter, and if necessary incrementing image
         self.refresh_counter += 1
         if self.refresh_counter % self.refresh_rate == 0:
             self.incrementImage()
-        
+
+        # Catch frames changed mid refresh
+        if self.image_index >= len(self.image):
+            self.incrementImage()
+
+        # Displaying current image at current position
+        self.screen.blit(self.image[self.image_index], self.rect)
+
+    def collisionWithGround(self):
+        ''' Collision Detection
+        Detects collision with the ground - if colliding with ground,
+        returns True
+        '''
+        collisions = pygame.sprite.spritecollide(self,
+                                                    self.tiles_group,
+                                                    False)
+        if len(collisions) != 0:
+            self.is_falling = False
+            self.stopMove()
+            return True
+        else:
+            return False
+
+    def applyGravity(self):
+        ''' applyGravity
+        Updates position subject to gravity.
+        If self is falling, then move
+        down by gravity.  Then checks for collisions with tiles to update
+        falling status.
+        '''
         # Updating positions subject to gravity
-        
+        self.moveY(self.gravity)
+        self.collisionWithGround()
+
+    def applyJump(self):
+        ''' Applys Jump to player after jump has been pressed
+        '''
+        jump = self.jump_speed // self.jumpcount
+        self.moveY( -1 * jump)
+        self.jumpcount = self.jumpcount * 2
+        if (jump == 1) or (jump == 0):
+            self.is_falling = True
+            self.state[0] = 'falling'
 
     def incrementImage(self):
         ''' Increment Image functino
@@ -151,12 +232,14 @@ class Character(pygame.sprite.Sprite):
         n_images = len(self.image)
         if self.image_index == n_images:
             self.image_index = 0
-    
+
     def updateState(self, action, direction):
         ''' updateState(action, direction)
         function to update state of character
         '''
         self.state = [action, direction]
+        self.refresh_counter = 0
+        self.image_index = 0
 
     def moveX(self, step):
         ''' moveX(step)
@@ -174,31 +257,38 @@ class Character(pygame.sprite.Sprite):
         self.position[1] += step
         self.rect.center = self.position
 
-    
+
     def startMove(self,direction):
         ''' startMove(direction)
         Input 'l' or 'r' for horizontal movement, 'u' for jump
         '''
+        if self.state[0] == 'idle':
+            self.state[0] = 'running'
         if direction == 'l':
             # Moving one speed step left
-            self.moveX(self.speed)
-            self.state = ['running', 'left']
+            self.x_y_moving = True
+            self.state[1] = 'left'
         elif direction == 'r':
-            # Moving one speed step right
-            self.moveX(-1 * self.speed)
-            self.state = ['running', 'right']
+            # Moving right
+            self.x_y_moving = True
+            self.state[1] = 'right'
         elif direction == 'u':
-            pass
-    
-    def stopMove(self):
+            self.state[0] = 'jumping'
+            self.jumpcount = 1
+
+    def stopMove(self, direction = 'none'):
         ''' stopMove()
-        Returns state to idle when no longer moving.  Purpose of function is 
+        Returns state to idle when no longer moving.  Purpose of function is
         to stop running animation.
 
-        WILL NEED CHANGING WHEN WEAPONS ARE IMPLEMENTED! Will need to choose 
+        WILL NEED CHANGING WHEN WEAPONS ARE IMPLEMENTED! Will need to choose
         state based on weapon!
         '''
-        self.state[0] = 'idle'
-    
-
-    
+        if self.state == ['running', direction]:
+            self.updateState('idle', direction)
+            self.x_y_moving = False
+        elif self.state[0] == 'falling':
+            if self.x_y_moving == True:
+                self.state[0] = 'running'
+            else:
+                self.updateState('idle', self.state[1])
