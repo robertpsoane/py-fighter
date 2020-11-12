@@ -13,6 +13,11 @@ import pygame
 import json
 from classes.displaystring import DisplayString
 
+### THESE IMPORTS ARE NEEDED IN CONTROLLER
+from classes.background import Background
+from classes.player import Player
+from classes.npc import NPC
+
 
 def pyfighterGame():
     ### Important Game Variables from JSON
@@ -36,6 +41,15 @@ def pyfighterGame():
     pygame.display.set_caption(game_name)
     clock = pygame.time.Clock()
 
+    ######## Will go in controller init!
+
+    game_background = Background(game_screen, screen_dims, 32)
+    player = Player(game_screen, game_background, 600, 100)
+    enemy = NPC(game_screen, game_background, 100, 100)
+    enemy.addTarget(player)
+
+    ########
+
     ### Setting up game loop
     run_me = True
 
@@ -50,15 +64,39 @@ def pyfighterGame():
                 # Detecting user pressing quit button, if X pressed,
                 # break loop and quit screen.
                 run_me = False
+            
+            ##################### TEMPORARY - GOING IN CONTROLLER
 
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_w:
+                    player.startMove('u')
+                if event.key == pygame.K_d:
+                    player.startMove('r')
+                if event.key == pygame.K_a:
+                    player.startMove('l')
+            if event.type == pygame.KEYUP:
+                if (event.key == pygame.K_d):
+                    player.stopMove('right')
+                elif (event.key == pygame.K_a):
+                    player.stopMove('left')
+                    
+
+            ######################################################
         # Refresh screen
-        game_display.fill(colour['blue'])
+        game_screen.fill(colour['blue'])
 
         ### Code to re-display items on screen will go here ###
 
+        game_background.display()
+        player.display()
+        enemy.display()
+
         # Blits the scaled game_display to game_screen, move to controller when ready #
-        scaled_surf = pygame.transform.scale(game_display, screen_dims)
-        game_screen.blit(scaled_surf, (0, 0))
+        #scaled_surf = pygame.transform.scale(game_display, screen_dims)
+        #game_screen.blit(scaled_surf, (0, 0))
         ##############################################################################
         # Flip to display
         pygame.display.flip()
+
+#### COMMENT BELOW OUT - only here for testing purposes now :)
+pyfighterGame()

@@ -13,6 +13,7 @@ import pygame
 import json
 from classes.displaystring import DisplayString
 from classes.player import Player
+from classes.npc import NPC
 
 from classes.map import Map
 
@@ -49,8 +50,10 @@ def pyfighter_playground():
     player_loc = [50, 50]
     player_gravity = 0
 
-    tile_1 = pygame.image.load('graphics/map_tiles/tile1.png')
-    tile_2 = pygame.image.load('graphics/map_tiles/tile2.png')
+
+    player = Player(game_screen, 600, 100)
+    npc = NPC(game_screen, 100, 100)
+    npc.addTarget(player)
 
     game_map = Map(tile_1, tile_2, game_display)
     ##########################################################################
@@ -67,22 +70,17 @@ def pyfighter_playground():
                 # break loop and quit screen.
                 run_me = False
 
-           #####################TEMP PLAYER##########################################
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RIGHT:
-                    move_R = True
-                if event.key == pygame.K_LEFT:
-                    move_L = True
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_RIGHT:
-                    move_R = False
-                if event.key == pygame.K_LEFT:
-                    move_L = False
-            ##############################################################
+
+
         # Refresh screen
         game_display.fill(colour['black'])
 
         ### Code to re-display items on screen will go here ###
+
+        
+        player.startMove('l')
+        player.display()
+        npc.display()
 
         ############################TEMP PLAYER##################################################
         game_map.generateMap()
