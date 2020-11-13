@@ -3,20 +3,52 @@
 
 '''
 
-class Controller:
-    def __init__():
-        pass
+import pygame
+from classes.background import Background
+from classes.player import Player
+from classes.npc import NPC
+
+
+class Controller():
+    def __init__(self, game_screen, screen_dims):
+        self.game_screen = game_screen
+        self.screen_dims = screen_dims
+
+    def generateMap(self):
+        self.game_background = Background(self.game_screen, self.screen_dims, 32)
+        self.player = Player(self.game_screen, self.game_background, 600, 100)
+        self.enemy = NPC(self.game_screen, self.game_background, 100, 100)
+        self.enemy.addTarget(self.player)
+
+    def keyboardInput(self, event):
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_w:
+                    self.player.startMove("u")
+                if event.key == pygame.K_d:
+                    self.player.startMove("r")
+                if event.key == pygame.K_a:
+                    self.player.startMove("l")
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_d:
+                    self.player.stopMove("right")
+                elif event.key == pygame.K_a:
+                    self.player.stopMove("left")
+
+    def display(self):
+        self.game_background.display()
+        self.player.display()
+        self.enemy.display()
 
 
 '''
 functions to code:
 
-note: all functions have parameter self, but when calling function you don't 
+note: all functions have parameter self, but when calling function you don't
 pass self
 Functions with an asterisk - use the name I've given (__init__ is a default python
 name, and display for consistency)
 
-*__init__() - function which runs when you initialise an instance of the 
+*__init__() - function which runs when you initialise an instance of the
             class.
             Needs to take input of screen, and screen dims
 
