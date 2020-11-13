@@ -17,7 +17,7 @@ from classes.displaystring import DisplayString
 from classes.background import Background
 from classes.player import Player
 from classes.npc import NPC
-
+from classes.controller import Controller
 
 def pyfighterGame():
     ### Important Game Variables from JSON
@@ -42,12 +42,9 @@ def pyfighterGame():
     clock = pygame.time.Clock()
 
     ######## Will go in controller init!
-
-    game_background = Background(game_screen, screen_dims, 32)
-    player = Player(game_screen, game_background, 600, 100)
-    enemy = NPC(game_screen, game_background, 100, 100)
-    enemy.addTarget(player)
-
+    game_controller = Controller(game_screen, screen_dims)
+    game_controller.generateMap() 
+    
     ########
 
     ### Setting up game loop
@@ -67,19 +64,7 @@ def pyfighterGame():
             
             ##################### TEMPORARY - GOING IN CONTROLLER
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_w:
-                    player.startMove('u')
-                if event.key == pygame.K_d:
-                    player.startMove('r')
-                if event.key == pygame.K_a:
-                    player.startMove('l')
-            if event.type == pygame.KEYUP:
-                if (event.key == pygame.K_d):
-                    player.stopMove('right')
-                elif (event.key == pygame.K_a):
-                    player.stopMove('left')
-                    
+            game_controller.keyboardInput(event)
 
             ######################################################
         # Refresh screen
@@ -87,9 +72,7 @@ def pyfighterGame():
 
         ### Code to re-display items on screen will go here ###
 
-        game_background.display()
-        player.display()
-        enemy.display()
+        game_controller.display()
 
         # Blits the scaled game_display to game_screen, move to controller when ready #
         #scaled_surf = pygame.transform.scale(game_display, screen_dims)
