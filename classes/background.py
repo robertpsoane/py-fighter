@@ -25,6 +25,7 @@ class Background:
         self.generateMap()
 
     def createGameMap(self, dims, cell):
+        # Dynamically generate game map matrix
         height_units = dims[1] // cell
         width_units = dims[0] // cell
         ground_start = height_units - 4
@@ -46,6 +47,13 @@ class Background:
         self.map_matrix = map_matrix
 
     def generateMap(self):
+        ''' generateMap()
+
+        Generates map group from map matrix - stored as self.map_group
+
+        '''
+
+        ### Create map_group
         map_group = pygame.sprite.Group()
 
         game_map = self.map_matrix
@@ -54,19 +62,35 @@ class Background:
                 if game_map[i][j] == '1':
                     cell = self.cell
                     position = (j * cell, i * cell)
+
+                    # Add individual tile sprite to map group
                     map_group.add(Tile(self.screen, position, cell, '1'))
                 elif game_map[i][j] == '2':
                     cell = self.cell
                     position = (j * cell, i * cell)
                     map_group.add(Tile(self.screen, position, cell, '2'))
+
+        # Store map_group to self
         self.map_group = map_group
 
     def display(self):
+        # Blit all tiles in map group
         for tile in self.map_group:
             tile.display()
 
 
 class Tile(pygame.sprite.Sprite):
+    ''' Tile
+
+    Implements tile sprite.
+    Input:
+        - screen to blit on to
+        - screen dims
+        - cell size (32)
+        - tile_type '1' or '2'
+
+    Has a display function to blit to screen
+    '''
     def __init__(self, screen, dims, cell, tile_type):
         # Init for sprite
         pygame.sprite.Sprite.__init__(self)
