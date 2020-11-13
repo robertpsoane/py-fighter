@@ -16,7 +16,7 @@ class Controller():
 
     def generateMap(self):
         self.game_background = Background(self.game_screen, self.screen_dims, 32)
-        self.player = Player(self.game_screen, self.game_background, 600, 100)
+        self.player = Player(self.game_screen, self.game_background, 600, 100)  #Numbers will be changed to actual size later on
         self.enemy = NPC(self.game_screen, self.game_background, 100, 100)
         self.enemy.addTarget(self.player)
 
