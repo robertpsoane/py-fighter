@@ -67,20 +67,4 @@ class Map:
                 x += 1
             y += 1
 
-    def collisionTest(self, rect, tiles):
-        self.rect = rect
-        self.tiles = tiles
-        hit_list = []
-        for tile in tiles:
-            if rect.colliderect(tile):
-                hit_list.append(tile)
-            return hit_list
-
-    def objectMove(self, rectm, movementm, tilesm):
-        self.movementm = movementm
-        self.tilesm = tilesm
-        collision_types = {'top: False', 'bottom: False', 'right: False', 'left: False'}
-        self.rectm.x += movmentm[0]
-        return rectm, collision_types
-    def display(self):
         self.generateMap()
