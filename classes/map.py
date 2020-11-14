@@ -67,19 +67,17 @@ class Map:
             x = 0
             for tile in row:
                 if tile == '3':
-                    cell = Map.TILE_SIZE
                     position = (row * Map.TILE_SIZE, tile * Map.TILE_SIZE)
                     self.game_display.blit(self.plat_image, (x * Map.TILE_SIZE, y * Map.TILE_SIZE))
-                    map_group.add(Tile(self.game_display, position, cell, '3'))
+                    map_group.add(Tile(self.game_display, position, Map.TILE_SIZE, '3'))
                 if tile == '2':
-                    cell = Map.TILE_SIZE
                     position = (row * Map.TILE_SIZE, tile * Map.TILE_SIZE)
                     self.game_display.blit(self.dirt_image, (x * Map.TILE_SIZE, y * Map.TILE_SIZE))
-                    map_group.add(Tile(self.game_display, position, cell, '2'))
+                    map_group.add(Tile(self.game_display, position, Map.TILE_SIZE, '2'))
                 if tile == '1':
                     position = (tile * Map.TILE_SIZE, tile * Map.TILE_SIZE)
                     self.game_display.blit(self.grass_image, (x * Map.TILE_SIZE, y * Map.TILE_SIZE))
-                    map_group.add(Tile(self.game_display, position, cell, '1'))
+                    map_group.add(Tile(self.game_display, position, Map.TILE_SIZE, '1'))
 
                 x += 1
             y += 1
