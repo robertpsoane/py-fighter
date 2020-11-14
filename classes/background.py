@@ -41,7 +41,7 @@ class Background:
                 else:
                     row.append('1')
             map_matrix.append(row)
-        
+
         self.height_units = height_units
         self.width_units = width_units
         self.map_matrix = map_matrix
@@ -106,6 +106,6 @@ class Tile(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect()
         self.rect.topleft = [dims[0], dims[1]]
-    
+
     def display(self):
         self.screen.blit(self.image, self.rect)

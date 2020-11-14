@@ -43,8 +43,8 @@ def pyfighterGame():
 
     ######## Will go in controller init!
     game_controller = Controller(game_screen, screen_dims)
-    game_controller.generateMap() 
-    
+    game_controller.genMap()
+
     ########
 
     ### Setting up game loop
@@ -61,7 +61,7 @@ def pyfighterGame():
                 # Detecting user pressing quit button, if X pressed,
                 # break loop and quit screen.
                 run_me = False
-            
+
             ##################### TEMPORARY - GOING IN CONTROLLER
 
             game_controller.keyboardInput(event)

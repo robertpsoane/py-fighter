@@ -18,7 +18,8 @@
     "map_keys": {
         "0":"soft",
         "1":"hard",
-        "2":"hard"
+        "2":"hard",
+        "3":"hard"
     }
 
 }
