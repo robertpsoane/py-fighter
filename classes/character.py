@@ -76,6 +76,12 @@ class Character(pygame.sprite.Sprite):
         self.state = character_data['initialstate']
         self.refresh_rate = character_data['refresh']
 
+        ### Health and stats data
+        self.alive = True
+        self.initial_health = character_data['initial_health_points']
+        self.health = self.initial_health
+        self.strength = character_data['initial_strength']
+
         # Character Position
         self.position = [x_position, y_position]
         
@@ -88,8 +94,11 @@ class Character(pygame.sprite.Sprite):
         self.image_index = 0
         self.rect = self.image[self.image_index].get_rect()
         self.rect.center = self.position
+
+        # Important move variables
         self.refresh_counter = 0
         self.x_y_moving = False
+        self.recoil_status = (False, 0)
 
         # Storing dimension variables to self
         self.screen_dims = (screen.get_width(), screen.get_height())
@@ -151,6 +160,20 @@ class Character(pygame.sprite.Sprite):
         '''
         self.target = target
 
+    def attack(self, type = 1):
+        if self.rect[0] < self.target.rect[0]:
+            direction = 1
+        else:
+            direction = -1
+        self.target.recoil(self.strength, direction)
+
+    def recoil(self, force, direction):
+        self.health = self.health - force
+        if self.health <= 0:
+            self.alive = False
+        self.recoil_status = (True, direction)
+        self.recoil_counter = 3
+
     def display(self):
         ''' Display function
         
@@ -166,9 +189,18 @@ class Character(pygame.sprite.Sprite):
         # Updating position subject to gravity
         if self.is_falling:
             self.applyGravity()
+
+        # Updating subject to recoil.  If character is recoiling, move in 
+        # recoil direction
+        if self.recoil_status[0]:
+            if self.recoil_counter == 0:
+                self.recoil_status = (False, 0)
+            self.moveX(10 * self.recoil_status[1])
+            self.recoil_counter = self.recoil_counter - 1
+
         
         # Update x/y subject to status
-        if self.x_y_moving == True:
+        if self.x_y_moving:
             if self.state[1] == 'right':
                 self.moveX(self.speed)
             if self.state[1] == 'left':
