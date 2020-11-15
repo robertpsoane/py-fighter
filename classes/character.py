@@ -110,7 +110,7 @@ class Character(pygame.sprite.Sprite):
         self.is_falling = True
     
     def changeMap(self, background):
-        ''' changeBackground
+        ''' changeMap(background) - used to update to new map
 
         Function to update player with new background.  Call this on player 
         when new map produced, map refers to class containing sprite group of 
@@ -122,6 +122,7 @@ class Character(pygame.sprite.Sprite):
 
     def loadSpriteSheets(self, character_data):
         ''' loadSpriteSheets(self, character_data)
+
         Procedure which loads spritesheet from path given, and extracts each
         frame of the sprite and stores to dictionary self.images
         These can then be updated depending on this instances state
@@ -160,7 +161,15 @@ class Character(pygame.sprite.Sprite):
         '''
         self.target = target
 
+
+    # TODO: Check if actually can attack player
+    # TODO: Implement health
     def attack(self, type = 1):
+        ''' Attack function - Attacks player assigned to it 
+
+        Causes player being attacked to recoil in opposite direction, and lose
+        health.
+        '''
         if self.rect[0] < self.target.rect[0]:
             direction = 1
         else:
@@ -168,6 +177,11 @@ class Character(pygame.sprite.Sprite):
         self.target.recoil(self.strength, direction)
 
     def recoil(self, force, direction):
+        ''' Recoil function - Loses health from attack and sets recoil counter
+
+        Recoil counter processed in display function.  Each frame pushes 
+        character back while recoiling.
+        '''
         self.health = self.health - force
         if self.health <= 0:
             self.alive = False
