@@ -37,7 +37,7 @@ def pyfighterGame():
 
     ### Setting up Screen and clock
     game_screen = pygame.display.set_mode((screen_width, screen_height))
-    game_display = pygame.Surface((screen_width / 1, screen_height / 1))  # surface on which we blit images
+    game_display = pygame.Surface((screen_width / 2, screen_height / 2))  # surface on which we blit images
     pygame.display.set_caption(game_name)
     clock = pygame.time.Clock()
 

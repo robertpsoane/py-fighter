@@ -16,9 +16,9 @@ class Controller():
         self.screen_dims = screen_dims
 
     def generateMap(self):
-        self.game_background = Map(self.game_screen, self.screen_dims, 32)
-        self.player = Player(self.game_screen, self.game_background, 600, 100)  #Numbers will be changed to actual size later on
-        self.enemy = NPC(self.game_screen, self.game_background, 100, 100)
+        self.game_background = Map(self.game_display, self.screen_dims, 32)
+        self.player = Player(self.game_display, self.game_background, 600, 100)  #Numbers will be changed to actual size later on
+        self.enemy = NPC(self.game_display, self.game_background, 100, 100)
         self.enemy.addTarget(self.player)
         self.player.addTarget(self.enemy)
 
@@ -45,6 +45,8 @@ class Controller():
         self.game_background.display()
         self.player.display()
         self.enemy.display()
+        scaled_surf = pygame.transform.scale(self.game_display, self.screen_dims)
+        self.game_screen.blit(scaled_surf, (0, 0))
 
 
 
