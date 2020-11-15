@@ -193,3 +193,5 @@ class Tile(pygame.sprite.Sprite):
 
     def display(self):
         self.screen.blit(self.image, self.rect)
+
+

@@ -10,7 +10,8 @@ from classes.npc import NPC
 
 
 class Controller():
-    def __init__(self, game_screen, screen_dims):
+    def __init__(self, game_display, game_screen, screen_dims):
+        self.game_display = game_display
         self.game_screen = game_screen
         self.screen_dims = screen_dims
 
@@ -39,9 +40,13 @@ class Controller():
 
 
     def display(self):
+
+
         self.game_background.display()
         self.player.display()
         self.enemy.display()
+
+
 
 
 '''
