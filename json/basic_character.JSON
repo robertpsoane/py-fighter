@@ -1,5 +1,5 @@
 {
-    "actions": ["running", "idle", "jumping", "falling"],
+    "actions": ["running", "idle", "jumping", "falling", "attack"],
     "directions": ["left", "right"],
 
     "running": {
@@ -22,6 +22,11 @@
         "right": [[2, 0], [3, 0]]
         },
 
+    "attack": {
+        "left": [[0, 0], [1, 0]],
+        "right": [[2, 0], [3, 0]]
+    },
+
     "path": "graphics/spritesheets/basic-character.png",
     "background": [0, 255, 0],
     "gridsize": [4, 9],
@@ -32,5 +37,9 @@
     "jump_speed": 50,
     "gravity": 10,
     "refresh": 10,
-    "initialstate": ["idle", "right"]
+    "initialstate": ["idle", "right"],
+
+    "initial_health_points": 100,
+    "initial_strength": 10
+
 }
