@@ -19,7 +19,6 @@ class Controller():
         self.player = Player(self.game_screen, self.game_map, 600, 100)  #Numbers will be changed to actual size later on
         self.enemy = NPC(self.game_screen, self.game_map, 100, 100)
         self.enemy.addTarget(self.player)
-        self.player.addTarget(self.enemy)
 
     def keyboardInput(self, event):
             if event.type == pygame.KEYDOWN:
@@ -29,14 +28,11 @@ class Controller():
                     self.player.startMove("r")
                 if event.key == pygame.K_a:
                     self.player.startMove("l")
-                if event.key == pygame.K_q:
-                    self.player.attack()
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_d:
                     self.player.stopMove("right")
                 elif event.key == pygame.K_a:
                     self.player.stopMove("left")
-
 
     def display(self):
         self.game_map.generateMap()
