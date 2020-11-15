@@ -43,7 +43,7 @@ def pyfighterGame():
 
     ######## Will go in controller init!
     game_controller = Controller(game_screen, screen_dims)
-    game_controller.genMap()
+    game_controller.generateMap()
 
     ########
 

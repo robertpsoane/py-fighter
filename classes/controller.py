@@ -14,7 +14,7 @@ class Controller():
         self.game_screen = game_screen
         self.screen_dims = screen_dims
 
-    def genMap(self): # Rokas changed the name of the function since one was named like that previusly
+    def generateMap(self):
         self.game_map = Map(self.game_screen, self.screen_dims)
         self.player = Player(self.game_screen, self.game_map, 600, 100)  #Numbers will be changed to actual size later on
         self.enemy = NPC(self.game_screen, self.game_map, 100, 100)
