@@ -28,7 +28,7 @@ def createGameMap():
          '0', '0', '0', '0', '0', '0', '0'],
         ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
          '0', '0', '0', '0', '0', '0', '0'],
-        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+        ['0', '0', '0', '0', '0', '0', '0', '0', '3', '0', '3', '0', '0', '0', '0', '0', '0', '0',
          '0', '0', '0', '0', '0', '0', '0'],
         ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
          '0', '0', '0', '0', '0', '0', '0'],
@@ -36,6 +36,18 @@ def createGameMap():
          '2', '2', '2', '2', '2', '2', '2'],
         ['1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1',
          '1', '1', '1', '1', '1', '1', '1'],
+        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+         '0', '0', '0', '0', '0', '0', '0'],
+        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+         '0', '0', '0', '0', '0', '0', '0'],
+        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+         '0', '0', '0', '0', '0', '0', '0'],
+        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+         '0', '0', '0', '0', '0', '0', '0'],
+        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+         '0', '0', '0', '0', '0', '0', '0'],
+        ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+         '0', '0', '0', '0', '0', '0', '0'],
         ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
          '0', '0', '0', '0', '0', '0', '0'],
         ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
@@ -51,7 +63,7 @@ def createGameMap():
 class Map:
     '''Poopty Skoopty'''
 
-    # TODO: TILE_SIZE should not be class variable but should be passed in 
+    # TODO: TILE_SIZE should not be class variable but should be passed in
     # when Map class initiated - doesn't matter what its called, but thats
     # what cell was doing on the other branch when I got it working. Please
     # add the variable to the config file and it can be passed into controller
@@ -62,7 +74,7 @@ class Map:
         self.grass_image = GRASS
         self.dirt_image = STONE
         self.plat_image = PLATFORM
-        self.screen = screen 
+        self.screen = screen
         self.dims = dims
         self.cell = cell
 
@@ -71,7 +83,7 @@ class Map:
 
         ## the create map_matrix bit could probably go within the generateMap
         ## function, as it is needed each time we get a new map?
-        ## I know my hacked together version had it differently but not 
+        ## I know my hacked together version had it differently but not
         ## probably better to change it :)
         self.createGameMapDYNAMIC(dims, cell)
         self.generateMap()
@@ -79,11 +91,11 @@ class Map:
     # Reads through the map matrix and blits the tiles on game_display, also adds them to map group.
     def generateMap(self):
         map_group = pygame.sprite.Group()
-        game_map = self.map_matrix
+        game_map = createGameMap()
 
         for i in range(self.height_units):
             for j in range(self.width_units):
-                # TODO: Can refactor this set of if statements into one if 
+                # TODO: Can refactor this set of if statements into one if
                 # statement
 
                 if game_map[i][j] == '1':
@@ -105,8 +117,13 @@ class Map:
         # Store map_group to self
         self.map_group = map_group
 
-    # TODO: If you choose to keep this function, rename it something more 
-    # sensible than DYNAMIC :) I just named it that so its clear its a 
+    def display(self):
+        # Blit all tiles in map group
+        for tile in self.map_group:
+            tile.display()
+
+    # TODO: If you choose to keep this function, rename it something more
+    # sensible than DYNAMIC :) I just named it that so its clear its a
     # separat function for th patch
     def createGameMapDYNAMIC(self, dims, cell):
         ''' Dynamic Creating Game Map
@@ -116,8 +133,8 @@ class Map:
         '''
 
         # Feel free to replace, just using to quickly get patch working.
-        # The hard coded game map isn't the right size for the game screen at 
-        # the moment, so instead of counting elements I used a dynamic 
+        # The hard coded game map isn't the right size for the game screen at
+        # the moment, so instead of counting elements I used a dynamic
         # function
 
         # Dynamically generate game map matrix
@@ -140,7 +157,7 @@ class Map:
         self.height_units = height_units
         self.width_units = width_units
         self.map_matrix = map_matrix
-
+        print(map_matrix)
 
 
 # Roberts Tile class

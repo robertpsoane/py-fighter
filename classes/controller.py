@@ -4,7 +4,7 @@
 '''
 
 import pygame
-from classes.background import Background
+from classes.map import Map
 from classes.player import Player
 from classes.npc import NPC
 
@@ -15,7 +15,7 @@ class Controller():
         self.screen_dims = screen_dims
 
     def generateMap(self):
-        self.game_background = Background(self.game_screen, self.screen_dims, 32)
+        self.game_background = Map(self.game_screen, self.screen_dims, 32)
         self.player = Player(self.game_screen, self.game_background, 600, 100)  #Numbers will be changed to actual size later on
         self.enemy = NPC(self.game_screen, self.game_background, 100, 100)
         self.enemy.addTarget(self.player)
