@@ -5,9 +5,9 @@ Takes input of character data, screen, x position, and y position.
 
 Has functions to make move.
 
-- character_data takes the form of a Python dictionary with all key components 
+- character_data takes the form of a Python dictionary with all key components
 and data for character.  This is usually stored in a JSON. We have decided
-to implement like this as it allows us to add future characters or make 
+to implement like this as it allows us to add future characters or make
 significant changes to the characters without having to edit the python code.
 
 character_data follows the following structure:
@@ -19,7 +19,7 @@ character_data follows the following structure:
     "running": {
         "left": [[0, 0], [0, 1], [0, 2], [0, 3], [0, 0], [0, 4], [0, 5], [0, 6]],
         "right": [[2, 0], [2, 1], [2, 2], [2, 3], [2, 0], [2, 4], [2, 5], [2, 6]]
-        },  
+        },
 
     "idle": {
         "left": [[0, 0], [1, 0]],
@@ -56,7 +56,7 @@ import pygame
 from classes.spritesheet import SpriteSheet
 
 class Character(pygame.sprite.Sprite):
-    
+
     ''' Character Class - Used to display and animate sprites from sprite
     sheets on screen.  Usually won't be initialised directly, rather its two
     child classes (Player and NPC) will be called.
@@ -84,7 +84,7 @@ class Character(pygame.sprite.Sprite):
 
         # Character Position
         self.position = [x_position, y_position]
-        
+
         # Load sprite sheet and extract frames to dictionary
         self.loadSpriteSheets(character_data)
 
@@ -108,12 +108,12 @@ class Character(pygame.sprite.Sprite):
 
         ##### TO GO TO JSON
         self.is_falling = True
-    
+
     def changeMap(self, background):
         ''' changeMap(background) - used to update to new map
 
-        Function to update player with new background.  Call this on player 
-        when new map produced, map refers to class containing sprite group of 
+        Function to update player with new background.  Call this on player
+        when new map produced, map refers to class containing sprite group of
         tiles, and map_matrix
         '''
         self.background = background
@@ -132,7 +132,7 @@ class Character(pygame.sprite.Sprite):
         scale_factor = character_data['scale_factor']
         scaled_size = [char_size[0] * scale_factor, char_size[1] * scale_factor]
         background_colour = character_data['background']
-        
+
         image_types = character_data['actions']
         image_directions = character_data['directions']
 
@@ -153,7 +153,7 @@ class Character(pygame.sprite.Sprite):
                             scaled_size
                             )
                     specific_image.set_colorkey(background_colour)
-                    
+
                     self.images[image_type][image_direction] += [specific_image]
 
     def addTarget(self, target):
@@ -190,9 +190,9 @@ class Character(pygame.sprite.Sprite):
 
     def display(self):
         ''' Display function
-        
-        Specific display function for characters.  Keeps track of number of 
-        times display has been called.  Depending on the refresh attribute, 
+
+        Specific display function for characters.  Keeps track of number of
+        times display has been called.  Depending on the refresh attribute,
         every n times it switches to the next image.  This is to animate
         the image.
         '''
@@ -223,19 +223,19 @@ class Character(pygame.sprite.Sprite):
 
         # Update state image
         self.image = self.images[self.state[0]][self.state[1]]
-        
+
         # Updating counter, and if necessary incrementing image
         self.refresh_counter += 1
         if self.refresh_counter % self.refresh_rate == 0:
-            self.incrementImage()   
-        
+            self.incrementImage()
+
         # Catch frames changed mid refresh
         if self.image_index >= len(self.image):
             self.incrementImage()
 
         # Displaying current image at current position
-        self.screen.blit(self.image[self.image_index], self.rect)             
-    
+        self.screen.blit(self.image[self.image_index], self.rect)
+
     def collisionWithGround(self):
         ''' Collision Detection
         Detects collision with the ground - if colliding with ground,
@@ -286,7 +286,7 @@ class Character(pygame.sprite.Sprite):
         n_images = len(self.image)
         if self.image_index == n_images:
             self.image_index = 0
-    
+
     def updateState(self, action, direction):
         ''' updateState(action, direction)
         function to update state of character
@@ -331,10 +331,10 @@ class Character(pygame.sprite.Sprite):
 
     def stopMove(self, direction = 'none'):
         ''' stopMove()
-        Returns state to idle when no longer moving.  Purpose of function is 
+        Returns state to idle when no longer moving.  Purpose of function is
         to stop running animation.
 
-        WILL NEED CHANGING WHEN WEAPONS ARE IMPLEMENTED! Will need to choose 
+        WILL NEED CHANGING WHEN WEAPONS ARE IMPLEMENTED! Will need to choose
         state based on weapon!
         '''
         if self.state == ['running', direction]:
@@ -345,6 +345,6 @@ class Character(pygame.sprite.Sprite):
                 self.state[0] = 'running'
             else:
                 self.updateState('idle', self.state[1])
-    
 
-    
+
+
