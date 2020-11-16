@@ -2,7 +2,7 @@
 
 Class to display string output to screen.
 
-Will be expanded to include methods to later update string displayed.
+Can be expanded to include methods to later update string displayed.
 
 '''
 
@@ -27,7 +27,7 @@ class DisplayString:
         self.text = input_string
 
         # Setting up font using pygame
-        self.font = pygame.font.Font('graphics/fonts/printer.ttf',font_size)
+        self.font = pygame.font.Font('graphics/fonts/8-bit/8bitOperatorPlus8-Regular.ttf',font_size)
         self.surf = self.font.render(self.text, True, colour)
         self.rect = self.surf.get_rect()
         self.rect.center = (self.x_pos, self.y_pos)
