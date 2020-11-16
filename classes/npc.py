@@ -3,9 +3,8 @@
 
 @author: Robert (Unless stated otherwise)
 '''
-
-import json
 import pygame
+import json
 from classes.character import Character
 
 class NPC(Character):
@@ -82,14 +81,11 @@ class NPC(Character):
         x_dif = self_x - target_x
         y_dif = self_y - target_y
 
-        # Attempt Attack
-        self.attack()
-
         if x_dif > self.c2c_width:
             self.startMove('l')
         elif x_dif <  -1 * self.c2c_width:
             self.startMove('r')
-        else:
+        elif pygame.sprite.collide_rect(self, self.target):
             self.attack(self.target)
 
     def withinWakeDistance(self):
@@ -110,6 +106,7 @@ class NPC(Character):
         else:
             return False
 
+
     def getPositionsAsLocal(self):
         ''' getPositionsAsLocal - returns positions of self and target
 
@@ -120,11 +117,3 @@ class NPC(Character):
         self.target.postition[0], etc
         '''
         return self.position[0], self.position[1], self.target.position[0], self.target.position[1]
-
-    def attack(self):
-        ''' attack function
-
-        Checks if player has collided, if so - attack
-        '''
-        if pygame.sprite.collide_rect(self, self.target):
-            Character.attack(self, self.target)
