@@ -3,7 +3,7 @@
 # but you can't see the images yet
 import pygame
 
-from camera import Camera
+from classes.camera import Camera
 
 # Load The tile paths in to variables
 stone = 'graphics/map_tiles/tile1.png'
@@ -119,10 +119,10 @@ class Map:
         # Store map_group to self
         self.map_group = map_group
 
-    def display(self):
+    def display(self, camera):
         # Blit all tiles in map group
         for tile in self.map_group:
-            tile.display()
+            tile.display(camera)
 
     # TODO: If you choose to keep this function, rename it something more
     # sensible than DYNAMIC :) I just named it that so its clear its a
@@ -193,7 +193,6 @@ class Tile(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = [dims[0], dims[1]]
 
-    def display(self):
-        self.screen.blit(self.image, self.rect)
-
-
+    def display(self, camera):
+        x,y = self.rect.topleft
+        self.screen.blit(self.image, (x-camera.x,y))

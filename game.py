@@ -11,6 +11,8 @@ S. Mistrey and R. Danevicius
 ### Library Imports
 import pygame
 import json
+
+from classes.camera import Camera
 from classes.displaystring import DisplayString
 
 ### THESE IMPORTS ARE NEEDED IN CONTROLLER
@@ -41,8 +43,11 @@ def pyfighterGame():
     pygame.display.set_caption(game_name)
     clock = pygame.time.Clock()
 
+    ######## Camera
+    camera = Camera()
+
     ######## Will go in controller init!
-    game_controller = Controller(game_display, game_screen, screen_dims)
+    game_controller = Controller(game_display, game_screen, screen_dims, camera)
     game_controller.generateMap()
 
     ########
@@ -50,10 +55,12 @@ def pyfighterGame():
     ### Setting up game loop
     run_me = True
 
+    
+
     while run_me:
         # Limit frame rate
         clock.tick(max_fps)
-
+        camera.x += 1
         # Get/action events
         for event in pygame.event.get():
 

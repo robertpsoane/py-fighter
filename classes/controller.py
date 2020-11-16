@@ -10,10 +10,11 @@ from classes.npc import NPC
 
 
 class Controller():
-    def __init__(self, game_display, game_screen, screen_dims):
+    def __init__(self, game_display, game_screen, screen_dims, camera):
         self.game_display = game_display
         self.game_screen = game_screen
         self.screen_dims = screen_dims
+        self.camera = camera
 
     def generateMap(self):
         self.game_background = Map(self.game_display, self.screen_dims, 32)
@@ -49,14 +50,15 @@ class Controller():
 
     def display(self):
 
-
-        self.game_background.display()
+        self.game_background.display(self.camera)
         self.player.display()
         self.enemy.display()
+
+        # scales the game_display to game_screen. Allows us to scale images
         scaled_surf = pygame.transform.scale(self.game_display, self.screen_dims)
         self.game_screen.blit(scaled_surf, (0, 0))
 
-
+        # Camera variable to create camera movement
 
 
 '''
