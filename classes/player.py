@@ -27,9 +27,16 @@ class Player(Character):
         Character.__init__(self, character_data, background, screen, x_position, y_position)
 
     def addTarget(self, target_group):
+        ''' Adds group of enemies to player
+        '''
         self.target_group = target_group
 
     def attack(self):
+        ''' attack function
+
+        Checks for any enemies in target group who have collided and attacks
+        them
+        '''
         collision_enemies = pygame.sprite.spritecollide(self, self.target_group, False)
         for collision_enemy in collision_enemies:
             Character.attack(self, collision_enemy)
