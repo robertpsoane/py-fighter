@@ -44,11 +44,8 @@ character_data follows the following structure:
 }
 
 Future Plans:
-- Gravity/falling
-- Jump function
 - Health functionality
 - Attack functionality
-- Recoil functionality
 
 @author: Robert (Unless stated otherwise)
 '''
@@ -63,6 +60,10 @@ class Character(pygame.sprite.Sprite):
     '''
 
     def __init__(self, character_data, background, screen, x_position, y_position):
+        ''' Init Character
+        Function takes and unpacks relevat information from the characters
+        JSON dictionary
+        '''
         # Initi for sprite
         pygame.sprite.Sprite.__init__(self)
 
@@ -192,7 +193,7 @@ class Character(pygame.sprite.Sprite):
         if self.health <= 0:
             self.alive = False
         self.recoil_status = (True, direction)
-        self.recoil_counter = 3
+        self.recoil_counter = 5
 
     def display(self):
         ''' Display function
@@ -215,7 +216,7 @@ class Character(pygame.sprite.Sprite):
         if self.recoil_status[0]:
             if self.recoil_counter == 0:
                 self.recoil_status = (False, 0)
-            self.moveX(10 * self.recoil_status[1])
+            self.moveX(15 * self.recoil_status[1])
             self.recoil_counter = self.recoil_counter - 1
 
         

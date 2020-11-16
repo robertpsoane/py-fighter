@@ -48,6 +48,10 @@ class NPC(Character):
         Character.display(self)
 
     def decideMoves(self):
+        ''' decideMoves - forms the basis for our 'AI'
+        Check x and y position of target, and x and y position of self.
+        Use simple comparison of positions to decide whether or not to attack
+        '''
         # Getting positions
         self_x = self.position[0]
         self_y = self.position[1]
@@ -62,3 +66,5 @@ class NPC(Character):
             self.startMove('l')
         elif x_dif <  -1 * self.c2c_width:
             self.startMove('r')
+        else:
+            self.attack(self.target)
