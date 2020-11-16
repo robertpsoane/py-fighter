@@ -30,6 +30,7 @@ class NPC(Character):
         '''
         Character.addTarget(self, target)
 
+        # TODO: Redo c2c_widtrh and methods which use it
         # Centre to centre width
         self.c2c_width = 0.5 * (self.width + self.target.width)
     

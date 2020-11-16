@@ -19,7 +19,15 @@ class Controller():
         self.player = Player(self.game_screen, self.game_background, 600, 100)  #Numbers will be changed to actual size later on
         self.enemy = NPC(self.game_screen, self.game_background, 100, 100)
         self.enemy.addTarget(self.player)
-        self.player.addTarget(self.enemy)
+
+        # Used to assign multiple targets to player
+        # TODO: Put in function if/when we have more than one enemy
+        #       on the board at any point in time
+        self.enemy_group = pygame.sprite.Group()
+        self.enemy_group.add(self.enemy)
+
+
+        self.player.addTarget(self.enemy_group)
 
     def keyboardInput(self, event):
             if event.type == pygame.KEYDOWN:
