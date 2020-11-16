@@ -1,6 +1,7 @@
 ''' NPC Class
 
 
+@author: Robert (Unless stated otherwise)
 '''
 
 import json

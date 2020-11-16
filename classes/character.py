@@ -50,7 +50,7 @@ Future Plans:
 - Attack functionality
 - Recoil functionality
 
-
+@author: Robert (Unless stated otherwise)
 '''
 import pygame
 from classes.spritesheet import SpriteSheet
