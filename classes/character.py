@@ -228,7 +228,7 @@ class Character(pygame.sprite.Sprite):
                 move_speed = -1 * self.speed
                 self.moveX(move_speed)
 
-        # Update state image
+        # Update state image TODO CHANGE image code
         self.image = self.images[self.state[0]][self.state[1]]
 
         # Updating counter, and if necessary incrementing image
