@@ -29,7 +29,7 @@ class SpriteSheet:
             raise SystemExit(e)
 
 
-    def image_at(self, position, size , colorkey = None):
+    def image_at(self, position, size, colorkey = None):
         """Load a specific image from a specific rectangle."""
         # Loads image from x, y, x+offset, y+offset.
 

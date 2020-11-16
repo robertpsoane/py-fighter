@@ -7,6 +7,7 @@ initialising as Character.
 This is distinct from the NPC class, as the NPC class will have a basic AI
 built in to attack the player, whereas the player is fairly simple.
 
+@author: Robert (Unless stated otherwise)
 '''
 import pygame
 import json
