@@ -14,9 +14,9 @@ class NPC(Character):
     json folder.
     '''
 
-    def __init__(self, screen, background, x_position, y_position, type = 'basic'):
+    def __init__(self, screen, background, x_position, y_position, npc_type = 'basic'):
         # Loading player data json, and converitng to python dictionary
-        json_location = f'json/{type}_enemy.JSON'
+        json_location = f'json/{npc_type}_enemy.JSON'
         try:
             with open(json_location) as character_json:
                 character_data = json.load(character_json)
