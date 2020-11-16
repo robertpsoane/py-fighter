@@ -157,24 +157,30 @@ class Character(pygame.sprite.Sprite):
                     self.images[image_type][image_direction] += [specific_image]
 
     def addTarget(self, target):
-        ''' addTarget - Used to lock character onto a target to attack
+        ''' addTarget - Used to lock player onto a target sprite group
         '''
         self.target = target
 
+    def spriteCollision(self, other):
+        if pygame.sprite.collide_rect(self, other):
+            print('COLLISION')
+        else:
+            print('NO COLLISION')
 
+    
     # TODO: Check if actually can attack player
     # TODO: Implement health
-    def attack(self, type = 1):
+    def attack(self, target, type = 1):
         ''' Attack function - Attacks player assigned to it 
 
         Causes player being attacked to recoil in opposite direction, and lose
         health.
         '''
-        if self.rect[0] < self.target.rect[0]:
+        if self.rect[0] < target.rect[0]:
             direction = 1
         else:
             direction = -1
-        self.target.recoil(self.strength, direction)
+        target.recoil(self.strength, direction)
 
     def recoil(self, force, direction):
         ''' Recoil function - Loses health from attack and sets recoil counter
