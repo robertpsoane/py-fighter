@@ -10,11 +10,11 @@ from classes.character import Character
 class NPC(Character):
 
     ''' NPC Class - Used to display and animate computer controlled characters
-    on the screen.  A type needs to be chosen to match the enemy json in the 
+    on the screen.  A type needs to be chosen to match the enemy json in the
     json folder.
 
     The NPC uses some very basic logic to give the NPCs some apparent autonomy.
-    With each display of the screen, 
+    With each display of the screen,
     '''
 
     def __init__(self, screen, background, x_position, y_position,
@@ -27,7 +27,7 @@ class NPC(Character):
         except:
             err_string = "Bad Enemy Name.  Please input an enemy which has a corresponding JSON"
             raise Exception(err_string)
-        
+
         # Initialising Character class
         Character.__init__(self, character_data, background, screen, x_position, y_position)
 
@@ -38,7 +38,7 @@ class NPC(Character):
         # be after which NPC wakes.
         # This should go somewhere else, like a JSON perhaps? TODO: Decide!
         self.wake_distance = 400
-    
+
     def addTarget(self,target):
         ''' addTarget - Used to lock NPC onto a target to attack
         '''
@@ -47,7 +47,7 @@ class NPC(Character):
         # TODO: Redo c2c_widtrh and methods which use it
         # Centre to centre width
         self.c2c_width = 0.5 * (self.width + self.target.width)
-    
+
     def display(self):
         ''' NPC display function.
 
@@ -72,7 +72,7 @@ class NPC(Character):
             if self.withinWakeDistance():
                 self.asleep = False
             else:
-                return 
+                return
 
         # Getting positions as local variables to make code read easier
         self_x, self_y, target_x, target_y = self.getPositionsAsLocal()
@@ -89,12 +89,12 @@ class NPC(Character):
             self.attack(self.target)
 
     def withinWakeDistance(self):
-        ''' withinWakeDistance - returns whether target is within NPCs wake 
+        ''' withinWakeDistance - returns whether target is within NPCs wake
         distance
         '''
         # Getting positions as local variables to make code read easier
         self_x, self_y, target_x, target_y = self.getPositionsAsLocal()
-        
+
         # x and y differences
         x_diff, y_diff = self_x - target_x, self_y - target_y
 
@@ -116,4 +116,8 @@ class NPC(Character):
         to make the code more readable as we don't need to carry round
         self.target.postition[0], etc
         '''
-        return self.position[0], self.position[1], self.target.position[0], self.target.position[1]
+        self_x = self.rect.centerx
+        self_y = self.rect.centery
+        target_x = self.target.rect.centerx
+        target_y = self.target.rect.centery
+        return self_x, self_y, target_x, target_y

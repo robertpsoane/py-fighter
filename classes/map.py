@@ -1,3 +1,7 @@
+'''
+@author: Rokas Danevicius (unless stated otherwise)
+'''
+
 # TODO: Document code before merging with master
 # TODO: Currently no display function in Map - players can detect collisions
 # but you can't see the images yet
@@ -14,6 +18,7 @@ plat = 'graphics/map_tiles/plat32px.png'
 STONE = pygame.image.load(stone)
 GRASS = pygame.image.load(grass)
 PLATFORM = pygame.image.load(plat)
+
 
 # Temporary hard coded map
 def createGameMap():
@@ -119,10 +124,10 @@ class Map:
         # Store map_group to self
         self.map_group = map_group
 
-    def display(self, camera):
+    def display(self):
         # Blit all tiles in map group
         for tile in self.map_group:
-            tile.display(camera)
+            tile.display()
 
     # TODO: If you choose to keep this function, rename it something more
     # sensible than DYNAMIC :) I just named it that so its clear its a
@@ -159,7 +164,6 @@ class Map:
         self.height_units = height_units
         self.width_units = width_units
         self.map_matrix = map_matrix
-        print(map_matrix)
 
 
 # Roberts Tile class
@@ -193,6 +197,5 @@ class Tile(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = [dims[0], dims[1]]
 
-    def display(self, camera):
-        x,y = self.rect.topleft
-        self.screen.blit(self.image, (x-camera.x,y))
+    def display(self):
+        self.screen.blit(self.image, self.rect)

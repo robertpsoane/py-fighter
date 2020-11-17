@@ -168,11 +168,11 @@ class Character(pygame.sprite.Sprite):
         else:
             print('NO COLLISION')
 
-    
+
     # TODO: Check if actually can attack player
     # TODO: Implement health
     def attack(self, target, type = 1):
-        ''' Attack function - Attacks player assigned to it 
+        ''' Attack function - Attacks player assigned to it
 
         Causes player being attacked to recoil in opposite direction, and lose
         health.
@@ -186,7 +186,7 @@ class Character(pygame.sprite.Sprite):
     def recoil(self, force, direction):
         ''' Recoil function - Loses health from attack and sets recoil counter
 
-        Recoil counter processed in display function.  Each frame pushes 
+        Recoil counter processed in display function.  Each frame pushes
         character back while recoiling.
         '''
         self.health = self.health - force
@@ -211,7 +211,7 @@ class Character(pygame.sprite.Sprite):
         if self.is_falling:
             self.applyGravity()
 
-        # Updating subject to recoil.  If character is recoiling, move in 
+        # Updating subject to recoil.  If character is recoiling, move in
         # recoil direction
         if self.recoil_status[0]:
             if self.recoil_counter == 0:
@@ -219,7 +219,7 @@ class Character(pygame.sprite.Sprite):
             self.moveX(15 * self.recoil_status[1])
             self.recoil_counter = self.recoil_counter - 1
 
-        
+
         # Update x/y subject to status
         if self.x_y_moving:
             if self.state[1] == 'right':
@@ -302,12 +302,14 @@ class Character(pygame.sprite.Sprite):
         self.refresh_counter = 0
         self.image_index = 0
 
+        #TODO ivestigate position bug.
     def moveX(self, step):
         ''' moveX(step)
         Function to move character step pixels in the X direction
         '''
-        self.position[0] += step
-        self.rect.center = self.position
+        #self.position[0] += step
+        #self.rect.center = self.position
+        self.rect.centerx += step
 
     def moveY(self, step):
         ''' moveY(step)
@@ -315,8 +317,9 @@ class Character(pygame.sprite.Sprite):
         - Note: the y axis is flipped from what we might naturally assume,
                 0 is at the top and not the bottom
         '''
-        self.position[1] += step
-        self.rect.center = self.position
+        #self.position[1] += step
+        #self.rect.center = self.position
+        self.rect.centery += step
 
     def startMove(self,direction):
         ''' startMove(direction)

@@ -7,20 +7,23 @@ import pygame
 from classes.map import Map
 from classes.player import Player
 from classes.npc import NPC
-
+from classes.camera import Camera
 
 class Controller():
-    def __init__(self, game_display, game_screen, screen_dims, camera):
+    def __init__(self, game_display, game_screen, screen_dims):
         self.game_display = game_display
         self.game_screen = game_screen
         self.screen_dims = screen_dims
-        self.camera = camera
+        self.camera = Camera()
 
     def generateMap(self):
         self.game_background = Map(self.game_display, self.screen_dims, 32)
         self.player = Player(self.game_display, self.game_background, 600, 100)  #Numbers will be changed to actual size later on
         self.enemy = NPC(self.game_display, self.game_background, 100, 100)
         self.enemy.addTarget(self.player)
+        self.camera.add(self.player)
+        self.camera.add(self.enemy)
+        self.camera.addMap(self.game_background)
 
         # Used to assign multiple targets to player
         # TODO: Put in function if/when we have more than one enemy
@@ -50,7 +53,8 @@ class Controller():
 
     def display(self):
 
-        self.game_background.display(self.camera)
+        self.camera.scroll()
+        self.game_background.display()
         self.player.display()
         self.enemy.display()
 
