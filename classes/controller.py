@@ -40,10 +40,10 @@ class Controller():
                     self.player.startMove("u")
                 if event.key == pygame.K_d:
                     self.player.startMove("r")
-                    self.camera.cameraMove("r")
+                    #self.camera.cameraMove("r")
                 if event.key == pygame.K_a:
                     self.player.startMove("l")
-                    self.camera.cameraMove("l")
+                   #self.camera.cameraMove("l")
                 if event.key == pygame.K_q:
                     self.player.attack()
             if event.type == pygame.KEYUP:

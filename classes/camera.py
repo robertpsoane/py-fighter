@@ -17,6 +17,7 @@ class Camera:
         self.init_player = self.sprites[0]
         self.init_position = self.init_player.position[0]
 
+    """
     def cameraTrack(self):
         self.init_position += 2
 
@@ -25,18 +26,13 @@ class Camera:
             self.cameraTrack()
         if direction == "l":
             self.init_position += -1 * 2
+    """
+
 
     def scroll(self):
 
-        print(self.init_position)
-
         if self.init_position <= 100 or self.init_position >= 800:
 
-            for tile in self.map.map_group:
-                tile.rect.centerx -= self.x
-
-            for sprite in self.sprites:
-                sprite.rect.centerx -= self.x
 
             self.player = self.sprites[0]
             self.x += 0
@@ -50,6 +46,6 @@ class Camera:
 
             self.player = self.sprites[0]
             self.x += (self.player.rect.centerx - self.x - 200)
-
+            self.init_position -= self.x
 
 
