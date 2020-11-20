@@ -9,6 +9,9 @@ class Camera:
         self.y = y
         self.sprites = []
 
+    def addBack(self, background_object):
+        self.background_scroll = background_object
+
     def addMap(self, map_obj):
         self.map = map_obj
 
@@ -39,6 +42,8 @@ class Camera:
             self.x += 0
 
         else:
+            self.background_scroll.move += self.x
+
             for tile in self.map.map_group:
                 tile.rect.centerx -= self.x
 
@@ -48,5 +53,5 @@ class Camera:
             self.player = self.sprites[0]
             self.x += (self.player.rect.centerx - self.x - 200)
             self.init_position -= self.x
-            print(self.player.rect.centerx)
+
 

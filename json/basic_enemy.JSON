@@ -27,7 +27,7 @@
     "gridsize": [4, 9],
     "charsize": [32, 32],
     "graphic_dims": [10, 26],
-    "scale_factor": 7,
+    "scale_factor": 1,
     "speed": 1,
     "jump_speed": 50,
     "gravity": 10,

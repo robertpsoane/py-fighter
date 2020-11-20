@@ -70,7 +70,7 @@ def pyfighterGame():
 
             ######################################################
         # Refresh screen
-        game_display.fill(colour['blue'])
+        game_display.fill(colour['main'])
 
         ### Code to re-display items on screen will go here ###
 
