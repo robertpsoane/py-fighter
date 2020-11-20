@@ -28,6 +28,7 @@ class Camera:
             self.init_position += -1 * 2
     """
 
+# TODO rename the init_position
 
     def scroll(self):
 
@@ -47,5 +48,5 @@ class Camera:
             self.player = self.sprites[0]
             self.x += (self.player.rect.centerx - self.x - 200)
             self.init_position -= self.x
-
+            print(self.player.rect.centerx)
 
