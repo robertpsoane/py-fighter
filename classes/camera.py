@@ -8,6 +8,7 @@ class Camera:
         self.x = x
         self.y = y
         self.sprites = []
+        self.world_x = x
 
     def addBack(self, background_object):
         self.background_scroll = background_object
@@ -20,28 +21,20 @@ class Camera:
         self.init_player = self.sprites[0]
         self.init_position = self.init_player.position[0]
 
-    """
-    def cameraTrack(self):
-        self.init_position += 2
-
-    def cameraMove(self, direction):
-        if direction == 'r':
-            self.cameraTrack()
-        if direction == "l":
-            self.init_position += -1 * 2
-    """
-
 # TODO rename the init_position
 
     def scroll(self):
 
-        if self.init_position <= 100 or self.init_position >= 800:
+        map_width = self.map.dims[0] - 400
 
-
-            self.player = self.sprites[0]
-            self.x += 0
-
+        if self.world_x > map_width:
+            self.x = 0
+            self.world_x = map_width
+        elif self.world_x < 0:
+            self.x = 0
+            self.world_x = 0
         else:
+
             self.background_scroll.move += self.x
 
             for tile in self.map.map_group:
@@ -51,7 +44,12 @@ class Camera:
                 sprite.rect.centerx -= self.x
 
             self.player = self.sprites[0]
-            self.x += (self.player.rect.centerx - self.x - 200)
-            self.init_position -= self.x
+
+            self.x = (self.player.rect.centerx - 400 / 2)
+
+
+            self.world_x += self.x
+
+
 
 
