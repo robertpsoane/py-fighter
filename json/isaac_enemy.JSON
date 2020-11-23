@@ -22,18 +22,15 @@
         "right": [[2, 0], [3, 0]]
         },
 
-    "path": "graphics/spritesheets/basic-enemy.png",
+    "path": "graphics/spritesheets/isaac-enemy.png",
     "background": [0, 255, 0],
     "gridsize": [4, 9],
-    "charsize": [32, 32],
+    "charsize": [64, 64],
     "graphic_dims": [10, 26],
-    "scale_factor": 4,
+    "scale_factor": 2,
     "speed": 1,
     "jump_speed": 50,
     "gravity": 10,
     "refresh": 10,
-    "initialstate": ["idle", "right"],
-
-    "initial_health_points": 100,
-    "initial_strength": 10
+    "initialstate": ["idle", "right"]
 }

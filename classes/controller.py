@@ -20,6 +20,15 @@ class Controller():
         self.enemy = NPC(self.game_screen, self.game_background, 100, 100)
         self.enemy.addTarget(self.player)
 
+        # Used to assign multiple targets to player
+        # TODO: Put in function if/when we have more than one enemy
+        #       on the board at any point in time
+        self.enemy_group = pygame.sprite.Group()
+        self.enemy_group.add(self.enemy)
+
+
+        self.player.addTarget(self.enemy_group)
+
     def keyboardInput(self, event):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w:
@@ -28,11 +37,14 @@ class Controller():
                     self.player.startMove("r")
                 if event.key == pygame.K_a:
                     self.player.startMove("l")
+                if event.key == pygame.K_q:
+                    self.player.attack()
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_d:
                     self.player.stopMove("right")
                 elif event.key == pygame.K_a:
                     self.player.stopMove("left")
+
 
     def display(self):
         self.game_background.display()

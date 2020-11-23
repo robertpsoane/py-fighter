@@ -1,8 +1,9 @@
 ''' NPC Class
 
 
+@author: Robert (Unless stated otherwise)
 '''
-
+import pygame
 import json
 from classes.character import Character
 
@@ -11,25 +12,39 @@ class NPC(Character):
     ''' NPC Class - Used to display and animate computer controlled characters
     on the screen.  A type needs to be chosen to match the enemy json in the 
     json folder.
+
+    The NPC uses some very basic logic to give the NPCs some apparent autonomy.
+    With each display of the screen, 
     '''
 
-    def __init__(self, screen, background, x_position, y_position, type = 'basic'):
+    def __init__(self, screen, background, x_position, y_position,
+                npc_type = 'basic', sleep_on_load = True):
         # Loading player data json, and converitng to python dictionary
-        json_location = f'json/{type}_enemy.JSON'
+        json_location = f'json/{npc_type}_enemy.JSON'
         try:
-            with open(json_location) as player_json:
-                character_data = json.load(player_json)
+            with open(json_location) as character_json:
+                character_data = json.load(character_json)
         except:
             err_string = "Bad Enemy Name.  Please input an enemy which has a corresponding JSON"
             raise Exception(err_string)
+        
         # Initialising Character class
         Character.__init__(self, character_data, background, screen, x_position, y_position)
+
+        # Setup sleep variable
+        self.asleep = sleep_on_load
+
+        # Wake distance (pixels) - used to determine distance target needs to
+        # be after which NPC wakes.
+        # This should go somewhere else, like a JSON perhaps? TODO: Decide!
+        self.wake_distance = 400
     
     def addTarget(self,target):
         ''' addTarget - Used to lock NPC onto a target to attack
         '''
         Character.addTarget(self, target)
 
+        # TODO: Redo c2c_widtrh and methods which use it
         # Centre to centre width
         self.c2c_width = 0.5 * (self.width + self.target.width)
     
@@ -46,11 +61,21 @@ class NPC(Character):
         Character.display(self)
 
     def decideMoves(self):
-        # Getting positions
-        self_x = self.position[0]
-        self_y = self.position[1]
-        target_x = self.target.position[0]
-        target_y = self.target.position[1]
+        ''' decideMoves - forms the basis for our 'AI'
+        Check x and y position of target, and x and y position of self.
+        Use simple comparison of positions to decide whether or not to attack
+        '''
+
+        # If asleep, check distance from target, if within wake_distance, wake
+        # else, stay stationary
+        if self.asleep:
+            if self.withinWakeDistance():
+                self.asleep = False
+            else:
+                return 
+
+        # Getting positions as local variables to make code read easier
+        self_x, self_y, target_x, target_y = self.getPositionsAsLocal()
 
         # Difference in x positions
         x_dif = self_x - target_x
@@ -60,3 +85,35 @@ class NPC(Character):
             self.startMove('l')
         elif x_dif <  -1 * self.c2c_width:
             self.startMove('r')
+        elif pygame.sprite.collide_rect(self, self.target):
+            self.attack(self.target)
+
+    def withinWakeDistance(self):
+        ''' withinWakeDistance - returns whether target is within NPCs wake 
+        distance
+        '''
+        # Getting positions as local variables to make code read easier
+        self_x, self_y, target_x, target_y = self.getPositionsAsLocal()
+        
+        # x and y differences
+        x_diff, y_diff = self_x - target_x, self_y - target_y
+
+        # Squared differences
+        sqr_diff = (x_diff ** 2) + (y_diff ** 2)
+        sqr_wake_distance = self.wake_distance ** 2
+        if sqr_diff < sqr_wake_distance:
+            return True
+        else:
+            return False
+
+
+    def getPositionsAsLocal(self):
+        ''' getPositionsAsLocal - returns positions of self and target
+
+        returns selfs x, y and targets x, y
+
+        This function is used solely to return positions of self and target
+        to make the code more readable as we don't need to carry round
+        self.target.postition[0], etc
+        '''
+        return self.position[0], self.position[1], self.target.position[0], self.target.position[1]

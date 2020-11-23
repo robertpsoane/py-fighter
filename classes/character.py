@@ -5,9 +5,9 @@ Takes input of character data, screen, x position, and y position.
 
 Has functions to make move.
 
-- character_data takes the form of a Python dictionary with all key components 
+- character_data takes the form of a Python dictionary with all key components
 and data for character.  This is usually stored in a JSON. We have decided
-to implement like this as it allows us to add future characters or make 
+to implement like this as it allows us to add future characters or make
 significant changes to the characters without having to edit the python code.
 
 character_data follows the following structure:
@@ -19,7 +19,7 @@ character_data follows the following structure:
     "running": {
         "left": [[0, 0], [0, 1], [0, 2], [0, 3], [0, 0], [0, 4], [0, 5], [0, 6]],
         "right": [[2, 0], [2, 1], [2, 2], [2, 3], [2, 0], [2, 4], [2, 5], [2, 6]]
-        },  
+        },
 
     "idle": {
         "left": [[0, 0], [1, 0]],
@@ -44,25 +44,26 @@ character_data follows the following structure:
 }
 
 Future Plans:
-- Gravity/falling
-- Jump function
 - Health functionality
 - Attack functionality
-- Recoil functionality
 
-
+@author: Robert (Unless stated otherwise)
 '''
 import pygame
 from classes.spritesheet import SpriteSheet
 
 class Character(pygame.sprite.Sprite):
-    
+
     ''' Character Class - Used to display and animate sprites from sprite
     sheets on screen.  Usually won't be initialised directly, rather its two
     child classes (Player and NPC) will be called.
     '''
 
     def __init__(self, character_data, background, screen, x_position, y_position):
+        ''' Init Character
+        Function takes and unpacks relevat information from the characters
+        JSON dictionary
+        '''
         # Initi for sprite
         pygame.sprite.Sprite.__init__(self)
 
@@ -76,9 +77,15 @@ class Character(pygame.sprite.Sprite):
         self.state = character_data['initialstate']
         self.refresh_rate = character_data['refresh']
 
+        ### Health and stats data
+        self.alive = True
+        self.initial_health = character_data['initial_health_points']
+        self.health = self.initial_health
+        self.strength = character_data['initial_strength']
+
         # Character Position
         self.position = [x_position, y_position]
-        
+
         # Load sprite sheet and extract frames to dictionary
         self.loadSpriteSheets(character_data)
 
@@ -88,8 +95,11 @@ class Character(pygame.sprite.Sprite):
         self.image_index = 0
         self.rect = self.image[self.image_index].get_rect()
         self.rect.center = self.position
+
+        # Important move variables
         self.refresh_counter = 0
         self.x_y_moving = False
+        self.recoil_status = (False, 0)
 
         # Storing dimension variables to self
         self.screen_dims = (screen.get_width(), screen.get_height())
@@ -99,12 +109,12 @@ class Character(pygame.sprite.Sprite):
 
         ##### TO GO TO JSON
         self.is_falling = True
-    
-    def changeMap(self, background):
-        ''' changeBackground
 
-        Function to update player with new background.  Call this on player 
-        when new map produced, map refers to class containing sprite group of 
+    def changeMap(self, background):
+        ''' changeMap(background) - used to update to new map
+
+        Function to update player with new background.  Call this on player
+        when new map produced, map refers to class containing sprite group of
         tiles, and map_matrix
         '''
         self.background = background
@@ -113,6 +123,7 @@ class Character(pygame.sprite.Sprite):
 
     def loadSpriteSheets(self, character_data):
         ''' loadSpriteSheets(self, character_data)
+
         Procedure which loads spritesheet from path given, and extracts each
         frame of the sprite and stores to dictionary self.images
         These can then be updated depending on this instances state
@@ -122,7 +133,7 @@ class Character(pygame.sprite.Sprite):
         scale_factor = character_data['scale_factor']
         scaled_size = [char_size[0] * scale_factor, char_size[1] * scale_factor]
         background_colour = character_data['background']
-        
+
         image_types = character_data['actions']
         image_directions = character_data['directions']
 
@@ -143,19 +154,52 @@ class Character(pygame.sprite.Sprite):
                             scaled_size
                             )
                     specific_image.set_colorkey(background_colour)
-                    
+
                     self.images[image_type][image_direction] += [specific_image]
 
     def addTarget(self, target):
-        ''' addTarget - Used to lock character onto a target to attack
+        ''' addTarget - Used to lock player onto a target sprite group
         '''
         self.target = target
 
+    def spriteCollision(self, other):
+        if pygame.sprite.collide_rect(self, other):
+            print('COLLISION')
+        else:
+            print('NO COLLISION')
+
+    
+    # TODO: Check if actually can attack player
+    # TODO: Implement health
+    def attack(self, target, type = 1):
+        ''' Attack function - Attacks player assigned to it 
+
+        Causes player being attacked to recoil in opposite direction, and lose
+        health.
+        '''
+        if self.rect[0] < target.rect[0]:
+            direction = 1
+        else:
+            direction = -1
+        target.recoil(self.strength, direction)
+
+    def recoil(self, force, direction):
+        ''' Recoil function - Loses health from attack and sets recoil counter
+
+        Recoil counter processed in display function.  Each frame pushes 
+        character back while recoiling.
+        '''
+        self.health = self.health - force
+        if self.health <= 0:
+            self.alive = False
+        self.recoil_status = (True, direction)
+        self.recoil_counter = 5
+
     def display(self):
         ''' Display function
-        
-        Specific display function for characters.  Keeps track of number of 
-        times display has been called.  Depending on the refresh attribute, 
+
+        Specific display function for characters.  Keeps track of number of
+        times display has been called.  Depending on the refresh attribute,
         every n times it switches to the next image.  This is to animate
         the image.
         '''
@@ -166,9 +210,18 @@ class Character(pygame.sprite.Sprite):
         # Updating position subject to gravity
         if self.is_falling:
             self.applyGravity()
+
+        # Updating subject to recoil.  If character is recoiling, move in 
+        # recoil direction
+        if self.recoil_status[0]:
+            if self.recoil_counter == 0:
+                self.recoil_status = (False, 0)
+            self.moveX(15 * self.recoil_status[1])
+            self.recoil_counter = self.recoil_counter - 1
+
         
         # Update x/y subject to status
-        if self.x_y_moving == True:
+        if self.x_y_moving:
             if self.state[1] == 'right':
                 self.moveX(self.speed)
             if self.state[1] == 'left':
@@ -177,19 +230,19 @@ class Character(pygame.sprite.Sprite):
 
         # Update state image
         self.image = self.images[self.state[0]][self.state[1]]
-        
+
         # Updating counter, and if necessary incrementing image
         self.refresh_counter += 1
         if self.refresh_counter % self.refresh_rate == 0:
-            self.incrementImage()   
-        
+            self.incrementImage()
+
         # Catch frames changed mid refresh
         if self.image_index >= len(self.image):
             self.incrementImage()
 
         # Displaying current image at current position
-        self.screen.blit(self.image[self.image_index], self.rect)             
-    
+        self.screen.blit(self.image[self.image_index], self.rect)
+
     def collisionWithGround(self):
         ''' Collision Detection
         Detects collision with the ground - if colliding with ground,
@@ -240,7 +293,7 @@ class Character(pygame.sprite.Sprite):
         n_images = len(self.image)
         if self.image_index == n_images:
             self.image_index = 0
-    
+
     def updateState(self, action, direction):
         ''' updateState(action, direction)
         function to update state of character
@@ -285,10 +338,10 @@ class Character(pygame.sprite.Sprite):
 
     def stopMove(self, direction = 'none'):
         ''' stopMove()
-        Returns state to idle when no longer moving.  Purpose of function is 
+        Returns state to idle when no longer moving.  Purpose of function is
         to stop running animation.
 
-        WILL NEED CHANGING WHEN WEAPONS ARE IMPLEMENTED! Will need to choose 
+        WILL NEED CHANGING WHEN WEAPONS ARE IMPLEMENTED! Will need to choose
         state based on weapon!
         '''
         if self.state == ['running', direction]:
@@ -299,6 +352,6 @@ class Character(pygame.sprite.Sprite):
                 self.state[0] = 'running'
             else:
                 self.updateState('idle', self.state[1])
-    
 
-    
+
+
