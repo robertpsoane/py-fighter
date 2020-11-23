@@ -12,11 +12,15 @@ print()
 # static images
 
 class Weapon:
-    def __init__(self, image_types, image_directions, scaled_size, char_size,
-                coords, sprite_sheet_location):
+    def __init__(self, screen, image_types, image_directions, scaled_size, char_size,
+                coords, sprite_sheet_location, status, index):
         pygame.sprite.Sprite.__init__(self)
         self.loadSpriteSheets(image_types, image_directions, scaled_size, char_size,
                 coords, sprite_sheet_location)
+
+        # Setting up initial image
+        self.image = self.images[status[0]][status[1]]
+
 
     
     def loadSpriteSheets(self, image_types, image_directions, scaled_size, 
@@ -41,7 +45,18 @@ class Weapon:
 
                     self.images[image_type][image_direction] += [specific_image]
 
-                
+    def display(self, x, y, state, index):
+        ''' display function
+
+        state takes form [action, direction], images[action][direction] gives a list of images
+        '''
+        self.owner.rect.centerx
+        action, direction = state[0], state[1]
+        self.image = self.images[action][direction][index]
+        self.screen.blit(self.image, self.rect)
+        
+
+
 
 
 class Sword(Weapon):
@@ -55,8 +70,8 @@ class Boomerang(Weapon):
 class Arms(Weapon):
     sprite_sheet_location = BASIC_ARMS_LOCATION
     def __init__(self, image_types, image_directions, scaled_size, char_size,
-                coords):
+                coords, status, index):
 
         Weapon.__init__(self, image_types, image_directions, scaled_size, 
-                        char_size, coords, self.sprite_sheet_location)
+                        char_size, coords, self.sprite_sheet_location, status, index)
     

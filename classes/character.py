@@ -159,7 +159,7 @@ class Character(pygame.sprite.Sprite):
                     self.images[image_type][image_direction] += [specific_image]
         
         self.arms = Arms(image_types, image_directions, scaled_size, char_size,
-                            character_data)
+                            character_data, status, index)
 
     def addTarget(self, target):
         ''' addTarget - Used to lock player onto a target sprite group
@@ -246,6 +246,12 @@ class Character(pygame.sprite.Sprite):
 
         # Displaying current image at current position
         self.screen.blit(self.image[self.image_index], self.rect)
+
+        '''
+        self.state ['idle', 'right']
+        '''
+
+        self.arms.display(self.rect.centerx, self.rect.centery, self.state, self.image_index)
 
     def collisionWithGround(self):
         ''' Collision Detection
