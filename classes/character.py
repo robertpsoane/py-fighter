@@ -361,5 +361,9 @@ class HealthBar:
     ''' Health Bar class
     Manages a graphical representation of each characters health.
     '''
-    def __init__(self):
-        pass
+    def __init__(self, character):
+        self.character = character
+        self.max_health = character.initial_health
+        self.health = character.health
+
+    
