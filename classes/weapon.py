@@ -7,19 +7,35 @@ from classes.spritesheet import SpriteSheet
 # from spritesheet import SpriteSheet
 # arms spirtesheets
 BASIC_ARMS_LOCATION = 'graphics/spritesheets/basic-arms.png'
+SWORD_ARMS_LOCATION = 'graphics/spritesheets/sword-arms.png'
+BOOMERANG_ARMS_LOCATION = 'graphics/spritesheets/boomerang-arms.png'
 
 print()
 # static images
 
-class Weapon:
-    def __init__(self, screen, image_types, image_directions, scaled_size, char_size,
-                coords, sprite_sheet_location, status, index):
+class Weapon(pygame.sprite.Sprite):
+    def __init__(self, owner, sprite_sheet_location):
         pygame.sprite.Sprite.__init__(self)
+        self.owner = owner
+        self.screen = owner.screen        
+        
+        # Loading Sprite Sheet
+        image_types = owner.character_data['actions']
+        image_directions = owner.character_data['directions']
+        char_size = owner.character_data['charsize']
+        scaled_size = owner.scaled_size
+        coords = owner.character_data
+    
         self.loadSpriteSheets(image_types, image_directions, scaled_size, char_size,
                 coords, sprite_sheet_location)
 
         # Setting up initial image
-        self.image = self.images[status[0]][status[1]]
+        self.state = owner.state
+        self.image = self.images[self.state[0]][self.state[1]]
+        self.index = owner.image_index
+        self.rect = self.image[self.index].get_rect()
+        self.rect.centerx = self.owner.rect.centerx
+        self.rect.centery = self.owner.rect.centery
 
 
     
@@ -45,18 +61,26 @@ class Weapon:
 
                     self.images[image_type][image_direction] += [specific_image]
 
-    def display(self, x, y, state, index):
+    def display(self):
         ''' display function
 
         state takes form [action, direction], images[action][direction] gives a list of images
         '''
-        self.owner.rect.centerx
-        action, direction = state[0], state[1]
-        self.image = self.images[action][direction][index]
-        self.screen.blit(self.image, self.rect)
-        
 
+        # Get owner variables
+        x, y = self.owner.rect.centerx, self.owner.rect.centery
+        self.state = self.owner.state
+        self.index = self.owner.image_index
+        action, direction = self.state[0], self.state[1]
 
+        # Select Image
+        self.image = self.images[action][direction]
+
+        # Update rect position
+        self.rect.center = x, y
+
+        # Blit to screen
+        self.screen.blit(self.image[self.index], self.rect)
 
 
 class Sword(Weapon):
@@ -68,10 +92,7 @@ class Boomerang(Weapon):
 
 
 class Arms(Weapon):
-    sprite_sheet_location = BASIC_ARMS_LOCATION
-    def __init__(self, image_types, image_directions, scaled_size, char_size,
-                coords, status, index):
-
-        Weapon.__init__(self, image_types, image_directions, scaled_size, 
-                        char_size, coords, self.sprite_sheet_location, status, index)
+    sprite_sheet_location = SWORD_ARMS_LOCATION
+    def __init__(self, owner):
+        Weapon.__init__(self, owner, self.sprite_sheet_location)
     

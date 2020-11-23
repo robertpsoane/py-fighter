@@ -71,6 +71,9 @@ class Character(pygame.sprite.Sprite):
         # Assigning character data to self.charactar_data
         self.character_data = character_data
 
+        # Putting object to screen
+        self.screen = screen
+
         ### Unpacking some important JSON dictionary into variables
         self.speed = character_data['speed']
         self.gravity = character_data['gravity']
@@ -90,12 +93,15 @@ class Character(pygame.sprite.Sprite):
         # Load sprite sheet and extract frames to dictionary
         self.loadSpriteSheets(character_data)
 
-        # Adding screen to object, and object to screen
-        self.screen = screen
+        # Adding screen to object
         self.image = self.images[self.state[0]][self.state[1]]
         self.image_index = 0
         self.rect = self.image[self.image_index].get_rect()
         self.rect.center = self.position
+
+        # Get Character Arms TODO WIll need updating to reflect some enemies
+        # having own arms/other arms
+        self.arms = Arms(self)
 
         # Important move variables
         self.refresh_counter = 0
@@ -133,6 +139,7 @@ class Character(pygame.sprite.Sprite):
         char_size = character_data['charsize']
         scale_factor = character_data['scale_factor']
         scaled_size = [char_size[0] * scale_factor, char_size[1] * scale_factor]
+        self.scaled_size = scaled_size
         background_colour = character_data['background']
 
         image_types = character_data['actions']
@@ -157,9 +164,6 @@ class Character(pygame.sprite.Sprite):
                     specific_image.set_colorkey(background_colour)
 
                     self.images[image_type][image_direction] += [specific_image]
-        
-        self.arms = Arms(image_types, image_directions, scaled_size, char_size,
-                            character_data, status, index)
 
     def addTarget(self, target):
         ''' addTarget - Used to lock player onto a target sprite group
@@ -251,7 +255,7 @@ class Character(pygame.sprite.Sprite):
         self.state ['idle', 'right']
         '''
 
-        self.arms.display(self.rect.centerx, self.rect.centery, self.state, self.image_index)
+        self.arms.display()
 
     def collisionWithGround(self):
         ''' Collision Detection
