@@ -38,7 +38,7 @@ class StartMenu:
             self.play_game()
         elif option == '2':
             # Note: This will be updated to help link when help link exists
-            webbrowser.open('https://github.com/robertpsoane/py-fighter',
+            webbrowser.open('https://sites.google.com/view/pyfighter/home',
                             new=2)
         elif option == '3':
             self.playing = False
