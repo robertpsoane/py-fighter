@@ -159,7 +159,7 @@ class Character(pygame.sprite.Sprite):
                     self.images[image_type][image_direction] += [specific_image]
         
         self.arms = Arms(image_types, image_directions, scaled_size, char_size,
-                        character_data, background_colour = (0, 255, 0))
+                            character_data)
 
     def addTarget(self, target):
         ''' addTarget - Used to lock player onto a target sprite group

@@ -6,23 +6,27 @@ import pygame
 from classes.spritesheet import SpriteSheet
 # from spritesheet import SpriteSheet
 # arms spirtesheets
-BASIC_ARMS_LOCATION = "graphics/spritesheets/basic_arms.png"
+BASIC_ARMS_LOCATION = 'graphics/spritesheets/basic-arms.png'
 
 print()
 # static images
 
 class Weapon:
-    def __init__(self, image_types, image_directions,
-            scaled_size, char_size, coords, background_colour = (0, 255, 0)):
+    def __init__(self, image_types, image_directions, scaled_size, char_size,
+                coords, sprite_sheet_location):
+        pygame.sprite.Sprite.__init__(self)
+        self.loadSpriteSheets(image_types, image_directions, scaled_size, char_size,
+                coords, sprite_sheet_location)
+
     
-        pass
-    
-    def loadSpriteSheets(self, image_types, image_directions,
-            scaled_size, char_size, coords, background_colour = (0, 255, 0)):
+    def loadSpriteSheets(self, image_types, image_directions, scaled_size, 
+                        char_size, coords, sprite_sheet_location,
+                        background_colour = (0, 255, 0)):
         ''' Assigns animation images to self
 
 
         '''
+        self.spritesheet = SpriteSheet(sprite_sheet_location)
         self.images = {}
         for image_type in image_types:
             self.images[image_type] = {}
@@ -49,9 +53,10 @@ class Boomerang(Weapon):
 
 
 class Arms(Weapon):
-    spritesheet = SpriteSheet("graphics/spritesheets/basic_arms.png")
-    def __init__(self, image_types, image_directions,
-            scaled_size, char_size, coords, background_colour = (0, 255, 0)):
-        Weapon.__init__(self, image_types, image_directions,
-            scaled_size, char_size, coords, background_colour = (0, 255, 0))
+    sprite_sheet_location = BASIC_ARMS_LOCATION
+    def __init__(self, image_types, image_directions, scaled_size, char_size,
+                coords):
+
+        Weapon.__init__(self, image_types, image_directions, scaled_size, 
+                        char_size, coords, self.sprite_sheet_location)
     

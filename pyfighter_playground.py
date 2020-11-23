@@ -41,7 +41,7 @@ def pyfighter_playground():
     pygame.display.set_caption(game_name)
     clock = pygame.time.Clock()
 
-    Weapon()
+    #Weapon()
     
     ### Setting up game loop
     run_me = True
