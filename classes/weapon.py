@@ -22,7 +22,7 @@ class Weapon(pygame.sprite.Sprite):
         # Loading Sprite Sheet
         image_types = owner.character_data['actions']
         image_directions = owner.character_data['directions']
-        char_size = owner.character_data['charsize']
+        char_size = [32, 32]
         scaled_size = owner.scaled_size
         coords = owner.character_data
     
