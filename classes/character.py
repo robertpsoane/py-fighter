@@ -247,6 +247,9 @@ class Character(pygame.sprite.Sprite):
         ''' Collision Detection
         Detects collision with the ground - if colliding with ground,
         returns True
+
+        Based on code from Python Basics YouTube series
+        https://www.youtube.com/watch?v=bQnEQvyS1Ns - Approx 4 minutes in.
         '''
         collisions = pygame.sprite.spritecollide(self,
                                                     self.tiles_group,
@@ -354,4 +357,9 @@ class Character(pygame.sprite.Sprite):
                 self.updateState('idle', self.state[1])
 
 
-
+class HealthBar:
+    ''' Health Bar class
+    Manages a graphical representation of each characters health.
+    '''
+    def __init__(self):
+        pass
