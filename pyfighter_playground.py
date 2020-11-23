@@ -17,6 +17,8 @@ from classes.npc import NPC
 
 from classes.map import Map
 
+from classes.weapon import Weapon
+
 def pyfighter_playground():
     ### Important Game Variables from JSON
     with open('json/config.JSON') as config_file:
@@ -39,6 +41,8 @@ def pyfighter_playground():
     pygame.display.set_caption(game_name)
     clock = pygame.time.Clock()
 
+    Weapon()
+    
     ### Setting up game loop
     run_me = True
 

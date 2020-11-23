@@ -51,6 +51,7 @@ Future Plans:
 '''
 import pygame
 from classes.spritesheet import SpriteSheet
+from classes.weapon import *
 
 class Character(pygame.sprite.Sprite):
 
@@ -156,6 +157,9 @@ class Character(pygame.sprite.Sprite):
                     specific_image.set_colorkey(background_colour)
 
                     self.images[image_type][image_direction] += [specific_image]
+        
+        self.arms = Arms(image_types, image_directions, scaled_size, char_size,
+                        character_data, background_colour = (0, 255, 0))
 
     def addTarget(self, target):
         ''' addTarget - Used to lock player onto a target sprite group
