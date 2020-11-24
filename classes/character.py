@@ -345,8 +345,7 @@ class Character(pygame.sprite.Sprite):
         ''' moveX(step)
         Function to move character step pixels in the X direction
         '''
-        self.position[0] += step
-        self.rect.center = self.position
+        self.rect.centerx += step
 
     def moveY(self, step):
         ''' moveY(step)
@@ -354,8 +353,8 @@ class Character(pygame.sprite.Sprite):
         - Note: the y axis is flipped from what we might naturally assume,
                 0 is at the top and not the bottom
         '''
-        self.position[1] += step
-        self.rect.center = self.position
+        
+        self.rect.centery += step
 
     def startMove(self,direction):
         ''' startMove(direction)
