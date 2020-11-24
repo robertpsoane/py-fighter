@@ -1,6 +1,8 @@
-'''
-@author: Rokas Danevicius (unless stated otherwise)
+''' Camera Class
+
 The class which creates a camera view for the game which fallows the player.
+
+@author: Rokas Danevicius (unless stated otherwise)
 '''
 
 
