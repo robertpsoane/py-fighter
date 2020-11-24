@@ -383,4 +383,4 @@ class HealthBar:
         self.max_health = character.initial_health
         self.health = character.health
 
-    
+
