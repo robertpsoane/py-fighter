@@ -1,7 +1,9 @@
-'''
-@author: Rokas Danevicius (unless stated otherwise)
+''' Map Class
+
 The class has the capability to generate a map and display it.
-###At the moment the map is generated with a hard coded matrix.###
+###At the moment the map is generated with a hard coded matrix.### TODO - Change to dynamically generated one
+
+@author: Rokas Danevicius (unless stated otherwise)
 '''
 
 # Importing pygame.
@@ -139,6 +141,7 @@ class Tile(pygame.sprite.Sprite):
         - tile_type '1' , '2' or '3'.
 
     Has a display function to blit to screen
+    @author: Robert Soane
     """
 
     def __init__(self, screen, dims, tile_type):
