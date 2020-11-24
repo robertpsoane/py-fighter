@@ -1,7 +1,9 @@
-'''
-@author: Rokas Danevicius (unless stated otherwise)
+''' Background Class
+
 The Class creates and blits a background which is then capable of parallax scrolling once
 camera Class starts updating the x values of each background object.
+
+@author: Rokas Danevicius (unless stated otherwise)
 '''
 
 
