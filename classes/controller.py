@@ -4,21 +4,32 @@
 '''
 
 import pygame
-from classes.background import Background
+from classes.map import Map
 from classes.player import Player
 from classes.npc import NPC
-
+from classes.camera import Camera
+from classes.background import Background
 
 class Controller():
-    def __init__(self, game_screen, screen_dims):
+    def __init__(self, game_display, game_screen, screen_dims):
+        self.game_display = game_display
         self.game_screen = game_screen
         self.screen_dims = screen_dims
+        self.camera = Camera()
+
 
     def generateMap(self):
-        self.game_background = Background(self.game_screen, self.screen_dims, 32)
-        self.player = Player(self.game_screen, self.game_background, 600, 100)  #Numbers will be changed to actual size later on
-        self.enemy = NPC(self.game_screen, self.game_background, 100, 100, 'thorsten')
+
+        self.background = Background(self.game_display)
+        self.game_map = Map(self.game_display, self.screen_dims, 32)
+        self.player = Player(self.game_display, self.game_map, 100, 100)  #Numbers will be changed to actual size later on
+        self.enemy = NPC(self.game_display, self.game_map, 600, 100, 'thorsten')
+
         self.enemy.addTarget(self.player)
+        self.camera.addBack(self.background)
+        self.camera.add(self.player)
+        self.camera.add(self.enemy)
+        self.camera.addMap(self.game_map)
 
         # Used to assign multiple targets to player
         # TODO: Put in function if/when we have more than one enemy
@@ -35,8 +46,10 @@ class Controller():
                     self.player.startMove("u")
                 if event.key == pygame.K_d:
                     self.player.startMove("r")
+                    #self.camera.cameraMove("r")
                 if event.key == pygame.K_a:
                     self.player.startMove("l")
+                   #self.camera.cameraMove("l")
                 if event.key == pygame.K_q:
                     self.player.attack()
             if event.type == pygame.KEYUP:
@@ -47,9 +60,19 @@ class Controller():
 
 
     def display(self):
-        self.game_background.display()
+
+
+        self.camera.scroll()
+        self.background.displayQ()
+        self.game_map.display()
         self.player.display()
         self.enemy.display()
+
+        # scales the game_display to game_screen. Allows us to scale images
+        scaled_surf = pygame.transform.scale(self.game_display, self.screen_dims)
+        self.game_screen.blit(scaled_surf, (0, 0))
+
+        # Camera variable to create camera movement
 
 
 '''

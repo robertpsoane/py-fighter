@@ -19,6 +19,7 @@ from classes.player import Player
 from classes.npc import NPC
 from classes.controller import Controller
 
+
 def pyfighterGame():
     ### Important Game Variables from JSON
     with open('json/config.JSON') as config_file:
@@ -37,12 +38,12 @@ def pyfighterGame():
 
     ### Setting up Screen and clock
     game_screen = pygame.display.set_mode((screen_width, screen_height))
-    game_display = pygame.Surface((screen_width, screen_height))  # surface on which we blit images
+    game_display = pygame.Surface((screen_width // 2, screen_height // 2))  # surface on which we blit images
     pygame.display.set_caption(game_name)
     clock = pygame.time.Clock()
 
     ######## Will go in controller init!
-    game_controller = Controller(game_screen, screen_dims)
+    game_controller = Controller(game_display, game_screen, screen_dims)
     game_controller.generateMap()
 
     ########
@@ -68,18 +69,19 @@ def pyfighterGame():
 
             ######################################################
         # Refresh screen
-        game_screen.fill(colour['blue'])
+        game_display.fill(colour['purple'])
 
         ### Code to re-display items on screen will go here ###
 
         game_controller.display()
 
         # Blits the scaled game_display to game_screen, move to controller when ready #
-        #scaled_surf = pygame.transform.scale(game_display, screen_dims)
-        #game_screen.blit(scaled_surf, (0, 0))
+        # scaled_surf = pygame.transform.scale(game_display, screen_dims)
+        # game_screen.blit(scaled_surf, (0, 0))
         ##############################################################################
         # Flip to display
         pygame.display.flip()
+
 
 # Used for testing - can run game direct from this file, bypassing the start menu
 if __name__ == '__main__':
