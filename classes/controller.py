@@ -22,8 +22,8 @@ class Controller():
 
         self.background = Background(self.game_display)
         self.game_map = Map(self.game_display, self.screen_dims, 32)
-        self.player = Player(self.game_display, self.game_map, 600, 100)  #Numbers will be changed to actual size later on
-        self.enemy = NPC(self.game_display, self.game_map, 100, 100, 'thorsten')
+        self.player = Player(self.game_display, self.game_map, 100, 100)  #Numbers will be changed to actual size later on
+        self.enemy = NPC(self.game_display, self.game_map, 600, 100, 'thorsten')
 
         self.enemy.addTarget(self.player)
         self.camera.addBack(self.background)
@@ -61,8 +61,9 @@ class Controller():
 
     def display(self):
 
+
         self.camera.scroll()
-        self.background.displayP()
+        self.background.displayQ()
         self.game_map.display()
         self.player.display()
         self.enemy.display()

@@ -17,7 +17,10 @@ class Background:
         self.display = screen
         self.move = 0
 
-    def displayP(self):
+    def displayQ(self):
+
+
+
         for background_object in background_objects:
             self.objects = (background_object[1][0] - self.move * background_object[0],
                             background_object[1][1])
