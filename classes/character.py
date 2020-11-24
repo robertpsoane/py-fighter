@@ -51,6 +51,7 @@ Future Plans:
 '''
 import pygame
 from classes.spritesheet import SpriteSheet
+from classes.weapon import *
 
 class Character(pygame.sprite.Sprite):
 
@@ -69,6 +70,9 @@ class Character(pygame.sprite.Sprite):
 
         # Assigning character data to self.charactar_data
         self.character_data = character_data
+
+        # Putting object to screen
+        self.screen = screen
 
         ### Unpacking some important JSON dictionary into variables
         self.speed = character_data['speed']
@@ -89,12 +93,15 @@ class Character(pygame.sprite.Sprite):
         # Load sprite sheet and extract frames to dictionary
         self.loadSpriteSheets(character_data)
 
-        # Adding screen to object, and object to screen
-        self.screen = screen
+        # Adding screen to object
         self.image = self.images[self.state[0]][self.state[1]]
         self.image_index = 0
         self.rect = self.image[self.image_index].get_rect()
         self.rect.center = self.position
+
+        # Get Character Arms TODO WIll need updating to reflect some enemies
+        # having own arms/other arms
+        self.arms = Arms(self)
 
         # Important move variables
         self.refresh_counter = 0
@@ -132,6 +139,7 @@ class Character(pygame.sprite.Sprite):
         char_size = character_data['charsize']
         scale_factor = character_data['scale_factor']
         scaled_size = [char_size[0] * scale_factor, char_size[1] * scale_factor]
+        self.scaled_size = scaled_size
         background_colour = character_data['background']
 
         image_types = character_data['actions']
@@ -228,7 +236,7 @@ class Character(pygame.sprite.Sprite):
                 move_speed = -1 * self.speed
                 self.moveX(move_speed)
 
-        # Update state image
+        # Update state image TODO CHANGE image code
         self.image = self.images[self.state[0]][self.state[1]]
 
         # Updating counter, and if necessary incrementing image
@@ -243,10 +251,19 @@ class Character(pygame.sprite.Sprite):
         # Displaying current image at current position
         self.screen.blit(self.image[self.image_index], self.rect)
 
+        '''
+        self.state ['idle', 'right']
+        '''
+
+        self.arms.display()
+
     def collisionWithGround(self):
         ''' Collision Detection
         Detects collision with the ground - if colliding with ground,
         returns True
+
+        Based on code from Python Basics YouTube series
+        https://www.youtube.com/watch?v=bQnEQvyS1Ns - Approx 4 minutes in.
         '''
         collisions = pygame.sprite.spritecollide(self,
                                                     self.tiles_group,
@@ -357,4 +374,13 @@ class Character(pygame.sprite.Sprite):
                 self.updateState('idle', self.state[1])
 
 
+class HealthBar:
+    ''' Health Bar class
+    Manages a graphical representation of each characters health.
+    '''
+    def __init__(self, character):
+        self.character = character
+        self.max_health = character.initial_health
+        self.health = character.health
 
+    

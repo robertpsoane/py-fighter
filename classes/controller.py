@@ -19,10 +19,11 @@ class Controller():
 
 
     def generateMap(self):
+
         self.background = Background(self.game_display)
         self.game_map = Map(self.game_display, self.screen_dims, 32)
-        self.player = Player(self.game_display, self.game_map, 600, 100)  #Numbers will be changed to actual size later on
-        self.enemy = NPC(self.game_display, self.game_map, 100, 100)
+        self.player = Player(self.game_screen, self.game_background, 600, 100)  #Numbers will be changed to actual size later on
+        self.enemy = NPC(self.game_screen, self.game_background, 100, 100, 'thorsten')
         self.enemy.addTarget(self.player)
         self.camera.addBack(self.background)
         self.camera.add(self.player)

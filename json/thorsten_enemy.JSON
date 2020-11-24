@@ -32,5 +32,8 @@
     "jump_speed": 50,
     "gravity": 10,
     "refresh": 10,
-    "initialstate": ["idle", "right"]
+    "initialstate": ["idle", "right"],
+
+    "initial_health_points": 100,
+    "initial_strength": 10
 }
