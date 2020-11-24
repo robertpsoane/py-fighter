@@ -81,5 +81,6 @@ def pyfighterGame():
         # Flip to display
         pygame.display.flip()
 
-#### COMMENT BELOW OUT - only here for testing purposes now :)
-pyfighterGame()
+# Used for testing - can run game direct from this file, bypassing the start menu
+if __name__ == '__main__':
+    pyfighterGame()
