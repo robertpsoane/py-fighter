@@ -60,7 +60,8 @@ class Character(pygame.sprite.Sprite):
     child classes (Player and NPC) will be called.
     '''
 
-    def __init__(self, character_data, background, screen, x_position, y_position):
+    def __init__(self, character_data, background, screen,
+                                    x_position, y_position):
         ''' Init Character
         Function takes and unpacks relevat information from the characters
         JSON dictionary
@@ -102,6 +103,7 @@ class Character(pygame.sprite.Sprite):
         # Get Character Arms TODO WIll need updating to reflect some enemies
         # having own arms/other arms
         self.arms = Arms(self)
+        self.healthbar = HealthBar(self)
 
         # Important move variables
         self.refresh_counter = 0
@@ -138,7 +140,8 @@ class Character(pygame.sprite.Sprite):
         self.spritesheet = SpriteSheet(character_data['path'])
         char_size = character_data['charsize']
         scale_factor = character_data['scale_factor']
-        scaled_size = [char_size[0] * scale_factor, char_size[1] * scale_factor]
+        scaled_size = [char_size[0] * scale_factor, 
+                        char_size[1] * scale_factor]
         self.scaled_size = scaled_size
         background_colour = character_data['background']
 
@@ -163,7 +166,8 @@ class Character(pygame.sprite.Sprite):
                             )
                     specific_image.set_colorkey(background_colour)
 
-                    self.images[image_type][image_direction] += [specific_image]
+                    self.images[image_type][image_direction] += \
+                                                            [specific_image]
 
     def addTarget(self, target):
         ''' addTarget - Used to lock player onto a target sprite group
@@ -176,11 +180,11 @@ class Character(pygame.sprite.Sprite):
         else:
             print('NO COLLISION')
 
-
+    
     # TODO: Check if actually can attack player
     # TODO: Implement health
     def attack(self, target, type = 1):
-        ''' Attack function - Attacks player assigned to it
+        ''' Attack function - Attacks player assigned to it 
 
         Causes player being attacked to recoil in opposite direction, and lose
         health.
@@ -194,14 +198,31 @@ class Character(pygame.sprite.Sprite):
     def recoil(self, force, direction):
         ''' Recoil function - Loses health from attack and sets recoil counter
 
-        Recoil counter processed in display function.  Each frame pushes
+        Recoil counter processed in display function.  Each frame pushes 
         character back while recoiling.
         '''
-        self.health = self.health - force
-        if self.health <= 0:
-            self.alive = False
+        self.loseHealth(force)
         self.recoil_status = (True, direction)
         self.recoil_counter = 5
+
+    def loseHealth(self, amount):
+        ''' loses amount of health and updates health bar accordingly
+
+        Updates health, checks if dead, and updates health bar
+        '''
+        self.health = self.health - amount
+        if self.health <= 0:
+            self.alive = False
+            return
+        self.healthbar.updateHealth()
+    
+    def gainHealth(self, amount):
+        ''' Gains health and updates healthbar accordingly
+        
+        Updates health, and updates health bar
+        '''
+        self.health = self.health + amount
+        self.healthbar.updateHealth()
 
     def display(self):
         ''' Display function
@@ -219,7 +240,7 @@ class Character(pygame.sprite.Sprite):
         if self.is_falling:
             self.applyGravity()
 
-        # Updating subject to recoil.  If character is recoiling, move in
+        # Updating subject to recoil.  If character is recoiling, move in 
         # recoil direction
         if self.recoil_status[0]:
             if self.recoil_counter == 0:
@@ -227,7 +248,7 @@ class Character(pygame.sprite.Sprite):
             self.moveX(15 * self.recoil_status[1])
             self.recoil_counter = self.recoil_counter - 1
 
-
+        
         # Update x/y subject to status
         if self.x_y_moving:
             if self.state[1] == 'right':
@@ -256,6 +277,7 @@ class Character(pygame.sprite.Sprite):
         '''
 
         self.arms.display()
+        self.healthbar.display()
 
     def collisionWithGround(self):
         ''' Collision Detection
@@ -319,14 +341,12 @@ class Character(pygame.sprite.Sprite):
         self.refresh_counter = 0
         self.image_index = 0
 
-        #TODO ivestigate position bug.
     def moveX(self, step):
         ''' moveX(step)
         Function to move character step pixels in the X direction
         '''
-        #self.position[0] += step
-        #self.rect.center = self.position
-        self.rect.centerx += step
+        self.position[0] += step
+        self.rect.center = self.position
 
     def moveY(self, step):
         ''' moveY(step)
@@ -334,9 +354,8 @@ class Character(pygame.sprite.Sprite):
         - Note: the y axis is flipped from what we might naturally assume,
                 0 is at the top and not the bottom
         '''
-        #self.position[1] += step
-        #self.rect.center = self.position
-        self.rect.centery += step
+        self.position[1] += step
+        self.rect.center = self.position
 
     def startMove(self,direction):
         ''' startMove(direction)
@@ -376,11 +395,85 @@ class Character(pygame.sprite.Sprite):
 
 class HealthBar:
     ''' Health Bar class
+    
     Manages a graphical representation of each characters health.
+    Positioned above the characters head.  When health > 50% in green,
+    When health > 20 in Orange, else in red.
+    Works by extracting current character 
     '''
     def __init__(self, character):
+        ''' __init__ function
+
+        Loads character data and sets up initial health bar above characters 
+        head
+        '''
+        # Extracting Character variables
         self.character = character
         self.max_health = character.initial_health
         self.health = character.health
+        self.screen = self.character.screen
 
+        # Get character position variables
+        self.char_height = self.character.rect.height
+        self.char_width = self.character.rect.width
+        self.y_shift = (self.char_height // 2)
+        self.generatePositions()
 
+        # Get Health bar dims
+        self.height = self.char_height // 20
+        self.init_width = self.char_width // 2
+        self.width = self.char_width // 2
+        
+
+        # Setting up surface variables
+        self.back_surf = pygame.Surface((self.width, self.height))
+        self.back_surf.fill((0, 0, 0))
+        self.back_rect = pygame.Rect((  self.x, self.y,
+                                        self.width, self.height))
+
+        self.front_surf = pygame.Surface((self.width, self.height))
+        self.front_surf.fill((35, 121, 7))
+        self.front_rect = pygame.Rect(( self.x, self.y, 
+                                        self.width, self.height))
+        
+
+    def display(self):
+        ''' display
+
+        Gets up to date healthbar positions from character and blits fore
+        and background healthbars
+        '''
+        self.generatePositions()
+
+        # Blit background surface
+        self.back_rect.center = (self.x, self.y)
+        self.screen.blit(self.back_surf, self.back_rect)
+
+        # Blit foreground surface
+        self.front_rect.topleft = self.back_rect.topleft
+        self.screen.blit(self.front_surf, self.front_rect)
+
+    def generatePositions(self):
+        ''' generate positions
+        
+        Generates x and y positions of health bar from characters
+        '''
+        self.x = self.character.rect.centerx
+        self.y = self.character.rect.centery - self.y_shift
+
+    def updateHealth(self):
+        ''' Called by character when it loses (or gains) health.  This updates
+        the surfaces in the health bar that get blitted to the screen
+        '''
+        self.health = self.character.health
+        self.width = int(((self.health) / self.max_health) \
+                            * self.init_width )
+        self.front_surf = pygame.Surface((self.width, self.height))
+        percentage = self.width / self.init_width
+        if percentage > 0.5:
+            colour = (35, 121, 7) # Deep green
+        elif percentage > 0.2:
+            colour = (255, 180, 0) # Orange
+        else:
+            colour = (255, 0, 0) # Red
+        self.front_surf.fill(colour)
