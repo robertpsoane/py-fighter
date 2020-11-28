@@ -224,13 +224,11 @@ class Character(pygame.sprite.Sprite):
         self.health = self.health + amount
         self.healthbar.updateHealth()
 
-    def display(self):
-        ''' Display function
+    
+    def update(self):
+        ''' Update function
 
-        Specific display function for characters.  Keeps track of number of
-        times display has been called.  Depending on the refresh attribute,
-        every n times it switches to the next image.  This is to animate
-        the image.
+        Updates position of characters subject to state.
         '''
         # Update verticle subject to jumping
         if self.state[0] == 'jumping':
@@ -257,6 +255,12 @@ class Character(pygame.sprite.Sprite):
                 move_speed = -1 * self.speed
                 self.moveX(move_speed)
 
+    
+    def display(self):
+        ''' Display function
+
+        Updates image if required, and displays image(s) to screen
+        '''
         # Update state image TODO CHANGE image code
         self.image = self.images[self.state[0]][self.state[1]]
 
@@ -272,10 +276,7 @@ class Character(pygame.sprite.Sprite):
         # Displaying current image at current position
         self.screen.blit(self.image[self.image_index], self.rect)
 
-        '''
-        self.state ['idle', 'right']
-        '''
-
+        # Display arms and health bar
         self.arms.display()
         self.healthbar.display()
 

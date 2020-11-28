@@ -48,14 +48,25 @@ class NPC(Character):
         # Centre to centre width
         self.c2c_width = 0.5 * (self.width + self.target.width)
 
+    def update(self):
+        ''' NPC update function
+
+        This function examines position of target, makes move based on target,
+        then uses parent classes update funciton
+        '''
+        # Deciding on and actioning any moves
+        self.decideMoves()
+
+        Character.update(self)
+        
+
+    
     def display(self):
         ''' NPC display function.
 
         This function examines position of target, makes move based on target,
         then displays to the screen.
         '''
-        # Deciding on and actioning any moves
-        self.decideMoves()
 
         # Calling parent display function
         Character.display(self)
