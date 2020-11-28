@@ -6,6 +6,8 @@ A Steampunk 2D streetfighting game built with PyGame.
 
 Produced as an MSc Computer Science project by R. Soane,
 S. Mistrey and R. Danevicius
+
+@author: R. Soane, S. Mistrey, R. Danevicius
 '''
 
 ### Library Imports
@@ -43,7 +45,7 @@ def pyfighterGame():
     clock = pygame.time.Clock()
 
     ######## Will go in controller init!
-    game_controller = Controller(game_display, game_screen, screen_dims)
+    game_controller = Controller(game_display, game_screen, screen_dims, colour)
     game_controller.generateMap()
 
     ########
@@ -63,22 +65,16 @@ def pyfighterGame():
                 # break loop and quit screen.
                 run_me = False
 
-            ##################### TEMPORARY - GOING IN CONTROLLER
-
+            # Pass event to game_controller
             game_controller.keyboardInput(event)
 
-            ######################################################
-        # Refresh screen
-        game_display.fill(colour['purple'])
-
-        ### Code to re-display items on screen will go here ###
-
+            
+        # Update elements data
+        game_controller.update()
+        
+        # Display elements on screen
         game_controller.display()
 
-        # Blits the scaled game_display to game_screen, move to controller when ready #
-        # scaled_surf = pygame.transform.scale(game_display, screen_dims)
-        # game_screen.blit(scaled_surf, (0, 0))
-        ##############################################################################
         # Flip to display
         pygame.display.flip()
 
