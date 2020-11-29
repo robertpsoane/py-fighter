@@ -5,20 +5,24 @@ Takes input of character data, screen, x position, and y position.
 
 Has functions to make move.
 
-- character_data takes the form of a Python dictionary with all key components
-and data for character.  This is usually stored in a JSON. We have decided
-to implement like this as it allows us to add future characters or make
-significant changes to the characters without having to edit the python code.
+- character_data takes the form of a Python dictionary with all key 
+components and data for character.  This is usually stored in a JSON. We
+have decided to implement like this as it allows us to add future 
+characters or makesignificant changes to the characters without having 
+to edit the python code.
 
 character_data follows the following structure:
 
 {
-    "actions": ["running", "idle"],  <-- These lines should not be edited
-    "directions": ["left", "right"], <-- from the preset as changing them may
-                                        cause the game to break
+    "actions": ["running", "idle"],  <-- These lines should not be 
+                                        edited
+    "directions": ["left", "right"], <-- from the preset as changing 
+                                        them may cause the game to break
     "running": {
-        "left": [[0, 0], [0, 1], [0, 2], [0, 3], [0, 0], [0, 4], [0, 5], [0, 6]],
-        "right": [[2, 0], [2, 1], [2, 2], [2, 3], [2, 0], [2, 4], [2, 5], [2, 6]]
+        "left": [[0, 0], [0, 1], [0, 2], [0, 3],
+                [0, 0], [0, 4], [0, 5], [0, 6]],
+        "right": [[2, 0], [2, 1], [2, 2], [2, 3],
+                [2, 0], [2, 4], [2, 5], [2, 6]]
         },
 
     "idle": {
@@ -26,12 +30,14 @@ character_data follows the following structure:
         "right": [[2, 0], [3, 0]]
         },
 
-        ^ These nested lists give the coordinates within the grid (in order) ^
-            of where the images that make up the given action can be found
-            in the sprite sheet.  There should be one dictionary for each action,
-            containing a list for each direction
+        ^ These nested lists give the coordinates within the grid (in ^
+            order) of where the images that make up the given action can
+            be found in the sprite sheet.  There should be one 
+            dictionary for each action, containing a list for each 
+            direction
 
-    "path": "graphics/spritesheets/basic-character.png", <-- File path of the
+    "path": "graphics/spritesheets/basic-character.png", <-- File path 
+                                                            of the
     "background": [0, 255, 0], <-- Background colour        spritesheet
     "gridsize": [4, 9], <-- Grid size of sprite sheet (zero-indexed)
     "charsize": [32, 32], <-- Size of character in pixels
@@ -39,8 +45,9 @@ character_data follows the following structure:
     "speed": 1, <-- Speed of character in pixels per frame
     "gravity": 1, <-- Gravitationaly speed in pixels per frame
     "refresh": 10, <-- Number of frames between character refresh
-    "initialstate": ["running", "right"] <-- State the character is initially
-                                            spawned in (eg direction facing)
+    "initialstate": ["running", "right"] <-- State the character is 
+                                            initially spawned in (eg 
+                                            direction facing)
 }
 
 Future Plans:
@@ -55,16 +62,16 @@ from classes.weapon import *
 
 class Character(pygame.sprite.Sprite):
 
-    ''' Character Class - Used to display and animate sprites from sprite
-    sheets on screen.  Usually won't be initialised directly, rather its two
-    child classes (Player and NPC) will be called.
+    ''' Character Class - Used to display and animate sprites from
+    sprite sheets on screen.  Usually won't be initialised directly, 
+    rather its two child classes (Player and NPC) will be called.
     '''
 
     def __init__(self, character_data, background, screen,
                                     x_position, y_position):
         ''' Init Character
-        Function takes and unpacks relevat information from the characters
-        JSON dictionary
+        Function takes and unpacks relevat information from the 
+        characters JSON dictionary
         '''
         # Initi for sprite
         pygame.sprite.Sprite.__init__(self)
@@ -97,11 +104,16 @@ class Character(pygame.sprite.Sprite):
         # Adding screen to object
         self.image = self.images[self.state[0]][self.state[1]]
         self.image_index = 0
-        self.rect = self.image[self.image_index].get_rect()
-        self.rect.center = self.position
+        self.plot_rect = self.image[self.image_index].get_rect()
+        self.plot_rect.center = self.position
 
-        # Get Character Arms TODO WIll need updating to reflect some enemies
-        # having own arms/other arms
+        self.rect = pygame.Rect((0, 0, self.width, self.height))
+        self.rect.center = self.plot_rect.center
+
+        
+
+        # Get Character Arms TODO MAY need updating to reflect some 
+        # enemies having own arms/other arms
         self.arms = Arms(self)
         self.healthbar = HealthBar(self)
 
@@ -122,9 +134,9 @@ class Character(pygame.sprite.Sprite):
     def changeMap(self, background):
         ''' changeMap(background) - used to update to new map
 
-        Function to update player with new background.  Call this on player
-        when new map produced, map refers to class containing sprite group of
-        tiles, and map_matrix
+        Function to update player with new background.  Call this on 
+        player when new map produced, map refers to class containing 
+        sprite group of tiles, and map_matrix
         '''
         self.background = background
         self.map_matrix = background.map_matrix
@@ -133,8 +145,8 @@ class Character(pygame.sprite.Sprite):
     def loadSpriteSheets(self, character_data):
         ''' loadSpriteSheets(self, character_data)
 
-        Procedure which loads spritesheet from path given, and extracts each
-        frame of the sprite and stores to dictionary self.images
+        Procedure which loads spritesheet from path given, and extracts 
+        each frame of the sprite and stores to dictionary self.images
         These can then be updated depending on this instances state
         '''
         self.spritesheet = SpriteSheet(character_data['path'])
@@ -186,8 +198,8 @@ class Character(pygame.sprite.Sprite):
     def attack(self, target, type = 1):
         ''' Attack function - Attacks player assigned to it 
 
-        Causes player being attacked to recoil in opposite direction, and lose
-        health.
+        Causes player being attacked to recoil in opposite direction, 
+        and lose health.
         '''
         if self.rect[0] < target.rect[0]:
             direction = 1
@@ -196,7 +208,8 @@ class Character(pygame.sprite.Sprite):
         target.recoil(self.strength, direction)
 
     def recoil(self, force, direction):
-        ''' Recoil function - Loses health from attack and sets recoil counter
+        ''' Recoil function - Loses health from attack and sets recoil 
+        counter
 
         Recoil counter processed in display function.  Each frame pushes 
         character back while recoiling.
@@ -234,12 +247,15 @@ class Character(pygame.sprite.Sprite):
         if self.state[0] == 'jumping':
             self.applyJump()
 
+        if not self.collisionWithGround() :
+            self.is_falling = True
+
         # Updating position subject to gravity
         if self.is_falling:
             self.applyGravity()
 
-        # Updating subject to recoil.  If character is recoiling, move in 
-        # recoil direction
+        # Updating subject to recoil.  If character is recoiling, move 
+        # in recoil direction
         if self.recoil_status[0]:
             if self.recoil_counter == 0:
                 self.recoil_status = (False, 0)
@@ -254,6 +270,8 @@ class Character(pygame.sprite.Sprite):
             if self.state[1] == 'left':
                 move_speed = -1 * self.speed
                 self.moveX(move_speed)
+
+        self.plot_rect.center = self.rect.center
 
     
     def display(self):
@@ -273,8 +291,15 @@ class Character(pygame.sprite.Sprite):
         if self.image_index >= len(self.image):
             self.incrementImage()
 
+        ###################################################
+        # TODO DELETE THE FOLLOWING CODE - FOR TESTING ONLY
+        surf = pygame.Surface((self.rect.width, self.rect.height))
+        surf.fill((100, 100, 0))
+        self.screen.blit(surf, self.rect)
+        ###################################################
+
         # Displaying current image at current position
-        self.screen.blit(self.image[self.image_index], self.rect)
+        self.screen.blit(self.image[self.image_index], self.plot_rect)
 
         # Display arms and health bar
         self.arms.display()
@@ -286,7 +311,8 @@ class Character(pygame.sprite.Sprite):
         returns True
 
         Based on code from Python Basics YouTube series
-        https://www.youtube.com/watch?v=bQnEQvyS1Ns - Approx 4 minutes in.
+        https://www.youtube.com/watch?v=bQnEQvyS1Ns - Approx 4 minutes 
+        in.
         '''
         collisions = pygame.sprite.spritecollide(self,
                                                     self.tiles_group,
@@ -302,8 +328,8 @@ class Character(pygame.sprite.Sprite):
         ''' applyGravity
         Updates position subject to gravity.
         If self is falling, then move
-        down by gravity.  Then checks for collisions with tiles to update
-        falling status.
+        down by gravity.  Then checks for collisions with tiles to 
+        update falling status.
         '''
         # Updating positions subject to gravity
         self.moveY(self.gravity)
@@ -351,8 +377,8 @@ class Character(pygame.sprite.Sprite):
     def moveY(self, step):
         ''' moveY(step)
         Function to move character step pixels in the Y direction.
-        - Note: the y axis is flipped from what we might naturally assume,
-                0 is at the top and not the bottom
+        - Note: the y axis is flipped from what we might naturally 
+                assume, 0 is at the top and not the bottom
         '''
         
         self.rect.centery += step
@@ -377,11 +403,11 @@ class Character(pygame.sprite.Sprite):
 
     def stopMove(self, direction = 'none'):
         ''' stopMove()
-        Returns state to idle when no longer moving.  Purpose of function is
-        to stop running animation.
+        Returns state to idle when no longer moving.  Purpose of 
+        function is to stop running animation.
 
-        WILL NEED CHANGING WHEN WEAPONS ARE IMPLEMENTED! Will need to choose
-        state based on weapon!
+        WILL NEED CHANGING WHEN WEAPONS ARE IMPLEMENTED! Will need to 
+        choose state based on weapon!
         '''
         if self.state == ['running', direction]:
             self.updateState('idle', direction)
@@ -404,8 +430,8 @@ class HealthBar:
     def __init__(self, character):
         ''' __init__ function
 
-        Loads character data and sets up initial health bar above characters 
-        head
+        Loads character data and sets up initial health bar above 
+        characters head
         '''
         # Extracting Character variables
         self.character = character
@@ -416,13 +442,13 @@ class HealthBar:
         # Get character position variables
         self.char_height = self.character.rect.height
         self.char_width = self.character.rect.width
-        self.y_shift = (self.char_height // 2)
+        self.y_shift = (self.char_height // 2) + self.char_height // 10
         self.generatePositions()
 
         # Get Health bar dims
-        self.height = self.char_height // 20
-        self.init_width = self.char_width // 2
-        self.width = self.char_width // 2
+        self.height = self.char_height // 15
+        self.init_width = self.char_width
+        self.width = self.char_width
         
 
         # Setting up surface variables
@@ -440,8 +466,8 @@ class HealthBar:
     def display(self):
         ''' display
 
-        Gets up to date healthbar positions from character and blits fore
-        and background healthbars
+        Gets up to date healthbar positions from character and blits 
+        fore and background healthbars
         '''
         self.generatePositions()
 
@@ -462,8 +488,9 @@ class HealthBar:
         self.y = self.character.rect.centery - self.y_shift
 
     def updateHealth(self):
-        ''' Called by character when it loses (or gains) health.  This updates
-        the surfaces in the health bar that get blitted to the screen
+        ''' Called by character when it loses (or gains) health.  This 
+        updates the surfaces in the health bar that get blitted to the 
+        screen
         '''
         self.health = self.character.health
         self.width = int(((self.health) / self.max_health) \

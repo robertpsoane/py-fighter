@@ -26,7 +26,7 @@
     "background": [0, 255, 0],
     "gridsize": [4, 9],
     "charsize": [64, 64],
-    "graphic_dims": [10, 26],
+    "graphic_dims": [18, 54],
     "scale_factor": 1,
     "speed": 1,
     "jump_speed": 50,
