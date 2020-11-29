@@ -16,11 +16,14 @@ class Controller():
         self.game_screen = game_screen
         self.screen_dims = screen_dims
         self.colour = colour
-        self.camera = Camera()
-
+        
+        
+    def play(self):
+        self.generateMap()
 
     def generateMap(self):
-
+        
+        self.camera = Camera()
         self.background = Background(self.game_display)
         self.game_map = Map(self.game_display, self.screen_dims, 32)
         # Numbers will be changed to actual size later on

@@ -21,6 +21,8 @@ class StartMenu:
         self.quit_obj = quit_obj
         self.play_game = game_function
         
+        self.playMusic()
+        
         # Quitting Bool to determine whether to quit game
         self.playing = True
 
@@ -36,9 +38,19 @@ class StartMenu:
         '''
         if option == '1':
             self.play_game()
+            self.playMusic()
         elif option == '2':
             # Note: This will be updated to help link when help link exists
             webbrowser.open('https://sites.google.com/view/pyfighter/home',
                             new=2)
         elif option == '3':
             self.playing = False
+
+    def playMusic(self):
+        ### Setting up game music
+        # - Music code inspired by code here:
+        #   https://riptutorial.com/pygame/example/24563/example-to-add-music-in-pygame
+        menu_background_path = 'audio/Indigo_Heart.mp3'
+        pygame.mixer.init()
+        pygame.mixer.music.load(menu_background_path)
+        pygame.mixer.music.play(-1)

@@ -6,7 +6,7 @@ A Steampunk 2D streetfighting game built with PyGame.
 
 Produced as an MSc Computer Science project by R. Soane,
 S. Mistrey and R. Danevicius
-k
+
 @author: R. Soane, S. Mistrey, R. Danevicius
 '''
 
@@ -44,9 +44,17 @@ def pyfighterGame():
     pygame.display.set_caption(game_name)
     clock = pygame.time.Clock()
 
-    ######## Will go in controller init!
+    ### Setting up game music
+    # - Music code inspired by code here:
+    #   https://riptutorial.com/pygame/example/24563/example-to-add-music-in-pygame
+    game_background_path = 'audio/prototype.wav'
+    pygame.mixer.init()
+    pygame.mixer.music.load(game_background_path)
+    pygame.mixer.music.play(-1)
+
+    # Setup game controller
     game_controller = Controller(game_display, game_screen, screen_dims, colour)
-    game_controller.generateMap()
+    game_controller.play()
 
     ########
 
@@ -63,6 +71,7 @@ def pyfighterGame():
             if event.type == pygame.QUIT:
                 # Detecting user pressing quit button, if X pressed,
                 # break loop and quit screen.
+                pygame.mixer.music.stop()
                 run_me = False
 
             # Pass event to game_controller
