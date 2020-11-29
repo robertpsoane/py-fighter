@@ -104,10 +104,15 @@ class Character(pygame.sprite.Sprite):
         # Adding screen to object
         self.image = self.images[self.state[0]][self.state[1]]
         self.image_index = 0
-        self.rect = self.image[self.image_index].get_rect()
-        self.rect.center = self.position
+        self.plot_rect = self.image[self.image_index].get_rect()
+        self.plot_rect.center = self.position
 
-        # Get Character Arms TODO WIll need updating to reflect some 
+        self.rect = pygame.Rect((0, 0, self.width, self.height))
+        self.rect.center = self.plot_rect.center
+
+        
+
+        # Get Character Arms TODO MAY need updating to reflect some 
         # enemies having own arms/other arms
         self.arms = Arms(self)
         self.healthbar = HealthBar(self)
@@ -263,6 +268,8 @@ class Character(pygame.sprite.Sprite):
                 move_speed = -1 * self.speed
                 self.moveX(move_speed)
 
+        self.plot_rect.center = self.rect.center
+
     
     def display(self):
         ''' Display function
@@ -281,8 +288,15 @@ class Character(pygame.sprite.Sprite):
         if self.image_index >= len(self.image):
             self.incrementImage()
 
+        ###################################################
+        # TODO DELETE THE FOLLOWING CODE - FOR TESTING ONLY
+        surf = pygame.Surface((self.rect.width, self.rect.height))
+        surf.fill((100, 100, 0))
+        self.screen.blit(surf, self.rect)
+        ###################################################
+
         # Displaying current image at current position
-        self.screen.blit(self.image[self.image_index], self.rect)
+        self.screen.blit(self.image[self.image_index], self.plot_rect)
 
         # Display arms and health bar
         self.arms.display()
@@ -425,13 +439,13 @@ class HealthBar:
         # Get character position variables
         self.char_height = self.character.rect.height
         self.char_width = self.character.rect.width
-        self.y_shift = (self.char_height // 2)
+        self.y_shift = (self.char_height // 2) + self.char_height // 10
         self.generatePositions()
 
         # Get Health bar dims
-        self.height = self.char_height // 20
-        self.init_width = self.char_width // 2
-        self.width = self.char_width // 2
+        self.height = self.char_height // 15
+        self.init_width = self.char_width
+        self.width = self.char_width
         
 
         # Setting up surface variables
