@@ -247,6 +247,9 @@ class Character(pygame.sprite.Sprite):
         if self.state[0] == 'jumping':
             self.applyJump()
 
+        if not self.collisionWithGround() :
+            self.is_falling = True
+
         # Updating position subject to gravity
         if self.is_falling:
             self.applyGravity()
