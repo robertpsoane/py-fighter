@@ -1,0 +1,4 @@
+# AUDIO DETAILS
+
+|		FILE NAME		|		AUTHOR		|		DESCRIPTION 
+|	prototype.wav		|	Robert Soane	|	Prototyping adding music functionality to main game play.  To be replaced at later date
