@@ -57,8 +57,14 @@ Future Plans:
 @author: Robert (Unless stated otherwise)
 '''
 import pygame
+import json
 from classes.spritesheet import SpriteSheet
 from classes.weapon import *
+
+
+with open('json/spritesheet.JSON') as sprite_sheet_json:
+            SPRITESHEET_JSON = json.load(sprite_sheet_json)
+
 
 class Character(pygame.sprite.Sprite):
 
@@ -78,6 +84,7 @@ class Character(pygame.sprite.Sprite):
 
         # Assigning character data to self.charactar_data
         self.character_data = character_data
+        self.addSpritesheetJSON()
 
         # Putting object to screen
         self.screen = screen
@@ -141,6 +148,10 @@ class Character(pygame.sprite.Sprite):
         self.background = background
         self.map_matrix = background.map_matrix
         self.tiles_group = background.map_group
+
+    def addSpritesheetJSON(self):
+        for key in SPRITESHEET_JSON.keys():
+            self.character_data[key] = SPRITESHEET_JSON[key]
 
     def loadSpriteSheets(self, character_data):
         ''' loadSpriteSheets(self, character_data)
