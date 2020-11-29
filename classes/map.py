@@ -166,4 +166,15 @@ class Tile(pygame.sprite.Sprite):
         '''
         Display method to blit the map to screen.
         '''
+        
+
         self.screen.blit(self.image, self.rect)
+
+        ###################################################
+        # TODO DELETE THE FOLLOWING CODE - FOR TESTING ONLY
+        surf = pygame.Surface((self.rect.width, self.rect.height))
+        surf.fill((0, 100, 100))
+        surf.set_alpha(50)
+        self.screen.blit(surf, self.rect)
+        ###################################################
+
