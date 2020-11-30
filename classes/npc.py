@@ -34,6 +34,11 @@ class NPC(Character):
         # Setup sleep variable
         self.asleep = sleep_on_load
 
+        # Attack delay - a delay of a number of frames to give player 
+        # opportunity of attacking first
+        self.attack_delay = 15
+        self.attack_counter = 0
+
         # Wake distance (pixels) - used to determine distance target needs to
         # be after which NPC wakes.
         # This should go somewhere else, like a JSON perhaps? TODO: Decide!
@@ -99,16 +104,27 @@ class NPC(Character):
         # Getting positions as local variables to make code read easier
         self_x, self_y, target_x, target_y = self.getPositionsAsLocal()
 
-        # Difference in x positions
+        # Difference in x and y positions
         x_dif = self_x - target_x
         y_dif = self_y - target_y
 
+        # If possible, attack
+        if pygame.sprite.collide_rect(self, self.target):
+            print(self.attack_counter)
+            if self.attack_counter == self.attack_delay:
+                self.attack_counter = 0
+                self.attack(self.target)
+            else:
+                self.attack_counter += 1
+        
+        # move in right direction
         if x_dif > self.c2c_width:
             self.startMove('l')
         elif x_dif <  -1 * self.c2c_width:
             self.startMove('r')
-        elif pygame.sprite.collide_rect(self, self.target):
-            self.attack(self.target)
+        elif not self.is_jumping:
+            self.startMove('u')
+        
 
     def withinWakeDistance(self):
         ''' withinWakeDistance - returns whether target is within NPCs wake

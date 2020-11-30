@@ -426,11 +426,11 @@ class Character(pygame.sprite.Sprite):
         if self.state == ['running', direction]:
             self.updateState('idle', direction)
             self.x_y_moving = False
-        # elif self.is_falling:
-        #     if self.x_y_moving == True:
-        #         self.state[0] = 'running'
-        #     else:
-        #         self.updateState('idle', self.state[1])
+        elif self.is_falling:
+            if self.x_y_moving == True:
+                self.state[0] = 'running'
+            else:
+                self.updateState('idle', self.state[1])
 
 
 class HealthBar:
