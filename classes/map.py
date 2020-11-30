@@ -8,6 +8,7 @@ The class has the capability to generate a map and display it.
 
 # Importing pygame.
 import pygame
+import random
 
 # Load The tile paths in to variables
 stone = 'graphics/map_tiles/tile1.png'
@@ -82,12 +83,103 @@ class Map:
         self.screen = screen
         self.dims = dims
         self.cell = cell
+        self.total_rows = 20
+        self.columns = 25
 
         self.height_units = dims[1] // cell
         self.width_units = dims[0] // cell
 
         self.generateMap()
 
+    def genMap(self):
+        dirt_row = 1
+        bottom_air = 10
+        air_row = 3
+        random_rows = 4
+        tile_matrix = []
+
+        top_air = [[0 for column in range(self.columns)] for row in range(air_row)]
+        tile_matrix.extend(top_air)
+        platforms = [[random.uniform(0, 1) for column in range(self.columns)] for row in
+                     range(random_rows)]
+        tile_matrix.extend(platforms)
+        middle_air = [[0 for column in range(self.columns)] for row in range(dirt_row)]
+        tile_matrix.extend(middle_air)
+        top_dirt = [[2 for column in range(self.columns)] for row in range(dirt_row)]
+        tile_matrix.extend(top_dirt)
+        bottom_dirt = [[1 for column in range(self.columns)] for row in range(dirt_row)]
+        tile_matrix.extend(bottom_dirt)
+        bottom_air = [[0 for column in range(self.columns)] for row in range(bottom_air)]
+        tile_matrix.extend(bottom_air)
+
+        return tile_matrix
+
+    def platformCheck(self, maplist, row, column):
+
+        check = [[row, column], [row, column - 1], [row, column - 2], [row, column - 3],
+                 [row, column - 4],
+                 [row, column + 1], [row, column + 2], [row, column + 3], [row, column + 4],
+                 [row - 1, column], [row - 1, column - 1], [row - 1, column - 2],
+                 [row - 1, column - 3],
+                 [row - 1, column - 4],
+                 [row - 1, column + 1], [row - 1, column + 2], [row - 1, column + 3],
+                 [row - 1, column + 4],
+                 [row - 2, column], [row - 2, column - 1], [row - 2, column - 2],
+                 [row - 2, column - 3],
+                 [row - 2, column - 4],
+                 [row - 2, column + 1], [row - 2, column + 2], [row - 2, column + 3],
+                 [row - 2, column + 4]]
+
+        for position in check:
+
+            if position[1] > 24:
+                return False
+            elif maplist[position[0]][position[1]] == 3:
+                return False
+
+        return True
+
+    def platformPlace(self, row, column):
+
+        checking = [[row, column + 1], [row, column + 2], [row, column + 3], [row, column + 4]]
+
+        for position in checking:
+            if position[1] > 24:
+                return False
+        return True
+
+    def readMap(self):
+        tile_matrix = self.genMap()
+
+        row = 0
+        while row < self.total_rows:
+            col = 0
+
+            while col < self.columns:
+
+                if (tile_matrix[row][col]) <= 0.5:
+                    tile_matrix[row][col] = 0
+
+                if 0.5 < (tile_matrix[row][col]) < 1:
+                    if self.platformCheck(tile_matrix, row, col):
+                        if self.platformPlace(row, col):
+                            for x in range(random.randint(2, 4)):
+                                tile_matrix[row][col + x] = 3
+                    else:
+                        tile_matrix[row][col] = 0
+
+                col += 1
+
+            row += 1
+        return tile_matrix
+
+    def randomiseMap(self):
+        #self.map_group = []
+        self.map_matrix = self.readMap()
+        for i in self.map_matrix:
+            for j in i:
+                print(j, end=' ')
+            print()
 
     def generateMap(self):
         '''
@@ -166,7 +258,7 @@ class Tile(pygame.sprite.Sprite):
         '''
         Display method to blit the map to screen.
         '''
-        
+
 
         self.screen.blit(self.image, self.rect)
 
