@@ -8,6 +8,8 @@ extended if required to create pause and other menues throughout the game.
 import pygame
 import webbrowser
 
+menu_background_location = 'graphics/menu/menu-background.png'
+
 class StartMenu:
     def __init__(self, screen, title_obj, play_obj, help_obj, quit_obj,
                 game_function):
@@ -21,12 +23,16 @@ class StartMenu:
         self.quit_obj = quit_obj
         self.play_game = game_function
         
+        self.background = pygame.image.load(menu_background_location)
+        self.background_rect = pygame.Rect((0, 0, 1, 1))
+
         self.playMusic()
         
         # Quitting Bool to determine whether to quit game
         self.playing = True
 
     def display(self):
+        self.screen.blit(self.background, self.background_rect)
         self.title_obj.display()
         self.play_obj.display()
         self.help_obj.display()
