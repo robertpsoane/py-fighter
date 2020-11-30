@@ -7,11 +7,12 @@ A Steampunk 2D streetfighting game built with PyGame.
 Produced as an MSc Computer Science project by R. Soane, 
 S. Mistrey and R. Danevicius
 
-##############################################################################
+########################################################################
 
-This file forms a start menu for the game.  When selected, the game function 
-is loaded as a new instance of pygame within the same window.  Implemented in
-this way so that whenever the player quits the game, it goes back to the menu.
+This file forms a start menu for the game.  When selected, the game 
+function is loaded as a new instance of pygame within the same window.  
+Implemented in this way so that whenever the player quits the game, it 
+goes back to the menu.
 
 '''
 
@@ -67,8 +68,8 @@ quit_obj = DisplayString(menu_screen, midpoint, 7*height_unit,
                         font_size['subtitle'], option_3, colour['white'])
 
 # Initialising StartMenu class
-start_menu = StartMenu(menu_screen, title_obj, play_obj, help_obj, quit_obj,
-                        pyfighterGame)
+start_menu = StartMenu(menu_screen, title_obj, play_obj, help_obj,
+                                            quit_obj, pyfighterGame)
 
 ### Main Game Loop
 while start_menu.playing:

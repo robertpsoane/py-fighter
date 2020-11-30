@@ -42,3 +42,15 @@ class Player(Character):
         for collision_enemy in collision_enemies:
             Character.attack(self, collision_enemy)
     
+    def update(self):
+        ''' Update
+        Updates using parent classes update function, then ensures still
+        on screen
+        '''
+        Character.update(self)
+        # Preventing from going off edges
+        if self.rect.left < 0:
+            self.rect.left = 0
+        if self.rect.right > self.screen.get_width():
+            self.rect.right = self.screen.get_width()
+    

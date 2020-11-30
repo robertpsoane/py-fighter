@@ -4,8 +4,8 @@ A Steampunk 2D streetfighting game built with PyGame.
 
 [ More details to go here before release :), big it up and that! ]
 
-Produced as an MSc Computer Science project by R. Soane,
-S. Mistrey and R. Danevicius
+Produced as an MSc Computer Science project by R. Soane, S. Mistrey and
+R. Danevicius
 
 @author: R. Soane, S. Mistrey, R. Danevicius
 '''
@@ -36,11 +36,13 @@ def pyfighterGame():
     screen_height = config['screen_dims'][1]
     max_fps = config['max_fps']
     game_name = config['game_name']
-    screen_dims = (config['screen_dims'])  # If screen_dims halved image get scaled up by half
+    # If screen_dims halved image get scaled up by half
+    screen_dims = (config['screen_dims'])
 
     ### Setting up Screen and clock
     game_screen = pygame.display.set_mode((screen_width, screen_height))
-    game_display = pygame.Surface((screen_width // 2, screen_height // 2))  # surface on which we blit images
+    # surface on which we blit images
+    game_display = pygame.Surface((screen_width // 2, screen_height // 2))  
     pygame.display.set_caption(game_name)
     clock = pygame.time.Clock()
 
@@ -53,7 +55,8 @@ def pyfighterGame():
     pygame.mixer.music.play(-1)
 
     # Setup game controller
-    game_controller = Controller(game_display, game_screen, screen_dims, colour)
+    game_controller = Controller(game_display, game_screen, screen_dims,
+                                                                    colour)
     game_controller.play()
 
     ########
@@ -88,6 +91,7 @@ def pyfighterGame():
         pygame.display.flip()
 
 
-# Used for testing - can run game direct from this file, bypassing the start menu
+# Used for testing - can run game direct from this file, bypassing the 
+# start menu
 if __name__ == '__main__':
     pyfighterGame()
