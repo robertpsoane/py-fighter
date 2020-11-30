@@ -137,6 +137,7 @@ class Character(pygame.sprite.Sprite):
 
         ##### TO GO TO JSON
         self.is_falling = True
+        self.is_jumping = False
 
     def changeMap(self, background):
         ''' changeMap(background) - used to update to new map
@@ -255,7 +256,8 @@ class Character(pygame.sprite.Sprite):
         Updates position of characters subject to state.
         '''
         # Update verticle subject to jumping
-        if self.state[0] == 'jumping':
+        #if self.state[0] == 'jumping':
+        if self.is_jumping:
             self.applyJump()
 
         if not self.collisionWithGround() :
@@ -354,7 +356,7 @@ class Character(pygame.sprite.Sprite):
         self.jumpcount = self.jumpcount * 2
         if (jump == 1) or (jump == 0):
             self.is_falling = True
-            self.state[0] = 'falling'
+            #self.state[0] = 'falling'
 
     def incrementImage(self):
         ''' Increment Image function
@@ -409,7 +411,8 @@ class Character(pygame.sprite.Sprite):
             self.x_y_moving = True
             self.state[1] = 'right'
         elif direction == 'u':
-            self.state[0] = 'jumping'
+            #self.state[0] = 'jumping'
+            self.is_jumping = True
             self.jumpcount = 1
 
     def stopMove(self, direction = 'none'):
@@ -423,11 +426,11 @@ class Character(pygame.sprite.Sprite):
         if self.state == ['running', direction]:
             self.updateState('idle', direction)
             self.x_y_moving = False
-        elif self.state[0] == 'falling':
-            if self.x_y_moving == True:
-                self.state[0] = 'running'
-            else:
-                self.updateState('idle', self.state[1])
+        # elif self.is_falling:
+        #     if self.x_y_moving == True:
+        #         self.state[0] = 'running'
+        #     else:
+        #         self.updateState('idle', self.state[1])
 
 
 class HealthBar:
