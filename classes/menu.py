@@ -1,7 +1,8 @@
 ''' Menu Class
 
 Class to create menu in pygame.  Used initially for start menu.  Can be 
-extended if required to create pause and other menues throughout the game.
+extended if required to create pause and other menues throughout the 
+game.
 
 '''
 
@@ -46,7 +47,8 @@ class StartMenu:
             self.play_game()
             self.playMusic()
         elif option == '2':
-            # Note: This will be updated to help link when help link exists
+            # Note: This will be updated to help link when help link 
+            # exists
             webbrowser.open('https://sites.google.com/view/pyfighter/home',
                             new=2)
         elif option == '3':
