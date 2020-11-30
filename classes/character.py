@@ -259,13 +259,13 @@ class Character(pygame.sprite.Sprite):
         #if self.state[0] == 'jumping':
         if self.is_jumping:
             self.applyJump()
+        else:
+            if not self.collisionWithGround() :
+                self.is_falling = True
 
-        if not self.collisionWithGround() :
-            self.is_falling = True
-
-        # Updating position subject to gravity
-        if self.is_falling:
-            self.applyGravity()
+            # Updating position subject to gravity
+            if self.is_falling:
+                self.applyGravity()
 
         # Updating subject to recoil.  If character is recoiling, move 
         # in recoil direction
@@ -332,6 +332,7 @@ class Character(pygame.sprite.Sprite):
                                                     False)
         if len(collisions) != 0:
             self.is_falling = False
+            self.is_jumping = False
             self.stopMove()
             return True
         else:
@@ -356,6 +357,7 @@ class Character(pygame.sprite.Sprite):
         self.jumpcount = self.jumpcount * 2
         if (jump == 1) or (jump == 0):
             self.is_falling = True
+            self.is_jumping = False
             #self.state[0] = 'falling'
 
     def incrementImage(self):

@@ -55,6 +55,7 @@ class NPC(Character):
         # TODO: Redo c2c_widtrh and methods which use it
         # Centre to centre width
         self.c2c_width = 0.5 * (self.width + self.target.width)
+        self.c2c_height = 0.5 * (self.height + self.target.height)
 
     def update(self):
         ''' NPC update function
@@ -126,7 +127,7 @@ class NPC(Character):
             self.startMove('l')
         elif x_dif <  -1 * self.c2c_width:
             self.startMove('r')
-        elif not self.is_jumping:
+        elif (not self.is_jumping) and y_dif > self.c2c_width:
             self.startMove('u')
         
 

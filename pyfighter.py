@@ -68,8 +68,8 @@ quit_obj = DisplayString(menu_screen, midpoint, 7*height_unit,
                         font_size['subtitle'], option_3, colour['white'])
 
 # Initialising StartMenu class
-start_menu = StartMenu(menu_screen, title_obj, play_obj, help_obj, quit_obj,
-                        pyfighterGame)
+start_menu = StartMenu(menu_screen, title_obj, play_obj, help_obj,
+                                            quit_obj, pyfighterGame)
 
 ### Main Game Loop
 while start_menu.playing:
