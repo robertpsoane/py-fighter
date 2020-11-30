@@ -37,7 +37,7 @@ class NPC(Character):
         # Wake distance (pixels) - used to determine distance target needs to
         # be after which NPC wakes.
         # This should go somewhere else, like a JSON perhaps? TODO: Decide!
-        self.wake_distance = 400
+        self.wake_distance = 200
 
     def addTarget(self,target):
         ''' addTarget - Used to lock NPC onto a target to attack
@@ -71,19 +71,30 @@ class NPC(Character):
         # Calling parent display function
         Character.display(self)
 
+    def stillAsleep(self):
+        ''' Still asleep function
+
+        Checks if character is still asleep, and can be wokenn.  If 
+        still asleep, returns True, else returns False.
+        '''
+
+        if self.asleep:
+            if self.withinWakeDistance():
+                self.asleep = False
+                return False
+            else:
+                return True
+        return False
+
     def decideMoves(self):
         ''' decideMoves - forms the basis for our 'AI'
         Check x and y position of target, and x and y position of self.
         Use simple comparison of positions to decide whether or not to attack
         '''
 
-        # If asleep, check distance from target, if within wake_distance, wake
-        # else, stay stationary
-        if self.asleep:
-            if self.withinWakeDistance():
-                self.asleep = False
-            else:
-                return
+        # If asleep, don't check for moves
+        if self.stillAsleep():
+            return
 
         # Getting positions as local variables to make code read easier
         self_x, self_y, target_x, target_y = self.getPositionsAsLocal()
