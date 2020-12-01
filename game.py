@@ -13,7 +13,7 @@ R. Danevicius
 ### Library Imports
 import pygame
 import json
-from classes.displaystring import DisplayString
+from classes.text import Text
 
 ### THESE IMPORTS ARE NEEDED IN CONTROLLER
 from classes.background import Background

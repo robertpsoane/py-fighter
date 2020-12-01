@@ -21,7 +21,8 @@ import pygame
 import json
 from game import pyfighterGame
 from classes.menu import StartMenu
-from classes.displaystring import DisplayString
+from classes.menu import Button
+from classes.text import Text
 
 ### Important Game Variables from JSON
 with open('json/config.JSON') as config_file:
@@ -58,14 +59,16 @@ midpoint = screen_width // 2
 height_unit = screen_height // 9
 
 # Creating pygame string objects
-title_obj = DisplayString(menu_screen, midpoint, height_unit,
-                        font_size['title'], menu_title, colour['green'])
-play_obj = DisplayString(menu_screen, midpoint, 3*height_unit, 
+title_obj = Text(menu_screen, (midpoint, height_unit),
+                        font_size['title'], menu_title, 'purple')
+play_obj = Text(menu_screen, (midpoint, 3*height_unit,),
                         font_size['subtitle'], option_1, colour['white'])
-help_obj = DisplayString(menu_screen, midpoint, 5*height_unit,
+help_obj = Text(menu_screen, (midpoint, 5*height_unit),
                         font_size['subtitle'], option_2, colour['white'])
-quit_obj = DisplayString(menu_screen, midpoint, 7*height_unit,
-                        font_size['subtitle'], option_3, colour['white'])
+# quit_obj = Text(menu_screen, (midpoint, 7*height_unit),
+#                        font_size['subtitle'], option_3, colour['white'])
+
+quit_obj = Button(menu_screen, 'test', (midpoint, 7*height_unit), print)
 
 # Initialising StartMenu class
 start_menu = StartMenu(menu_screen, title_obj, play_obj, help_obj,
