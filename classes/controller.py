@@ -56,7 +56,7 @@ class Controller():
                 if event.key == pygame.K_q:
                     self.player.attack()
                 if event.key == pygame.K_m:
-                    self.game_map.randomiseMap()
+                    self.game_map.generateMap()
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_d:
                     self.player.stopMove("right")
