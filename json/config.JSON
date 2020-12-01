@@ -16,6 +16,8 @@
     "max_fps": 60,
     "game_name": "PyFighter",
     "logo_location": "graphics/logo/logo.png",
+    "menu_music": "audio/Indigo_Heart.mp3",
+    "start_menu_background": "graphics/menu/menu-background.png",
     "map_keys": {
         "0":"soft",
         "1":"hard",

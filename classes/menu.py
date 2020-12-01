@@ -8,11 +8,75 @@ game.
 '''
 
 import pygame
-import webbrowser
 from classes.text import Text
 
-menu_background_location = 'graphics/menu/menu-background.png'
 button_location = 'graphics/menu/button.png'
+
+
+class Menu:
+    def __init__(self, screen, title_obj, background_location, *buttons):
+        ''' Start Menu
+        Class which generates and contains start menu function.
+        '''
+        self.screen = screen
+        self.title_obj = title_obj
+        self.unpackButtons(buttons)
+        
+        self.background = pygame.image.load(background_location)
+        self.background_rect = pygame.Rect((0, 0, 1, 1))
+
+        # Quitting Bool to determine whether to quit game
+        self.playing = True
+
+    def display(self):
+        self.screen.blit(self.background, self.background_rect)
+        self.title_obj.display()
+        # self.play_obj.display()
+        # self.help_obj.display()
+        for button in self.buttons:
+            button.display()
+
+    def do(self, event):
+        ''' do function
+        Actions whatever action is called by user
+        
+        if option == '1':
+            self.play_game()
+            self.playMusic()
+        elif option == '2':
+            # Note: This will be updated to help link when help link 
+            # exists
+            webbrowser.open('https://sites.google.com/view/pyfighter/home',
+                            new=2)
+        elif option == '3':
+            self.playing = False
+        '''
+        if event.type == pygame.QUIT:
+            # Detecting user pressing quit button, if X pressed,
+            # break loop and quit screen.
+            self.playing = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            for button in self.buttons:
+                if self.checkPress(button, event.pos):
+                    button.mouse_down = True
+        if event.type == pygame.MOUSEBUTTONUP:
+            for button in self.buttons:
+                if self.checkPress(button, event.pos) and button.mouse_down:
+                    button.press()
+                button.mouse_down = False
+                
+    def checkPress(self, button, pos):
+        x0, x1, y0, y1 = button.coords
+        if (x0 < pos[0] < x1) and (y0 < pos[1] < y1):
+            return True
+        return False
+
+    def unpackButtons(self, buttons):
+        self.buttons = []
+        for button in buttons:
+            self.buttons.append(button)
+
+
 
 class Button:
     ''' Button Class
@@ -28,18 +92,20 @@ class Button:
     the Text class so that the button can easily be moved on screen if 
     required
     '''
-    def __init__(self, screen, text, position, size = (128, 64),
+    def __init__(self, screen, text, position, func, size = (128, 64),
                             text_colour = 'white', highlight = 'yellow',
                             font_size = 35):
         # Storing attributes
         self.screen = screen
         self.text = text
         self.__position = position
+        self.func = func
         self.size = size
         self.text_colour = text_colour
         self.highlight = highlight
         self.font_size = font_size
         self.highlighted = False
+        self.mouse_down = False
 
         # Make edges attributes
         self.setEdgesAttributes()
@@ -47,6 +113,9 @@ class Button:
         # Making text and images
         self.makeText()
         self.makeImage()
+
+    def press(self):
+        self.func()
 
     def makeText(self):
         self.text = Text(self.screen, self.position, self.font_size,
@@ -62,17 +131,14 @@ class Button:
 
     def update(self):
         pos_x, pos_y = pygame.mouse.get_pos()
-        if (self.left < pos_x < self.right) and (self.top < pos_y < self.bottom):
+        over_button = (self.left < pos_x < self.right) and (self.top < pos_y < self.bottom)
+        if over_button:
             self.highlighted = True
             self.text.colour = self.highlight
-            self.actionIfPressed()
         elif self.highlighted:
             self.text.colour = self.text_colour
-
-    def actionIfPressed(self):
-        if pygame.mouse.get_pressed()[0]:
-            self.function()
-        
+            self.highlighted = False
+      
     def display(self):
         self.update()
         self.screen.blit(self.image, self.rect)
@@ -116,54 +182,3 @@ class Button:
         return (self.left, self.right, self.top, self.bottom)
 
 
-class StartMenu:
-    def __init__(self, screen, title_obj, play_obj, help_obj, quit_obj,
-                game_function):
-        ''' Start Menu
-        Class which generates and contains start menu function.
-        '''
-        self.screen = screen
-        self.title_obj = title_obj
-        self.play_obj = play_obj
-        self.help_obj = help_obj
-        self.quit_obj = quit_obj
-        self.play_game = game_function
-        
-        self.background = pygame.image.load(menu_background_location)
-        self.background_rect = pygame.Rect((0, 0, 1, 1))
-
-        self.playMusic()
-        
-        # Quitting Bool to determine whether to quit game
-        self.playing = True
-
-    def display(self):
-        self.screen.blit(self.background, self.background_rect)
-        self.title_obj.display()
-        self.play_obj.display()
-        self.help_obj.display()
-        self.quit_obj.display()
-
-    def do(self, option):
-        ''' do function
-        Actions whatever action is called by user
-        '''
-        if option == '1':
-            self.play_game()
-            self.playMusic()
-        elif option == '2':
-            # Note: This will be updated to help link when help link 
-            # exists
-            webbrowser.open('https://sites.google.com/view/pyfighter/home',
-                            new=2)
-        elif option == '3':
-            self.playing = False
-
-    def playMusic(self):
-        ### Setting up game music
-        # - Music code inspired by code here:
-        #   https://riptutorial.com/pygame/example/24563/example-to-add-music-in-pygame
-        menu_background_path = 'audio/Indigo_Heart.mp3'
-        pygame.mixer.init()
-        pygame.mixer.music.load(menu_background_path)
-        pygame.mixer.music.play(-1)
