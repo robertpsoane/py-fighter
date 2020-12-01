@@ -80,22 +80,25 @@ play_text = 'Play'
 help_text = 'Help'
 quit_text = 'Quit'
 
-# Calculating (x,y) coords of strings
-midpoint = screen_width // 2
-height_unit = screen_height // 9
+# Title position
+title_x = screen_width // 2
+title_y = screen_height // 9
+# Calculating (x,y) coords of buttons
+width_unit = screen_width // 6
+height_unit = screen_height // 2
 
 # Creating pygame string objects
-title_obj = Text(menu_screen, (midpoint, height_unit),
+title_obj = Text(menu_screen, (title_x, title_y),
                         font_size['title'], menu_title, 'purple')
 
 play_button = Button(menu_screen, play_text, 
-                    (midpoint, 3*height_unit,), playGame)
+                    (1 * width_unit, height_unit,), playGame)
 
 help_button = Button(menu_screen, help_text, 
-                    (midpoint, 5*height_unit,), getHelp)
+                    (3 * width_unit, height_unit,), getHelp)
 
 quit_button = Button(menu_screen, quit_text, 
-                    (midpoint, 7*height_unit), quitGame)
+                    (5 * width_unit, height_unit), quitGame)
 
 # Initialising StartMenu class
 start_menu = Menu(menu_screen, title_obj, menu_background, play_button, 
