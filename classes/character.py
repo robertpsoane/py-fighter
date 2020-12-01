@@ -1,5 +1,8 @@
 ''' Character Class
 
+TODO NEEDS A RE WRITE
+
+
 Character class for py-fighter game.
 Takes input of character data, screen, x position, and y position.
 

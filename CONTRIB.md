@@ -2,14 +2,16 @@
 #### Contributions of each group member, along with references and where we got our inspiration
 
 ## Robert Soane
-### Code - I wrote the *majority or all* of following files
+### Major Code Contributions
+I wrote the *majority or all* of following files
 #### Character, Player and NPC
 I produced the Character, Player and NPC classes.  The Player and NPC's inherit from Character, and most of the methods are in the Character class.  There are some differences in NPC, such as the automated moving and attacking.
 #### Text
 I produced the Text rendering and plotting class.  I took inspiration from the Pygame documentation.
 #### Menu
 #### Spritesheet
-### Code - I *contributed* towards the following files
+### Minor Code Contributions
+I *contributed* towards the following files
 #### Controller
 I wrote the update function in the controller.
 #### Map
