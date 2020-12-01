@@ -47,10 +47,14 @@ class NPC(Character):
         # TODO: Decide!
         self.wake_distance = 200
 
-    def addTarget(self,target):
+    def addTarget(self, target_group):
         ''' addTarget - Used to lock NPC onto a target to attack
         '''
-        Character.addTarget(self, target)
+        Character.addTarget(self, target_group)
+        # Sorry this line is messy! was playing in the debugger and 
+        # found it works
+        self.target = target_group.sprites()[0]
+
 
         # TODO: Redo c2c_widtrh and methods which use it
         # Centre to centre width

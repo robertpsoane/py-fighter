@@ -196,10 +196,11 @@ class Character(pygame.sprite.Sprite):
                     self.images[image_type][image_direction] += \
                                                             [specific_image]
 
-    def addTarget(self, target):
-        ''' addTarget - Used to lock player onto a target sprite group
+    def addTarget(self, target_group):
+        ''' Adds group of enemies to player
         '''
-        self.target = target
+        self.target_group = target_group
+
 
     def spriteCollision(self, other):
         if pygame.sprite.collide_rect(self, other):
@@ -279,17 +280,21 @@ class Character(pygame.sprite.Sprite):
             self.recoil_counter = self.recoil_counter - 1
 
         
+        #self.collidesWithAny()
+
         # Update x/y subject to status
         if self.x_y_moving:
+
             if self.state[1] == 'right':
                 self.moveX(self.speed)
+                
             if self.state[1] == 'left':
+
                 move_speed = -1 * self.speed
                 self.moveX(move_speed)
 
         self.plot_rect.center = self.rect.center
 
-    
     def display(self):
         ''' Display function
 
