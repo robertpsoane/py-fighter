@@ -140,8 +140,10 @@ class Character(pygame.sprite.Sprite):
         self.changeMap(background)
 
         ##### TO GO TO JSON
-        self.is_falling = True
+        self.is_falling = False
         self.is_jumping = False
+        self.jumps_in_action = 0
+        self.max_jumps_in_action = 2
 
     def changeMap(self, background):
         ''' changeMap(background) - used to update to new map
@@ -346,6 +348,7 @@ class Character(pygame.sprite.Sprite):
         if len(collisions) != 0:
             self.is_falling = False
             self.is_jumping = False
+            self.jumps_in_action = 0
             self.stopMove()
             return True
         else:
@@ -426,8 +429,11 @@ class Character(pygame.sprite.Sprite):
             self.state[1] = 'right'
         elif direction == 'u':
             #self.state[0] = 'jumping'
-            self.is_jumping = True
-            self.jumpcount = 1
+            if (self.jumps_in_action < self.max_jumps_in_action):
+                self.is_jumping = True
+                self.jumpcount = 1
+                self.jumps_in_action += 1
+            
 
     def stopMove(self, direction = 'none'):
         ''' stopMove()
