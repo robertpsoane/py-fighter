@@ -88,14 +88,18 @@ height_unit = screen_height // 9
 title_obj = Text(menu_screen, (midpoint, height_unit),
                         font_size['title'], menu_title, 'purple')
 
-play_button = Button(menu_screen, play_text, (midpoint, 3*height_unit,), playGame)
+play_button = Button(menu_screen, play_text, 
+                    (midpoint, 3*height_unit,), playGame)
 
-help_button = Button(menu_screen, help_text, (midpoint, 5*height_unit,), getHelp)
+help_button = Button(menu_screen, help_text, 
+                    (midpoint, 5*height_unit,), getHelp)
 
-quit_button = Button(menu_screen, quit_text, (midpoint, 7*height_unit), quitGame)
+quit_button = Button(menu_screen, quit_text, 
+                    (midpoint, 7*height_unit), quitGame)
 
 # Initialising StartMenu class
-start_menu = Menu(menu_screen, title_obj, menu_background, play_button, help_button, quit_button)
+start_menu = Menu(menu_screen, title_obj, menu_background, play_button, 
+                                                help_button, quit_button)
 
 # Start Music
 playMusic(menu_background_path)
