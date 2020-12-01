@@ -190,28 +190,28 @@ class Map:
         '''
 
         map_group = pygame.sprite.Group()
-        self.map_matrix = createGameMap()
+        self.map_matrix = self.readMap()
 
         for i in range(self.height_units):
             for j in range(self.width_units):
                 # TODO: Can refactor this set of if statements into one if
                 # statement
 
-                if self.map_matrix[i][j] == '1':
+                if self.map_matrix[i][j] == 1:
                     cell = self.cell
                     position = (j * cell, i * cell)
 
                     # Add individual tile sprite to map group
-                    map_group.add(Tile(self.screen, position, '1'))
-                elif self.map_matrix[i][j] == '2':
+                    map_group.add(Tile(self.screen, position, 1))
+                elif self.map_matrix[i][j] == 2:
                     cell = self.cell
                     position = (j * cell, i * cell)
-                    map_group.add(Tile(self.screen, position, '2'))
+                    map_group.add(Tile(self.screen, position, 2))
 
-                elif self.map_matrix[i][j] == '3':
+                elif self.map_matrix[i][j] == 3:
                     cell = self.cell
                     position = (j * cell, i * cell)
-                    map_group.add(Tile(self.screen, position, '3'))
+                    map_group.add(Tile(self.screen, position, 3))
 
         # Store map_group to self
         self.map_group = map_group
@@ -244,11 +244,11 @@ class Tile(pygame.sprite.Sprite):
         self.screen = screen
         self.dims = dims
 
-        if self.type == '1':
+        if self.type == 1:
             self.image = STONE
-        if self.type == '2':
+        if self.type == 2:
             self.image = GRASS
-        if self.type == '3':
+        if self.type == 3:
             self.image = PLATFORM
 
         self.rect = self.image.get_rect()
