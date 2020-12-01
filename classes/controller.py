@@ -16,13 +16,13 @@ class Controller():
         self.game_screen = game_screen
         self.screen_dims = screen_dims
         self.colour = colour
-        
-        
+
+
     def play(self):
         self.generateMap()
 
     def generateMap(self):
-        
+
         self.camera = Camera()
         self.background = Background(self.game_display)
         self.game_map = Map(self.game_display, self.screen_dims, 32)
@@ -62,12 +62,12 @@ class Controller():
                     self.player.stopMove("left")
 
     def update(self):
-        ''' Update function - Used to update positions of characters on 
+        ''' Update function - Used to update positions of characters on
             screen.
 
             This was initially encapsulated in the display function,
-            however this caused issues when the map functions were 
-            tracking characters.  This was due to the fact that some 
+            however this caused issues when the map functions were
+            tracking characters.  This was due to the fact that some
             changes to the characters position (such as due to gravity
             and recoil) were being applied after the map had updated.
             To avoid this, update functions were added to characters.
