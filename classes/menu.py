@@ -1,8 +1,8 @@
-''' Menu Class
+''' Menu Module
 
-Class to create menu in pygame.  Used initially for start menu.  Can be 
-extended if required to create pause and other menues throughout the 
-game.
+Module to deal with menus and buttons.  Used initially for start menu.  
+Can be extended if required to create pause and other menues throughout 
+the game.
 
 @author: Robert (unless stated otherwise)
 '''
