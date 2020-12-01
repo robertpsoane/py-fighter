@@ -14,9 +14,13 @@ button_location = 'graphics/menu/button.png'
 
 
 class Menu:
+    ''' Menu
+    Class which generates and contains menu functionality
+    '''
     def __init__(self, screen, title_obj, background_location, *buttons):
-        ''' Start Menu
-        Class which generates and contains start menu function.
+        ''' Menu
+
+        Unpacks buttons passed into menu
         '''
         self.screen = screen
         self.title_obj = title_obj
@@ -29,6 +33,9 @@ class Menu:
         self.playing = True
 
     def display(self):
+        '''
+        Displays all buttons on the screen
+        '''
         self.screen.blit(self.background, self.background_rect)
         self.title_obj.display()
         # self.play_obj.display()
@@ -38,18 +45,13 @@ class Menu:
 
     def do(self, event):
         ''' do function
-        Actions whatever action is called by user
         
-        if option == '1':
-            self.play_game()
-            self.playMusic()
-        elif option == '2':
-            # Note: This will be updated to help link when help link 
-            # exists
-            webbrowser.open('https://sites.google.com/view/pyfighter/home',
-                            new=2)
-        elif option == '3':
-            self.playing = False
+        Actions whatever is input by user.  Receives events from game 
+        loop and if applicable actions them.
+
+        The buttons have a record of whether they have been 
+        'button-downed' yet.  If they have, then if they are als 
+        'button-upped' will call their function
         '''
         if event.type == pygame.QUIT:
             # Detecting user pressing quit button, if X pressed,
@@ -66,12 +68,17 @@ class Menu:
                 button.mouse_down = False
                 
     def checkPress(self, button, pos):
+        ''' 
+        Checks whether a position hits any of the buttons on the menu
+        '''
         x0, x1, y0, y1 = button.coords
         if (x0 < pos[0] < x1) and (y0 < pos[1] < y1):
             return True
         return False
 
     def unpackButtons(self, buttons):
+        ''' Unpacks buttons form tuple to list
+        '''
         self.buttons = []
         for button in buttons:
             self.buttons.append(button)
@@ -90,7 +97,8 @@ class Button:
 
     I have used property decorators to deal with button position, as in
     the Text class so that the button can easily be moved on screen if 
-    required
+    required.  For this reason, __position is private, so that it cannot 
+    be edited from outside the function.
     '''
     def __init__(self, screen, text, position, func, size = (128, 64),
                             text_colour = 'white', highlight = 'yellow',
@@ -115,13 +123,19 @@ class Button:
         self.makeImage()
 
     def press(self):
+        ''' Call button function when pressed
+        '''
         self.func()
 
     def makeText(self):
+        ''' Create text object
+        '''
         self.text = Text(self.screen, self.position, self.font_size,
                             self.text, self.text_colour)
     
     def makeImage(self):
+        ''' Make image object from image to be loaded
+        '''
         self.image = pygame.transform.scale(
             pygame.image.load(button_location),
             self.size
@@ -130,8 +144,11 @@ class Button:
         self.rect.center = self.position
 
     def update(self):
+        ''' Updates highlighting if cursor hovering over button
+        ''' 
         pos_x, pos_y = pygame.mouse.get_pos()
-        over_button = (self.left < pos_x < self.right) and (self.top < pos_y < self.bottom)
+        over_button = (self.left < pos_x < self.right) \
+                        and (self.top < pos_y < self.bottom)
         if over_button:
             self.highlighted = True
             self.text.colour = self.highlight
@@ -140,15 +157,26 @@ class Button:
             self.highlighted = False
       
     def display(self):
+        ''' Displays all button components on screen
+        '''
         self.update()
         self.screen.blit(self.image, self.rect)
         self.text.display()
 
     def setEdgesAttributes(self):
+        ''' Sets left/right/top/bottom attributes from position
+        '''
         self.left = self.position[0] - (self.size[0] // 2)
         self.right = self.position[0] + (self.size[0] // 2)
         self.top = self.position[1] - (self.size[1] // 2)
         self.bottom = self.position[1] + (self.size[1] // 2)
+
+    # The following decorated functions deal with position and 
+    # coordinates of our button.  The position gives the centre 
+    # position, x and y give the corresponding components of the centre,
+    # and coords give the corner positions.  These are all updated by 
+    # updating the position, and the position setter cascades the 
+    # changes to all attributes.
 
     @property
     def position(self):
@@ -156,6 +184,7 @@ class Button:
 
     @position.setter
     def position(self, new_pos):
+    
         self.__position = new_pos
         self.setEdgesAttributes()
         self.text.position = self.position
