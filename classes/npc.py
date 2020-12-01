@@ -41,6 +41,9 @@ class NPC(Character):
         self.attack_delay = 15
         self.attack_counter = 0
 
+        # Kill NPC if falls off map
+        self.max_depth = screen.get_size()[1]
+
         # Wake distance (pixels) - used to determine distance target 
         # needs to be after which NPC wakes.
         # This should go somewhere else, like a JSON perhaps? 
@@ -67,6 +70,8 @@ class NPC(Character):
         This function examines position of target, makes move based on 
         target, then uses parent classes update funciton
         '''
+        if self.position[1] > self.max_depth:
+            self.kill()
         # Deciding on and actioning any moves
         self.decideMoves()
 
