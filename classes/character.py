@@ -120,7 +120,8 @@ class Character(pygame.sprite.Sprite):
         self.rect = pygame.Rect((0, 0, self.width, self.height))
         self.rect.center = self.plot_rect.center
 
-        
+        # setup score
+        self.score = 0
 
         # Get Character Arms TODO MAY need updating to reflect some 
         # enemies having own arms/other arms
@@ -154,6 +155,10 @@ class Character(pygame.sprite.Sprite):
         self.tiles_group = background.map_group
 
     def addSpritesheetJSON(self):
+        ''' addSpritesheetJSON
+
+        Loads spritesheet interpretation data from SPRITESHEET_JSON
+        '''
         for key in SPRITESHEET_JSON.keys():
             self.character_data[key] = SPRITESHEET_JSON[key]
 
@@ -182,6 +187,8 @@ class Character(pygame.sprite.Sprite):
         self.images = {}
 
         # Importing images into self.images dictionary
+        # This interacts with spritesheet code from https://ehmatthes.github.io/pcc_2e/beyond_pcc/pygame_sprite_sheets/#a-simple-sprite-sheet
+        # to load sprites into a dictinoary
         for image_type in image_types:
             self.images[image_type] = {}
             for image_direction in image_directions:
@@ -201,16 +208,12 @@ class Character(pygame.sprite.Sprite):
         '''
         self.target_group = target_group
 
-
     def spriteCollision(self, other):
         if pygame.sprite.collide_rect(self, other):
             print('COLLISION')
         else:
             print('NO COLLISION')
 
-    
-    # TODO: Check if actually can attack player
-    # TODO: Implement health
     def attack(self, target, type = 1):
         ''' Attack function - Attacks player assigned to it 
 
@@ -221,6 +224,7 @@ class Character(pygame.sprite.Sprite):
             direction = 1
         else:
             direction = -1
+        self.score += self.strength
         target.recoil(self.strength, direction)
 
     def recoil(self, force, direction):
@@ -240,8 +244,10 @@ class Character(pygame.sprite.Sprite):
         Updates health, checks if dead, and updates health bar
         '''
         self.health = self.health - amount
+        self.score -= amount // 5
         if self.health <= 0:
             self.alive = False
+            self.kill()
             return
         self.healthbar.updateHealth()
     
@@ -253,7 +259,6 @@ class Character(pygame.sprite.Sprite):
         self.health = self.health + amount
         self.healthbar.updateHealth()
 
-    
     def update(self):
         ''' Update function
 
@@ -403,7 +408,6 @@ class Character(pygame.sprite.Sprite):
         - Note: the y axis is flipped from what we might naturally 
                 assume, 0 is at the top and not the bottom
         '''
-        
         self.rect.centery += step
 
     def startMove(self,direction):
@@ -486,7 +490,6 @@ class HealthBar:
         self.front_rect = pygame.Rect(( self.x, self.y, 
                                         self.width, self.height))
         
-
     def display(self):
         ''' display
 

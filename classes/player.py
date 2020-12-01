@@ -42,6 +42,7 @@ class Player(Character):
         Updates using parent classes update function, then ensures still
         on screen
         '''
+        #print(self.score)
         Character.update(self)
         # Preventing from going off edges
         if self.rect.left < 0:
