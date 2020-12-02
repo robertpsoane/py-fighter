@@ -31,7 +31,7 @@ class Controller():
         self.player_group = pygame.sprite.Group()
         self.player_group.add(self.player)
 
-        self.enemy = NPC(self.game_display, self.game_map, 600, 100, 'thorsten')
+        self.enemy = NPC(self.game_display, self.game_map, 600, 100, 'thorsten', 'sword')
 
         self.enemy.addTarget(self.player_group)
         self.camera.addBack(self.background)

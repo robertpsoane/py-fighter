@@ -14,6 +14,7 @@ BOOMERANG_ARMS_LOCATION = 'graphics/spritesheets/boomerang-arms.png'
 SWORD_LOCATION = 'graphics/weapons/sword.png'
 BOOMERANG_LOCATION = 'graphics/weapons/boomerang-static.png'
 
+
 print()
 
 class Weapon(pygame.sprite.Sprite):
@@ -72,7 +73,6 @@ class Weapon(pygame.sprite.Sprite):
         '''
 
         # Get owner variables
-        x, y = self.owner.plot_rect.centerx, self.owner.plot_rect.centery
         self.state = self.owner.state
         self.index = self.owner.image_index
         action, direction = self.state[0], self.state[1]
@@ -80,30 +80,21 @@ class Weapon(pygame.sprite.Sprite):
         # Select Image
         self.image = self.images[action][direction]
 
-        # Update rect position
-        self.rect.center = x, y
-        
-        # Determines whether owner is alive 
-        if not self.owner.alive
-            self.owned = False
-
-        # Rect position alive
-        if self.owner.alive:
-            x, y = self.owner.rect.centerx, self.owner.rect.centery
-        if self.owner.alive:
-            self.rect.center = x, y 
-            
-        # Blit to screen
         if self.owned:
-            self.screen.blit(self.image[self.index], self.rect)
-        else:
-            self.screen.blit(self.weapon, self.rect)            
+            # Rect position alive
+            if self.owner.alive:
+                self.rect.center = self.owner.rect.center
+                self.screen.blit(self.image[self.index], self.rect)
+            else:
+                self.owned = False            
+                 
             
+        '''
         # Update dropped weapon
         if owner.alive:
             self.rect_death = self.rect
             self.screen.blit(self.image[self.index], self.rect)
-
+        
         if not self.owner.alive:
             self.owned = False
             self.rect_death.bottom = 100
@@ -113,24 +104,34 @@ class Weapon(pygame.sprite.Sprite):
                 if self.owner.state[1] == 'left':
                 self.rect_death.right += 2
             self.screen.blit(self.weapon, self.rect_death)
+        '''
         
 
+class DroppableWeapon(Weapon):
+    def display(self):
+        Weapon.display(self)
+        if not self.owned:
+            self.screen.blit(self.weapon, self.rect) 
 
 
-class Sword(Weapon):
+class Sword(DroppableWeapon):
     sprite_sheet_location = SWORD_ARMS_LOCATION
+    
     def __init__(self, owner):
         Weapon.__init__(self, owner, self.sprite_sheet_location)
     
-    
-    self.weapon = pygame.image.load(SWORD_LOCATION)
+        self.weapon = pygame.image.load(SWORD_LOCATION)
+        self.weapon.set_colorkey((0, 255, 0))
 
-class Boomerang(Weapon):
+
+class Boomerang(DroppableWeapon):
     sprite_sheet_location = BOOMERANG_ARMS_LOCATION
     def __init__(self, owner):
         Weapon.__init__(self, owner, self.sprite_sheet_location)
 
-    self.weapon = pygame.image.load(BOOMERANG_LOCATION)
+        self.weapon = pygame.image.load(BOOMERANG_LOCATION)
+        self.weapon.set_colorkey((0, 255, 0))
+
 
 class Arms(Weapon):
     sprite_sheet_location = BASIC_ARMS_LOCATION
@@ -138,4 +139,8 @@ class Arms(Weapon):
         Weapon.__init__(self, owner, self.sprite_sheet_location)
 
 
-    
+WEAPON_TYPES = {
+    'arms':Arms,
+    'boomerang':Boomerang,
+    'sword':Sword
+}

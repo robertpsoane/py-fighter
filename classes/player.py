@@ -19,13 +19,13 @@ class Player(Character):
     on the screen.
     '''
 
-    def __init__(self, screen, background, x_position, y_position):
+    def __init__(self, screen, background, x_position, y_position, arm_type = 'arms'):
         # Loading player data json, and converitng to python dictionary
         with open('json/basic_character.JSON') as player_json:
             character_data = json.load(player_json)
 
         # Initialising Character class
-        Character.__init__(self, character_data, background, screen, x_position, y_position)
+        Character.__init__(self, character_data, background, screen, x_position, y_position, arm_type)
 
     def attack(self):
         ''' attack function

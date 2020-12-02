@@ -77,7 +77,7 @@ class Character(pygame.sprite.Sprite):
     '''
 
     def __init__(self, character_data, background, screen,
-                                    x_position, y_position):
+                                    x_position, y_position, arm_type = 'arms'):
         ''' Init Character
         Function takes and unpacks relevat information from the 
         characters JSON dictionary
@@ -125,7 +125,7 @@ class Character(pygame.sprite.Sprite):
 
         # Get Character Arms TODO MAY need updating to reflect some 
         # enemies having own arms/other arms
-        self.arms = Arms(self)
+        self.arms = WEAPON_TYPES[arm_type](self)
         self.healthbar = HealthBar(self)
 
         # Important move variables
@@ -249,7 +249,7 @@ class Character(pygame.sprite.Sprite):
         self.score -= amount // 5
         if self.health <= 0:
             self.alive = False
-            self.kill()
+            #self.kill()
             return
         self.healthbar.updateHealth()
     
