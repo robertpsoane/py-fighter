@@ -28,19 +28,28 @@ class Controller():
         self.game_map = Map(self.game_display, self.screen_dims, 32)
         # Numbers will be changed to actual size later on
         self.player = Player(self.game_display, self.game_map, 100, 100)
+        self.player_group = pygame.sprite.Group()
+        self.player_group.add(self.player)
+
         self.enemy = NPC(self.game_display, self.game_map, 600, 100, 'thorsten')
 
-        self.enemy.addTarget(self.player)
+        self.enemy.addTarget(self.player_group)
         self.camera.addBack(self.background)
         self.camera.add(self.player)
         self.camera.add(self.enemy)
         self.camera.addMap(self.game_map)
 
+        
         # Used to assign multiple targets to player
         # TODO: Put in function if/when we have more than one enemy
         #       on the board at any point in time
         self.enemy_group = pygame.sprite.Group()
         self.enemy_group.add(self.enemy)
+
+        self.characters = pygame.sprite.Group()
+        self.characters.add(self.player)
+        for enemy in self.enemy_group:
+            self.characters.add(enemy)
 
 
         self.player.addTarget(self.enemy_group)
@@ -76,9 +85,8 @@ class Controller():
             @author: Robert
         '''
         # Updating player and enemy positions
-        self.player.update()
-        for enemy in self.enemy_group:
-            enemy.update()
+        for character in self.characters:
+            character.update()
 
         # Update camera position
         self.camera.scroll()
@@ -93,9 +101,8 @@ class Controller():
         self.game_map.display()
 
         # Display characters
-        self.player.display()
-        for enemy in self.enemy_group:
-            enemy.display()
+        for character in self.characters:
+            character.display()
 
         # scales the game_display to game_screen. Allows us to scale images
         scaled_surf = pygame.transform.scale(self.game_display, self.screen_dims)

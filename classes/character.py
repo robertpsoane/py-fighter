@@ -1,5 +1,8 @@
 ''' Character Class
 
+TODO NEEDS A RE WRITE
+
+
 Character class for py-fighter game.
 Takes input of character data, screen, x position, and y position.
 
@@ -117,7 +120,8 @@ class Character(pygame.sprite.Sprite):
         self.rect = pygame.Rect((0, 0, self.width, self.height))
         self.rect.center = self.plot_rect.center
 
-        
+        # setup score
+        self.score = 0
 
         # Get Character Arms TODO MAY need updating to reflect some 
         # enemies having own arms/other arms
@@ -136,8 +140,10 @@ class Character(pygame.sprite.Sprite):
         self.changeMap(background)
 
         ##### TO GO TO JSON
-        self.is_falling = True
+        self.is_falling = False
         self.is_jumping = False
+        self.jumps_in_action = 0
+        self.max_jumps_in_action = 2
 
     def changeMap(self, background):
         ''' changeMap(background) - used to update to new map
@@ -151,6 +157,10 @@ class Character(pygame.sprite.Sprite):
         self.tiles_group = background.map_group
 
     def addSpritesheetJSON(self):
+        ''' addSpritesheetJSON
+
+        Loads spritesheet interpretation data from SPRITESHEET_JSON
+        '''
         for key in SPRITESHEET_JSON.keys():
             self.character_data[key] = SPRITESHEET_JSON[key]
 
@@ -179,6 +189,8 @@ class Character(pygame.sprite.Sprite):
         self.images = {}
 
         # Importing images into self.images dictionary
+        # This interacts with spritesheet code from https://ehmatthes.github.io/pcc_2e/beyond_pcc/pygame_sprite_sheets/#a-simple-sprite-sheet
+        # to load sprites into a dictinoary
         for image_type in image_types:
             self.images[image_type] = {}
             for image_direction in image_directions:
@@ -193,10 +205,10 @@ class Character(pygame.sprite.Sprite):
                     self.images[image_type][image_direction] += \
                                                             [specific_image]
 
-    def addTarget(self, target):
-        ''' addTarget - Used to lock player onto a target sprite group
+    def addTarget(self, target_group):
+        ''' Adds group of enemies to player
         '''
-        self.target = target
+        self.target_group = target_group
 
     def spriteCollision(self, other):
         if pygame.sprite.collide_rect(self, other):
@@ -204,9 +216,6 @@ class Character(pygame.sprite.Sprite):
         else:
             print('NO COLLISION')
 
-    
-    # TODO: Check if actually can attack player
-    # TODO: Implement health
     def attack(self, target, type = 1):
         ''' Attack function - Attacks player assigned to it 
 
@@ -217,6 +226,7 @@ class Character(pygame.sprite.Sprite):
             direction = 1
         else:
             direction = -1
+        self.score += self.strength
         target.recoil(self.strength, direction)
 
     def recoil(self, force, direction):
@@ -236,8 +246,10 @@ class Character(pygame.sprite.Sprite):
         Updates health, checks if dead, and updates health bar
         '''
         self.health = self.health - amount
+        self.score -= amount // 5
         if self.health <= 0:
             self.alive = False
+            self.kill()
             return
         self.healthbar.updateHealth()
     
@@ -249,7 +261,6 @@ class Character(pygame.sprite.Sprite):
         self.health = self.health + amount
         self.healthbar.updateHealth()
 
-    
     def update(self):
         ''' Update function
 
@@ -276,17 +287,21 @@ class Character(pygame.sprite.Sprite):
             self.recoil_counter = self.recoil_counter - 1
 
         
+        #self.collidesWithAny()
+
         # Update x/y subject to status
         if self.x_y_moving:
+
             if self.state[1] == 'right':
                 self.moveX(self.speed)
+                
             if self.state[1] == 'left':
+
                 move_speed = -1 * self.speed
                 self.moveX(move_speed)
 
         self.plot_rect.center = self.rect.center
 
-    
     def display(self):
         ''' Display function
 
@@ -333,6 +348,7 @@ class Character(pygame.sprite.Sprite):
         if len(collisions) != 0:
             self.is_falling = False
             self.is_jumping = False
+            self.jumps_in_action = 0
             self.stopMove()
             return True
         else:
@@ -395,7 +411,6 @@ class Character(pygame.sprite.Sprite):
         - Note: the y axis is flipped from what we might naturally 
                 assume, 0 is at the top and not the bottom
         '''
-        
         self.rect.centery += step
 
     def startMove(self,direction):
@@ -414,8 +429,11 @@ class Character(pygame.sprite.Sprite):
             self.state[1] = 'right'
         elif direction == 'u':
             #self.state[0] = 'jumping'
-            self.is_jumping = True
-            self.jumpcount = 1
+            if (self.jumps_in_action < self.max_jumps_in_action):
+                self.is_jumping = True
+                self.jumpcount = 1
+                self.jumps_in_action += 1
+            
 
     def stopMove(self, direction = 'none'):
         ''' stopMove()
@@ -478,7 +496,6 @@ class HealthBar:
         self.front_rect = pygame.Rect(( self.x, self.y, 
                                         self.width, self.height))
         
-
     def display(self):
         ''' display
 

@@ -41,16 +41,23 @@ class NPC(Character):
         self.attack_delay = 15
         self.attack_counter = 0
 
+        # Kill NPC if falls off map
+        self.max_depth = screen.get_size()[1]
+
         # Wake distance (pixels) - used to determine distance target 
         # needs to be after which NPC wakes.
         # This should go somewhere else, like a JSON perhaps? 
         # TODO: Decide!
         self.wake_distance = 200
 
-    def addTarget(self,target):
+    def addTarget(self, target_group):
         ''' addTarget - Used to lock NPC onto a target to attack
         '''
-        Character.addTarget(self, target)
+        Character.addTarget(self, target_group)
+        # Sorry this line is messy! was playing in the debugger and 
+        # found it works
+        self.target = target_group.sprites()[0]
+
 
         # TODO: Redo c2c_widtrh and methods which use it
         # Centre to centre width
@@ -63,6 +70,8 @@ class NPC(Character):
         This function examines position of target, makes move based on 
         target, then uses parent classes update funciton
         '''
+        if self.position[1] > self.max_depth:
+            self.kill()
         # Deciding on and actioning any moves
         self.decideMoves()
 
