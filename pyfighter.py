@@ -7,20 +7,24 @@ A Steampunk 2D streetfighting game built with PyGame.
 Produced as an MSc Computer Science project by R. Soane, 
 S. Mistrey and R. Danevicius
 
-##############################################################################
+########################################################################
 
-This file forms a start menu for the game.  When selected, the game function 
-is loaded as a new instance of pygame within the same window.  Implemented in
-this way so that whenever the player quits the game, it goes back to the menu.
+This file forms a start menu for the game.  When selected, the game 
+function is loaded as a new instance of pygame within the same window.  
+Implemented in this way so that whenever the player quits the game, it 
+goes back to the menu.
 
 '''
 
 ### Library Imports
-import pygame
+import os
+import webbrowser
 import json
+import pygame
 from game import pyfighterGame
-from classes.menu import StartMenu
-from classes.displaystring import DisplayString
+from classes.menu import Menu
+from classes.menu import Button
+from classes.text import Text
 
 ### Important Game Variables from JSON
 with open('json/config.JSON') as config_file:
@@ -45,30 +49,64 @@ clock = pygame.time.Clock()
 logo_image = pygame.image.load(config['logo_location'])
 pygame.display.set_icon(logo_image)
 
-### Setting up Menu objects
+menu_background = config['start_menu_background']
+menu_background_path = config['menu_music']
+
+### Setting up Menu
+# Menu Functions - These functions are passed into each menu button
+def playGame():
+    pyfighterGame()
+    playMusic(menu_background_path)
+
+def playMusic(music_path):
+    ### Setting up game music
+    # - Music code inspired by code here:
+    #   https://riptutorial.com/pygame/example/24563/example-to-add-music-in-pygame
+    pygame.mixer.init()
+    pygame.mixer.music.load(music_path)
+    pygame.mixer.music.play(-1)
+
+def getHelp():
+    webbrowser.open('https://sites.google.com/view/pyfighter/home',
+                            new=2)
+
+def quitGame():
+    pygame.quit()
+    os._exit(0)
+
 # String names
 menu_title = game_name
-option_1 = '[1] Play Game'
-option_2 = '[2] Help'
-option_3 = '[3] Quit'
+play_text = 'Play'
+help_text = 'Help'
+quit_text = 'Quit'
 
-# Calculating (x,y) coords of strings
-midpoint = screen_width // 2
-height_unit = screen_height // 9
+# Title position
+title_x = screen_width // 2
+title_y = screen_height // 9
+# Calculating (x,y) coords of buttons
+width_unit = screen_width // 6
+height_unit = screen_height // 2
 
 # Creating pygame string objects
-title_obj = DisplayString(menu_screen, midpoint, height_unit,
-                        font_size['title'], menu_title, colour['green'])
-play_obj = DisplayString(menu_screen, midpoint, 3*height_unit, 
-                        font_size['subtitle'], option_1, colour['white'])
-help_obj = DisplayString(menu_screen, midpoint, 5*height_unit,
-                        font_size['subtitle'], option_2, colour['white'])
-quit_obj = DisplayString(menu_screen, midpoint, 7*height_unit,
-                        font_size['subtitle'], option_3, colour['white'])
+title_obj = Text(menu_screen, (title_x, title_y),
+                        font_size['title'], menu_title, 'purple')
+
+play_button = Button(menu_screen, play_text, 
+                    (1 * width_unit, height_unit,), playGame)
+
+help_button = Button(menu_screen, help_text, 
+                    (3 * width_unit, height_unit,), getHelp)
+
+quit_button = Button(menu_screen, quit_text, 
+                    (5 * width_unit, height_unit), quitGame)
 
 # Initialising StartMenu class
-start_menu = StartMenu(menu_screen, title_obj, play_obj, help_obj, quit_obj,
-                        pyfighterGame)
+start_menu = Menu(menu_screen, title_obj, menu_background, play_button, 
+                                                help_button, quit_button)
+
+# Start Music
+playMusic(menu_background_path)
+
 
 ### Main Game Loop
 while start_menu.playing:
@@ -77,15 +115,8 @@ while start_menu.playing:
 
     # Get/action events
     for event in pygame.event.get():
-        
-        if event.type == pygame.QUIT:
-            # Detecting user pressing quit button, if X pressed,
-            # break loop and quit screen.
-            start_menu.playing = False
-        
-        if event.type == pygame.KEYDOWN:
-            # If key pressed, start menu to action chosen option.
-            start_menu.do(event.unicode)
+        # Send each event to the start menu
+        start_menu.do(event)
         
     # Refresh screen
     menu_screen.fill(colour['black'])
@@ -96,3 +127,4 @@ while start_menu.playing:
     # Display everything on screen
     pygame.display.flip()
 
+quitGame()

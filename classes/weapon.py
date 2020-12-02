@@ -72,7 +72,7 @@ class Weapon(pygame.sprite.Sprite):
         '''
 
         # Get owner variables
-        x, y = self.owner.rect.centerx, self.owner.rect.centery
+        x, y = self.owner.plot_rect.centerx, self.owner.plot_rect.centery
         self.state = self.owner.state
         self.index = self.owner.image_index
         action, direction = self.state[0], self.state[1]

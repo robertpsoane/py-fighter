@@ -11,31 +11,45 @@ from classes.camera import Camera
 from classes.background import Background
 
 class Controller():
-    def __init__(self, game_display, game_screen, screen_dims):
+    def __init__(self, game_display, game_screen, screen_dims, colour):
         self.game_display = game_display
         self.game_screen = game_screen
         self.screen_dims = screen_dims
-        self.camera = Camera()
+        self.colour = colour
 
+
+    def play(self):
+        self.generateMap()
 
     def generateMap(self):
 
+        self.camera = Camera()
         self.background = Background(self.game_display)
         self.game_map = Map(self.game_display, self.screen_dims, 32)
-        self.player = Player(self.game_display, self.game_map, 100, 100)  #Numbers will be changed to actual size later on
+        # Numbers will be changed to actual size later on
+        self.player = Player(self.game_display, self.game_map, 100, 100)
+        self.player_group = pygame.sprite.Group()
+        self.player_group.add(self.player)
+
         self.enemy = NPC(self.game_display, self.game_map, 600, 100, 'thorsten')
 
-        self.enemy.addTarget(self.player)
+        self.enemy.addTarget(self.player_group)
         self.camera.addBack(self.background)
         self.camera.add(self.player)
         self.camera.add(self.enemy)
         self.camera.addMap(self.game_map)
 
+        
         # Used to assign multiple targets to player
         # TODO: Put in function if/when we have more than one enemy
         #       on the board at any point in time
         self.enemy_group = pygame.sprite.Group()
         self.enemy_group.add(self.enemy)
+
+        self.characters = pygame.sprite.Group()
+        self.characters.add(self.player)
+        for enemy in self.enemy_group:
+            self.characters.add(enemy)
 
 
         self.player.addTarget(self.enemy_group)
@@ -46,10 +60,8 @@ class Controller():
                     self.player.startMove("u")
                 if event.key == pygame.K_d:
                     self.player.startMove("r")
-                    #self.camera.cameraMove("r")
                 if event.key == pygame.K_a:
                     self.player.startMove("l")
-                   #self.camera.cameraMove("l")
                 if event.key == pygame.K_q:
                     self.player.attack()
             if event.type == pygame.KEYUP:
@@ -58,51 +70,42 @@ class Controller():
                 elif event.key == pygame.K_a:
                     self.player.stopMove("left")
 
+    def update(self):
+        ''' Update function - Used to update positions of characters on
+            screen.
+
+            This was initially encapsulated in the display function,
+            however this caused issues when the map functions were
+            tracking characters.  This was due to the fact that some
+            changes to the characters position (such as due to gravity
+            and recoil) were being applied after the map had updated.
+            To avoid this, update functions were added to characters.
+            These are called before we blit to the screen.
+
+            @author: Robert
+        '''
+        # Updating player and enemy positions
+        for character in self.characters:
+            character.update()
+
+        # Update camera position
+        self.camera.scroll()
 
     def display(self):
 
+        # Colour screen purple
+        self.game_display.fill(self.colour['purple'])
 
-        self.camera.scroll()
+        # Display background and map
         self.background.displayQ()
         self.game_map.display()
-        self.player.display()
-        self.enemy.display()
+
+        # Display characters
+        for character in self.characters:
+            character.display()
 
         # scales the game_display to game_screen. Allows us to scale images
         scaled_surf = pygame.transform.scale(self.game_display, self.screen_dims)
         self.game_screen.blit(scaled_surf, (0, 0))
 
         # Camera variable to create camera movement
-
-
-'''
-functions to code:
-
-note: all functions have parameter self, but when calling function you don't
-pass self
-Functions with an asterisk - use the name I've given (__init__ is a default python
-name, and display for consistency)
-
-*__init__() - function which runs when you initialise an instance of the
-            class.
-            Needs to take input of screen, and screen dims
-
-generateMap() - function which makes an instance of map, background, player,
-                npc etc at the beginning of a room
-
-*display()  - calls display on all objects.  should call controller.display() in
-            the game loop for each iteration, this function displays everything
-            to the screen
-
-keyboardInput() - called in the for loop in the game loop - initially used only
-                to control player, takes keyboard input and processes it
-
-
-Note - player is the class for the player, however you can call all methods in
-        character on player (eg you can do player.startMove('l'))
-
-Feel free to write any other functions in the class to help make the
- controller more useable etc
-
-
-'''
