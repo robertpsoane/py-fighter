@@ -8,8 +8,9 @@ import pygame
 from classes.text import Text
 
 def pauseScreen(screen):
-
-    paused_text = Text(screen, (500, 200), 60, 'PAUSED', 'purple')
+    height = screen.get_height() // 2
+    width = screen.get_width() // 2
+    paused_text = Text(screen, (width, height), 60, 'PAUSED', 'purple')
     
     paused = True
     while paused:

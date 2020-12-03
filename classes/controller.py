@@ -101,6 +101,8 @@ class Controller():
                 if event.key == pygame.K_q:
                     self.player.attack()
                 if event.key == pygame.K_ESCAPE:
+                    self.player.updateState('idle', self.player.state[1])
+                    self.player.x_y_moving = False
                     pauseScreen(self.game_screen)
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_d:
