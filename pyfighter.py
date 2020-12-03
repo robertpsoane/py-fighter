@@ -21,7 +21,7 @@ import os
 import webbrowser
 import json
 import pygame
-from game import pyfighterGame
+from screens.game import pyfighterGame
 from classes.menu import Menu
 from classes.menu import Button
 from classes.text import Text

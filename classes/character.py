@@ -236,7 +236,7 @@ class Character(pygame.sprite.Sprite):
         Causes player being attacked to recoil in opposite direction, 
         and lose health.
         '''
-        SFX.punch()
+        SFX.wind()
         if self.rect[0] < target.rect[0]:
             direction = 1
         else:
