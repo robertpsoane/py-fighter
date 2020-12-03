@@ -53,9 +53,21 @@ character_data follows the following structure:
                                             direction facing)
 }
 
-Future Plans:
-- Health functionality
-- Attack functionality
+We get this from two different sources - the spritesheet JSON which 
+gives a mapping between grid coordinates and the corresponding images
+on the spritesheet, and the character specific config which contains 
+data about the specific character.
+
+The main source of inspiration for this class and its sub class was the
+website on producing a chess game:
+https://ehmatthes.github.io/pcc_2e/beyond_pcc/pygame_sprite_sheets/#a-simple-sprite-sheet
+This site shows how to blit images to a screen, and ways to split up
+a sprites sheet.
+
+I didn't take any inspiration for animating the sprite across frames
+I just assumed I could put the images in a data structure and iterate
+over them
+
 
 @author: Robert (Unless stated otherwise)
 '''
@@ -63,7 +75,9 @@ import pygame
 import json
 from classes.spritesheet import SpriteSheet
 from classes.weapon import *
+from classes.sfxbox import SFXBox
 
+SFX = SFXBox()
 
 with open('json/spritesheet.JSON') as sprite_sheet_json:
             SPRITESHEET_JSON = json.load(sprite_sheet_json)
@@ -222,6 +236,7 @@ class Character(pygame.sprite.Sprite):
         Causes player being attacked to recoil in opposite direction, 
         and lose health.
         '''
+        SFX.punch()
         if self.rect[0] < target.rect[0]:
             direction = 1
         else:

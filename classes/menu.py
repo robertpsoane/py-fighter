@@ -9,9 +9,11 @@ the game.
 
 import pygame
 from classes.text import Text
+from classes.sfxbox import SFXBox
 
 button_location = 'graphics/menu/button.png'
 
+SFX = SFXBox()
 
 class Menu:
     ''' Menu
@@ -64,6 +66,7 @@ class Menu:
         if event.type == pygame.MOUSEBUTTONUP:
             for button in self.buttons:
                 if self.checkPress(button, event.pos) and button.mouse_down:
+                    SFX.click()
                     button.press()
                 button.mouse_down = False
                 
