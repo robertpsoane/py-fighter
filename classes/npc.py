@@ -124,7 +124,7 @@ class NPC(Character):
 
         # If possible, attack
         if pygame.sprite.collide_rect(self, self.target):
-            print(self.attack_counter)
+            #print(self.attack_counter)
             if self.attack_counter == self.attack_delay:
                 self.attack_counter = 0
                 self.attack(self.target)

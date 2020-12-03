@@ -73,6 +73,7 @@ class Controller():
 
     def newGame(self):
         self.level.val += 1
+        self.player.max_health += 10
         self.setupCameraMap()
         self.resetPlayer()
         self.generateLevel()
