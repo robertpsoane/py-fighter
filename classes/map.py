@@ -255,13 +255,22 @@ class Tile(pygame.sprite.Sprite):
 
         if self.type == 1:
             self.image = STONE
+            self.rect = self.image.get_rect()
+            self.rect.topleft = [dims[0], dims[1]]
+
         if self.type == 2:
             self.image = GRASS
+            self.rect = self.image.get_rect()
+            self.rect.topleft = [dims[0], dims[1]]
+
         if self.type == 3:
             self.image = PLATFORM
+            self.rect = self.image.get_rect()
+            # Making platform rect smaller
+            self.rect.inflate_ip(0, -31)
+            self.rect.topleft = [dims[0], dims[1]]
 
-        self.rect = self.image.get_rect()
-        self.rect.topleft = [dims[0], dims[1]]
+
 
     def display(self):
         '''
