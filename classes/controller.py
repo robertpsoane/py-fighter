@@ -121,6 +121,7 @@ class Controller():
         '''
         self.level.val += 1
         self.player.max_health += 10
+        self.player.health = self.player.max_health
         self.setupCameraMap()
         self.resetPlayer()
         self.generateLevel()
@@ -194,7 +195,7 @@ class Controller():
         to edit the code.
         '''
         self.god_mode = 5
-        self.player.max_health = 1000000000
+        self.player.max_health = 1000000000000000000000000000
         self.player.health = self.player.max_health
         self.gt = Text(self.game_screen,
                         (110, self.game_screen.get_height() - 20),
@@ -219,7 +220,8 @@ class Controller():
         # Update camera position
         self.camera.scroll()
 
-        if (self.player.alive == False) and (self.god_mode != 5):
+        # Check if player is alive
+        if self.player.alive == False:
             gameOver()
 
         for enemy in self.enemy_group:

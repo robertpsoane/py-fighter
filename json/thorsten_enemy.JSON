@@ -11,6 +11,6 @@
     "refresh": 10,
     "initialstate": ["idle", "right"],
 
-    "initial_health_points": 100,
+    "initial_health_points": 30,
     "initial_strength": 10
 }
