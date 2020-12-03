@@ -177,8 +177,6 @@ class Controller():
         #self.score_string.text = f'Score = {self.player.score}'
         self.score.val = self.player.score
         
-        
-
     def display(self):
         ''' Display
 
@@ -217,8 +215,6 @@ class GameOutput():
 
     Class to deal with displaying score and level to the game
     '''
-
-
     font_size = 30
 
     def __init__(self, screen):
