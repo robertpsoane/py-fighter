@@ -26,19 +26,29 @@ class Controller():
         self.colour = colour
         self.score = Score(game_screen)
         self.level = Level(game_screen)
-        self.initialGame()
+        self.firstLevel()
+        self.mid_width = self.game_screen.get_width() // 2
+        self.mid_height = self.game_screen.get_height() // 2
 
     def setupCameraMap(self):
+        ''' 
+        Sets up camera and map for a given level
+        '''
         self.camera = Camera()
         self.background = Background(self.game_display)
         self.game_map = Map(self.game_display, self.screen_dims, 32)
 
     def setupPlayer(self):
+        ''' Sets up player for the first level
+        '''
         self.player = Player(self.game_display, self.game_map, 100, - 100)
         self.player_group = pygame.sprite.Group()
         self.player_group.add(self.player)
 
     def generateLevel(self):
+        '''
+        This function generates a new level, and enemies to fight
+        '''
         self.enemy = NPC(self.game_display, self.game_map, 600, - 100, 'thorsten')
 
         self.enemy.addTarget(self.player_group)
@@ -61,17 +71,25 @@ class Controller():
         self.player.addTarget(self.enemy_group)
     
     def resetPlayer(self):
+        ''' Resets player to start point for new level
+        '''
         self.player.changeMap(self.game_map)
         self.player.center = 100, 100
         self.player.updateState('idle', self.player.state[1])
         self.player.x_y_moving = False
 
-    def initialGame(self):
+    def firstLevel(self):
+        ''' Sets up first level
+        '''
         self.setupCameraMap()
         self.setupPlayer()
         self.generateLevel()
 
-    def newGame(self):
+    def newLevel(self):
+        ''' Function to start a new level
+
+        Increments the level counter, and adjusts player health
+        '''
         self.level.val += 1
         self.player.max_health += 10
         self.setupCameraMap()
@@ -79,9 +97,13 @@ class Controller():
         self.generateLevel()
     
     def levelComplete(self):
-        width, height = self.game_screen.get_width() // 2, self.game_screen.get_height() // 2
-        level_complete1 = Text(self.game_screen, (width, height - 40), 30, 'Level Complete')
-        level_complete2 = Text(self.game_screen, (width, height), 30, 'Press Space to continue')
+        ''' levelComplete function
+
+        This is called whenever a level is complete and used to allow 
+        the player to trigger the start of the next level.
+        '''       
+        level_complete1 = Text(self.game_screen, (self.mid_width, self.mid_height - 40), 30, 'Level Complete')
+        level_complete2 = Text(self.game_screen, (self.mid_width, self.mid_height), 30, 'Press Space to continue')
         level_complete1.display()
         level_complete2.display()
         pygame.display.flip()
@@ -95,6 +117,11 @@ class Controller():
                     self.run = False
 
     def keyboardInput(self, event):
+        ''' keyboardInput
+    
+        Called by game loop, and checking events from keyboard, and 
+        calling respective functions.
+        '''
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w:
                     self.player.startMove("u")
@@ -145,7 +172,7 @@ class Controller():
 
         if len(self.enemy_group) == 0:
             self.levelComplete()
-            self.newGame()
+            self.newLevel()
 
         #self.score_string.text = f'Score = {self.player.score}'
         self.score.val = self.player.score
@@ -153,6 +180,11 @@ class Controller():
         
 
     def display(self):
+        ''' Display
+
+        This displays all our objects to the screen in order.  This 
+        takes place each frame.
+        '''
 
         # Colour screen purple
         self.game_display.fill(self.colour['purple'])
@@ -166,7 +198,8 @@ class Controller():
             character.display()
 
         # scales the game_display to game_screen. Allows us to scale images
-        scaled_surf = pygame.transform.scale(self.game_display, self.screen_dims)
+        scaled_surf = pygame.transform.scale(self.game_display,
+                                                self.screen_dims)
         self.game_screen.blit(scaled_surf, (0, 0))
 
         self.score.display()
@@ -180,25 +213,55 @@ class Controller():
 # Refactored from main Controller class by Robert
 
 class GameOutput():
+    ''' GameOutput
+
+    Class to deal with displaying score and level to the game
+    '''
+
+
     font_size = 30
 
     def __init__(self, screen):
-        self.text_output = Text(screen, (self.position), self.font_size, str(self))
+        ''' 
+        Initialises a Text object on the screen which can be updated 
+        when required
+        '''
+        self.text_output = Text(screen, (self.position), self.font_size,
+                                                             str(self))
 
     def __str__(self):
+        '''
+        Returns a string of the label and value
+        '''
         return f'{self.label}{self.val}'
 
     def refreshString(self):
+        '''
+        Refreshes the string to blit each time value is changed
+        '''
         self.text_output.text = str(self)
 
     def display(self):
+        '''
+        Blits text object to string
+        '''
         self.text_output.display()
 
     
 class Score(GameOutput):
+    '''
+    Shows score on screen at top left.
+
+    We store the value as a private variable, this is so we can use the 
+    setter decorator to control how it is updated.  To avoid making our
+    characters depend on this class, they never update the object.
+    Instead the controller updates the value with each update.
+    To avoid having to re-render the Text object every update, we check 
+    whether the score has changed, if it has we update it and re-render
+    the Text object.
+    '''
     
     def __init__(self, screen):
-        #(100, 100), 20, 'Score = 0'
         self.position = (100, 50)
         self.__val = 0
         self.label = 'Score: '
@@ -217,7 +280,18 @@ class Score(GameOutput):
             self.refreshString()
 
 class Level(GameOutput):
+    '''
+    Used to display Level we are on to top right hand side of screen
     
+    Frustratingly we had to copy and paste the @property method and 
+    couldn't use inheritance.  This is because the __val attribute is
+    private and cannot be accessed outside of the Level class.
+    (Sorry about copying code! We really didn't have a choice :'( )
+
+    The value setter is similar to the setter in Score, however we don't
+    bother checking if there is a change in level before updating it as
+    we will only be updating this class when there is a change.
+    '''
     def __init__(self, screen):
         #(100, 100), 20, 'Score = 0'
         self.position = (screen.get_width() - 100 , 50)
