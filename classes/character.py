@@ -264,7 +264,7 @@ class Character(pygame.sprite.Sprite):
         self.score -= amount // 5
         if self.health <= 0:
             self.alive = False
-            self.kill()
+            #self.kill()
             return
         self.healthbar.updateHealth()
     

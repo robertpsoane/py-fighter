@@ -23,6 +23,7 @@ class Camera:
 
         # List used to save the name of character Class instances.
         self.sprites = []
+
         # Create a variable to follow Players position in the map when camera is not working.
         self.world_x = x
 
@@ -37,6 +38,9 @@ class Camera:
     def addPlayer(self, player):
         self.sprites = [player]
 
+    def addWeapon(self, weapon):
+        pass
+    
     def add(self, sprite):
         ''' Access the variables of all Character class instance.'''
         self.sprites.append(sprite)

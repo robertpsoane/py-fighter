@@ -9,6 +9,9 @@ from classes.player import Player
 from classes.npc import NPC
 from classes.camera import Camera
 from classes.background import Background
+from classes.text import Text
+
+from screens.pause import pauseScreen
 
 class Controller():
     def __init__(self, game_display, game_screen, screen_dims, colour):
@@ -16,17 +19,20 @@ class Controller():
         self.game_screen = game_screen
         self.screen_dims = screen_dims
         self.colour = colour
+        self.setupScore()
+
+    def setupScore(self):
+        self.score_string = Text(self.game_screen, (100, 100), 20, 'Score = 0')
 
 
-    def play(self):
-        self.generateMap()
 
-    def generateMap(self):
 
+    def firstGame(self):
+        #self.generateMap()
         self.camera = Camera()
         self.background = Background(self.game_display)
         self.game_map = Map(self.game_display, self.screen_dims, 32)
-        # Numbers will be changed to actual size later on
+
         self.player = Player(self.game_display, self.game_map, 100, 100)
         self.player_group = pygame.sprite.Group()
         self.player_group.add(self.player)
@@ -39,7 +45,6 @@ class Controller():
         self.camera.add(self.enemy)
         self.camera.addMap(self.game_map)
 
-        
         # Used to assign multiple targets to player
         # TODO: Put in function if/when we have more than one enemy
         #       on the board at any point in time
@@ -54,6 +59,37 @@ class Controller():
 
         self.player.addTarget(self.enemy_group)
 
+    def newGame(self):
+        self.camera = Camera()
+        self.background = Background(self.game_display)
+        self.game_map = Map(self.game_display, self.screen_dims, 32)
+
+        self.player.changeMap(self.game_map)
+        self.player.center = 100, 100
+
+        self.enemy = NPC(self.game_display, self.game_map, 600, 100, 'thorsten')
+
+        self.enemy.addTarget(self.player_group)
+        self.camera.addBack(self.background)
+        self.camera.add(self.player)
+        self.camera.add(self.enemy)
+        self.camera.addMap(self.game_map)
+
+        # Used to assign multiple targets to player
+        # TODO: Put in function if/when we have more than one enemy
+        #       on the board at any point in time
+        self.enemy_group = pygame.sprite.Group()
+        self.enemy_group.add(self.enemy)
+
+        self.characters = pygame.sprite.Group()
+        self.characters.add(self.player)
+        for enemy in self.enemy_group:
+            self.characters.add(enemy)
+
+
+        self.player.addTarget(self.enemy_group)
+
+    
     def keyboardInput(self, event):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w:
@@ -64,6 +100,8 @@ class Controller():
                     self.player.startMove("l")
                 if event.key == pygame.K_q:
                     self.player.attack()
+                if event.key == pygame.K_ESCAPE:
+                    pauseScreen(self.game_screen)
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_d:
                     self.player.stopMove("right")
@@ -91,6 +129,23 @@ class Controller():
         # Update camera position
         self.camera.scroll()
 
+        if self.player.alive == False:
+            gameOver()
+
+        for enemy in self.enemy_group:
+            if enemy.rect.bottom > self.screen_dims[1]:
+                enemy.kill()
+            if enemy.alive == False:
+                self.camera.addWeapon(enemy.arms)
+                enemy.kill()
+
+        if len(self.enemy_group) == 0:
+            self.newGame()
+
+        self.score_string.text = f'Score = {self.player.score}'
+        
+        
+
     def display(self):
 
         # Colour screen purple
@@ -107,5 +162,7 @@ class Controller():
         # scales the game_display to game_screen. Allows us to scale images
         scaled_surf = pygame.transform.scale(self.game_display, self.screen_dims)
         self.game_screen.blit(scaled_surf, (0, 0))
+
+        self.score_string.display()
 
         # Camera variable to create camera movement

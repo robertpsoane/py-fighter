@@ -57,7 +57,7 @@ def pyfighterGame():
     # Setup game controller
     game_controller = Controller(game_display, game_screen, screen_dims,
                                                                     colour)
-    game_controller.play()
+    game_controller.firstGame()
 
     ########
 
