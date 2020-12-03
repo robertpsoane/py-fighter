@@ -21,7 +21,7 @@ import os
 import webbrowser
 import json
 import pygame
-from game import pyfighterGame
+from screens.game import pyfighterGame
 from classes.menu import Menu
 from classes.menu import Button
 from classes.text import Text
@@ -64,7 +64,7 @@ def playMusic(music_path):
     #   https://riptutorial.com/pygame/example/24563/example-to-add-music-in-pygame
     pygame.mixer.init()
     pygame.mixer.music.load(music_path)
-    pygame.mixer.music.play(-1)
+    #pygame.mixer.music.play(-1)
 
 def getHelp():
     webbrowser.open('https://sites.google.com/view/pyfighter/home',

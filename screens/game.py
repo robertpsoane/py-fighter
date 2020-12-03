@@ -52,12 +52,12 @@ def pyfighterGame():
     game_background_path = 'audio/prototype.wav'
     pygame.mixer.init()
     pygame.mixer.music.load(game_background_path)
-    pygame.mixer.music.play(-1)
+    #pygame.mixer.music.play(-1)
 
     # Setup game controller
     game_controller = Controller(game_display, game_screen, screen_dims,
                                                                     colour)
-    game_controller.play()
+    game_controller.firstGame()
 
     ########
 
