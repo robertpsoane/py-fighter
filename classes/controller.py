@@ -38,7 +38,8 @@ class Controller():
         self.firstLevel()
         self.mid_width = self.game_screen.get_width() // 2
         self.mid_height = self.game_screen.get_height() // 2
-        self.god_mode = 0
+        self.god_mode = False
+        self.cheats = 0
 
     def setupCameraMap(self):
         ''' 
@@ -169,13 +170,13 @@ class Controller():
                 pauseScreen(self.game_screen)
             # Setting up god mode
             elif event.key == pygame.K_RSHIFT:
-                self.god_mode = 1
-            elif (event.key == pygame.K_1) and (self.god_mode == 1):
-                self.god_mode += 1
-            elif (event.key == pygame.K_2) and (self.god_mode == 2):
-                self.god_mode += 1
-            elif (event.key == pygame.K_3) and (self.god_mode == 3):
-                self.god_mode += 1            
+                self.cheats = 1
+            elif (event.key == pygame.K_1) and (self.cheats == 1):
+                self.cheats += 1
+            elif (event.key == pygame.K_2) and (self.cheats == 2):
+                self.cheats += 1
+            elif (event.key == pygame.K_3) and (self.cheats == 3):
+                self.cheats += 1            
 
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_d:
@@ -183,10 +184,11 @@ class Controller():
             elif event.key == pygame.K_a:
                 self.player.stopMove("left")
             elif event.key == pygame.K_RSHIFT:
-                if self.god_mode == 4:
+                if self.cheats == 4:
                     self.initGodMode()
+                    self.cheats = 0
                 else:
-                    self.god_mode = 0
+                    self.cheats = 0
         
     def initGodMode(self):
         ''' God Mode
@@ -194,12 +196,13 @@ class Controller():
         This is here to debug the game without dying, and without having
         to edit the code.
         '''
-        self.god_mode = 5
+        self.god_mode = True
         self.player.max_health = 1000000000000000000000000000
         self.player.health = self.player.max_health
         self.gt = Text(self.game_screen,
                         (110, self.game_screen.get_height() - 20),
                                         20, 'god mode activated')
+        self.player.speed *= 2
 
     def update(self):
         ''' Update function - Used to update positions of characters on
@@ -265,7 +268,7 @@ class Controller():
         self.level.display()
 
         # If in god mode, display text
-        if self.god_mode == 5:
+        if self.god_mode:
             self.gt.display()
 
         # Camera variable to create camera movement
