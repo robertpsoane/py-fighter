@@ -1,6 +1,10 @@
 ''' Controller Class
 
+The controller class.  This class controls the main game.
 
+This file also contains the main game score and level outputs.
+
+@author: Robert, Shaylen, Rokas (predominantly coded collaboratively)
 '''
 
 import pygame
@@ -20,11 +24,9 @@ class Controller():
         self.game_screen = game_screen
         self.screen_dims = screen_dims
         self.colour = colour
-        self.setupScore()
+        self.score = Score(game_screen)
+        self.level = Level(game_screen)
         self.initialGame()
-
-    def setupScore(self):
-        self.score_string = Text(self.game_screen, (100, 100), 20, 'Score = 0')
 
     def setupCameraMap(self):
         self.camera = Camera()
@@ -68,6 +70,7 @@ class Controller():
         self.generateLevel()
 
     def newGame(self):
+        self.level.val += 1
         self.setupCameraMap()
         self.resetPlayer()
         self.generateLevel()
@@ -119,8 +122,6 @@ class Controller():
             and recoil) were being applied after the map had updated.
             To avoid this, update functions were added to characters.
             These are called before we blit to the screen.
-
-            @author: Robert
         '''
         # Updating player and enemy positions
         for character in self.characters:
@@ -143,7 +144,8 @@ class Controller():
             self.levelComplete()
             self.newGame()
 
-        self.score_string.text = f'Score = {self.player.score}'
+        #self.score_string.text = f'Score = {self.player.score}'
+        self.score.val = self.player.score
         
         
 
@@ -164,6 +166,67 @@ class Controller():
         scaled_surf = pygame.transform.scale(self.game_display, self.screen_dims)
         self.game_screen.blit(scaled_surf, (0, 0))
 
-        self.score_string.display()
+        self.score.display()
+        self.level.display()
 
         # Camera variable to create camera movement
+
+
+# These three classes are used to produce a score and level output on the
+# screen during gameplay
+# Refactored from main Controller class by Robert
+
+class GameOutput():
+    font_size = 30
+
+    def __init__(self, screen):
+        self.text_output = Text(screen, (self.position), self.font_size, str(self))
+
+    def __str__(self):
+        return f'{self.label}{self.val}'
+
+    def refreshString(self):
+        self.text_output.text = str(self)
+
+    def display(self):
+        self.text_output.display()
+
+    
+class Score(GameOutput):
+    
+    def __init__(self, screen):
+        #(100, 100), 20, 'Score = 0'
+        self.position = (100, 50)
+        self.__val = 0
+        self.label = 'Score: '
+        GameOutput.__init__(self, screen)
+
+    @property
+    def val(self):
+        return self.__val
+
+    @val.setter
+    def val(self, new_val):
+        if new_val == self.__val:
+            return
+        else:
+            self.__val = new_val
+            self.refreshString()
+
+class Level(GameOutput):
+    
+    def __init__(self, screen):
+        #(100, 100), 20, 'Score = 0'
+        self.position = (screen.get_width() - 100 , 50)
+        self.__val = 1
+        self.label = 'Level: '
+        GameOutput.__init__(self, screen)
+
+    @property
+    def val(self):
+        return self.__val
+
+    @val.setter
+    def val(self, new_val):
+        self.__val = new_val
+        self.refreshString()
