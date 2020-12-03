@@ -57,14 +57,12 @@ def pyfighterGame():
     # Setup game controller
     game_controller = Controller(game_display, game_screen, screen_dims,
                                                                     colour)
-    game_controller.firstGame()
+    #game_controller.firstGame()
 
     ########
 
-    ### Setting up game loop
-    run_me = True
-
-    while run_me:
+  
+    while game_controller.run:
         # Limit frame rate
         clock.tick(max_fps)
 
@@ -75,7 +73,7 @@ def pyfighterGame():
                 # Detecting user pressing quit button, if X pressed,
                 # break loop and quit screen.
                 pygame.mixer.music.stop()
-                run_me = False
+                game_controller.run = False
 
             # Pass event to game_controller
             game_controller.keyboardInput(event)

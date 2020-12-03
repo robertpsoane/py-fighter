@@ -10,34 +10,34 @@ from classes.npc import NPC
 from classes.camera import Camera
 from classes.background import Background
 from classes.text import Text
-
+from screens.gameover import gameOver
 from screens.pause import pauseScreen
 
 class Controller():
     def __init__(self, game_display, game_screen, screen_dims, colour):
+        self.run = True
         self.game_display = game_display
         self.game_screen = game_screen
         self.screen_dims = screen_dims
         self.colour = colour
         self.setupScore()
+        self.initialGame()
 
     def setupScore(self):
         self.score_string = Text(self.game_screen, (100, 100), 20, 'Score = 0')
 
-
-
-
-    def firstGame(self):
-        #self.generateMap()
+    def setupCameraMap(self):
         self.camera = Camera()
         self.background = Background(self.game_display)
         self.game_map = Map(self.game_display, self.screen_dims, 32)
 
-        self.player = Player(self.game_display, self.game_map, 100, 100)
+    def setupPlayer(self):
+        self.player = Player(self.game_display, self.game_map, 100, - 100)
         self.player_group = pygame.sprite.Group()
         self.player_group.add(self.player)
 
-        self.enemy = NPC(self.game_display, self.game_map, 600, 100, 'thorsten')
+    def generateLevel(self):
+        self.enemy = NPC(self.game_display, self.game_map, 600, - 100, 'thorsten')
 
         self.enemy.addTarget(self.player_group)
         self.camera.addBack(self.background)
@@ -56,40 +56,38 @@ class Controller():
         for enemy in self.enemy_group:
             self.characters.add(enemy)
 
-
         self.player.addTarget(self.enemy_group)
-
-    def newGame(self):
-        self.camera = Camera()
-        self.background = Background(self.game_display)
-        self.game_map = Map(self.game_display, self.screen_dims, 32)
-
+    
+    def resetPlayer(self):
         self.player.changeMap(self.game_map)
         self.player.center = 100, 100
 
-        self.enemy = NPC(self.game_display, self.game_map, 600, 100, 'thorsten')
+    def initialGame(self):
+        self.setupCameraMap()
+        self.setupPlayer()
+        self.generateLevel()
 
-        self.enemy.addTarget(self.player_group)
-        self.camera.addBack(self.background)
-        self.camera.add(self.player)
-        self.camera.add(self.enemy)
-        self.camera.addMap(self.game_map)
-
-        # Used to assign multiple targets to player
-        # TODO: Put in function if/when we have more than one enemy
-        #       on the board at any point in time
-        self.enemy_group = pygame.sprite.Group()
-        self.enemy_group.add(self.enemy)
-
-        self.characters = pygame.sprite.Group()
-        self.characters.add(self.player)
-        for enemy in self.enemy_group:
-            self.characters.add(enemy)
-
-
-        self.player.addTarget(self.enemy_group)
-
+    def newGame(self):
+        self.setupCameraMap()
+        self.resetPlayer()
+        self.generateLevel()
     
+    def levelComplete(self):
+        width, height = self.game_screen.get_width() // 2, self.game_screen.get_height() // 2
+        level_complete1 = Text(self.game_screen, (width, height - 40), 30, 'Level Complete')
+        level_complete2 = Text(self.game_screen, (width, height), 30, 'Press Space to continue')
+        level_complete1.display()
+        level_complete2.display()
+        pygame.display.flip()
+        waiting = True
+        while waiting:
+            for event in pygame.event.get():
+                if (event.type == pygame.KEYDOWN) and (event.key == pygame.K_SPACE):
+                    waiting = False
+                if event.type == pygame.QUIT:
+                    waiting = False
+                    self.run = False
+
     def keyboardInput(self, event):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w:
@@ -142,6 +140,7 @@ class Controller():
                 enemy.kill()
 
         if len(self.enemy_group) == 0:
+            self.levelComplete()
             self.newGame()
 
         self.score_string.text = f'Score = {self.player.score}'
