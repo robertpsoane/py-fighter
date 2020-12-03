@@ -63,6 +63,8 @@ class Controller():
     def resetPlayer(self):
         self.player.changeMap(self.game_map)
         self.player.center = 100, 100
+        self.player.updateState('idle', self.player.state[1])
+        self.player.x_y_moving = False
 
     def initialGame(self):
         self.setupCameraMap()
