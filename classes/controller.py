@@ -8,6 +8,7 @@ This file also contains the main game score and level outputs.
 '''
 
 import pygame
+import random
 from classes.map import Map
 from classes.player import Player
 from classes.npc import NPC
@@ -17,7 +18,13 @@ from classes.text import Text
 from screens.gameover import gameOver
 from screens.pause import pauseScreen
 
+ENEMIES = ['isaac', 'thorsten']
+PLAYER_X_VAL = 50
+
 class Controller():
+    
+    
+    
     def __init__(self, game_display, game_screen, screen_dims, colour):
         self.run = True
         self.game_display = game_display
@@ -26,9 +33,12 @@ class Controller():
         self.colour = colour
         self.score = Score(game_screen)
         self.level = Level(game_screen)
+        self.player_x = PLAYER_X_VAL
+        self.spawn_area = (2 * self.player_x, screen_dims[0])
         self.firstLevel()
         self.mid_width = self.game_screen.get_width() // 2
         self.mid_height = self.game_screen.get_height() // 2
+        self.god_mode = 0
 
     def setupCameraMap(self):
         ''' 
@@ -41,40 +51,59 @@ class Controller():
     def setupPlayer(self):
         ''' Sets up player for the first level
         '''
-        self.player = Player(self.game_display, self.game_map, 100, - 100)
+        self.player = Player(self.game_display, self.game_map, self.player_x, - 100)
         self.player_group = pygame.sprite.Group()
         self.player_group.add(self.player)
+        self.characters = pygame.sprite.Group()
+        self.characters.add(self.player)
+
+    def addCameraTracking(self):
+        '''
+        Method to add all blitted objects to camera
+        '''
+        self.camera.addBack(self.background)
+        self.camera.addMap(self.game_map)
+        self.camera.addPlayer(self.player)
+        for enemy in self.enemy_group:
+            self.camera.add(enemy)
+    
+    def decideEnemyType(self):
+        '''
+        Randomly returns an enemy from the enemies list
+        Consulted docs below to check how to use randint vs randrange
+        https://docs.python.org/3/library/random.html
+        '''
+        idx = random.randrange(len(ENEMIES))
+        return ENEMIES[idx]
 
     def generateLevel(self):
         '''
         This function generates a new level, and enemies to fight
         '''
-        self.enemy = NPC(self.game_display, self.game_map, 600, - 100, 'thorsten')
-
-        self.enemy.addTarget(self.player_group)
-        self.camera.addBack(self.background)
-        self.camera.add(self.player)
-        self.camera.add(self.enemy)
-        self.camera.addMap(self.game_map)
-
-        # Used to assign multiple targets to player
-        # TODO: Put in function if/when we have more than one enemy
-        #       on the board at any point in time
+        # Setup enemy group for level
         self.enemy_group = pygame.sprite.Group()
-        self.enemy_group.add(self.enemy)
 
-        self.characters = pygame.sprite.Group()
-        self.characters.add(self.player)
-        for enemy in self.enemy_group:
+        # Set up enemies for level.  Level number represents number of enemies
+        for n in range(self.level.val):
+            enemy_type = self.decideEnemyType()
+            print(self.spawn_area)
+            position = random.randrange(self.spawn_area[0], self.spawn_area[1])
+            enemy = NPC(self.game_display, self.game_map, position, -100, enemy_type)
+            enemy.addTarget(self.player_group)
+            self.enemy_group.add(enemy)      
             self.characters.add(enemy)
 
+        # Tell player about enemies
         self.player.addTarget(self.enemy_group)
+
+        # Setup tracking
+        self.addCameraTracking()
     
     def resetPlayer(self):
         ''' Resets player to start point for new level
         '''
         self.player.changeMap(self.game_map)
-        self.player.center = 100, 100
+        self.player.center = self.player_x, -100
         self.player.updateState('idle', self.player.state[1])
         self.player.x_y_moving = False
 
@@ -121,25 +150,55 @@ class Controller():
     
         Called by game loop, and checking events from keyboard, and 
         calling respective functions.
+        Includes functionality to activate 'god mode'.
+        The intention of god mode is for debugging without dying.
         '''
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_w:
-                    self.player.startMove("u")
-                if event.key == pygame.K_d:
-                    self.player.startMove("r")
-                if event.key == pygame.K_a:
-                    self.player.startMove("l")
-                if event.key == pygame.K_q:
-                    self.player.attack()
-                if event.key == pygame.K_ESCAPE:
-                    self.player.updateState('idle', self.player.state[1])
-                    self.player.x_y_moving = False
-                    pauseScreen(self.game_screen)
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_d:
-                    self.player.stopMove("right")
-                elif event.key == pygame.K_a:
-                    self.player.stopMove("left")
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_w:
+                self.player.startMove("u")
+            elif event.key == pygame.K_d:
+                self.player.startMove("r")
+            elif event.key == pygame.K_a:
+                self.player.startMove("l")
+            elif event.key == pygame.K_q:
+                self.player.attack()
+            elif event.key == pygame.K_ESCAPE:
+                self.player.updateState('idle', self.player.state[1])
+                self.player.x_y_moving = False
+                pauseScreen(self.game_screen)
+            # Setting up god mode
+            elif event.key == pygame.K_RSHIFT:
+                self.god_mode = 1
+            elif (event.key == pygame.K_1) and (self.god_mode == 1):
+                self.god_mode += 1
+            elif (event.key == pygame.K_2) and (self.god_mode == 2):
+                self.god_mode += 1
+            elif (event.key == pygame.K_3) and (self.god_mode == 3):
+                self.god_mode += 1            
+
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_d:
+                self.player.stopMove("right")
+            elif event.key == pygame.K_a:
+                self.player.stopMove("left")
+            elif event.key == pygame.K_RSHIFT:
+                if self.god_mode == 4:
+                    self.initGodMode()
+                else:
+                    self.god_mode = 0
+        
+    def initGodMode(self):
+        ''' God Mode
+
+        This is here to debug the game without dying, and without having
+        to edit the code.
+        '''
+        self.god_mode = 5
+        self.player.max_health = 1000000000
+        self.player.health = self.player.max_health
+        self.gt = Text(self.game_screen,
+                        (110, self.game_screen.get_height() - 20),
+                                        20, 'god mode activated')
 
     def update(self):
         ''' Update function - Used to update positions of characters on
@@ -160,7 +219,7 @@ class Controller():
         # Update camera position
         self.camera.scroll()
 
-        if self.player.alive == False:
+        if (self.player.alive == False) and (self.god_mode != 5):
             gameOver()
 
         for enemy in self.enemy_group:
@@ -202,6 +261,10 @@ class Controller():
 
         self.score.display()
         self.level.display()
+
+        # If in god mode, display text
+        if self.god_mode == 5:
+            self.gt.display()
 
         # Camera variable to create camera movement
 

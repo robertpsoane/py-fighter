@@ -526,7 +526,7 @@ class HealthBar:
         self.front_rect.topleft = self.back_rect.topleft
         self.screen.blit(self.front_surf, self.front_rect)
 
-        print(f'{self.health} / {self.max_health} ')
+        #print(f'{self.health} / {self.max_health} ')
 
     def generatePositions(self):
         ''' generate positions
