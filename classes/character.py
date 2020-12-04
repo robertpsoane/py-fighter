@@ -1,8 +1,5 @@
 ''' Character Class
 
-TODO NEEDS A RE WRITE
-
-
 Character class for py-fighter game.
 Takes input of character data, screen, x position, and y position.
 
@@ -115,8 +112,8 @@ class Character(pygame.sprite.Sprite):
 
         ### Health and stats data
         self.alive = True
-        self.initial_health = character_data['initial_health_points']
-        self.health = self.initial_health
+        self.__max_health = character_data['initial_health_points']
+        self.__health = self.__max_health
         self.strength = character_data['initial_strength']
 
         # Character Position
@@ -133,6 +130,9 @@ class Character(pygame.sprite.Sprite):
 
         self.rect = pygame.Rect((0, 0, self.width, self.height))
         self.rect.center = self.plot_rect.center
+
+        self.feet_rect = pygame.Rect((0, 0, self.width, self.height // 10))
+        self.feet_rect.bottomleft = self.rect.bottomleft
 
         # setup score
         self.score = 0
@@ -158,7 +158,7 @@ class Character(pygame.sprite.Sprite):
         self.is_jumping = False
         self.jumps_in_action = 0
         self.max_jumps_in_action = 2
-
+    
     def changeMap(self, background):
         ''' changeMap(background) - used to update to new map
 
@@ -169,6 +169,9 @@ class Character(pygame.sprite.Sprite):
         self.background = background
         self.map_matrix = background.map_matrix
         self.tiles_group = background.map_group
+        self.tile_rect = []
+        for tile in self.tiles_group:
+            self.tile_rect.append(tile.rect)
 
     def addSpritesheetJSON(self):
         ''' addSpritesheetJSON
@@ -251,30 +254,10 @@ class Character(pygame.sprite.Sprite):
         Recoil counter processed in display function.  Each frame pushes 
         character back while recoiling.
         '''
-        self.loseHealth(force)
+        self.health -= force
+        self.score -= force // 5
         self.recoil_status = (True, direction)
-        self.recoil_counter = 5
-
-    def loseHealth(self, amount):
-        ''' loses amount of health and updates health bar accordingly
-
-        Updates health, checks if dead, and updates health bar
-        '''
-        self.health = self.health - amount
-        self.score -= amount // 5
-        if self.health <= 0:
-            self.alive = False
-            #self.kill()
-            return
-        self.healthbar.updateHealth()
-    
-    def gainHealth(self, amount):
-        ''' Gains health and updates healthbar accordingly
-        
-        Updates health, and updates health bar
-        '''
-        self.health = self.health + amount
-        self.healthbar.updateHealth()
+        self.recoil_counter = 5 
 
     def update(self):
         ''' Update function
@@ -315,6 +298,8 @@ class Character(pygame.sprite.Sprite):
                 move_speed = -1 * self.speed
                 self.moveX(move_speed)
 
+    def syncRects(self):
+        self.feet_rect.bottomleft = self.rect.bottomleft
         self.plot_rect.center = self.rect.center
 
     def display(self):
@@ -334,12 +319,18 @@ class Character(pygame.sprite.Sprite):
         if self.image_index >= len(self.image):
             self.incrementImage()
 
-        ###################################################
-        # TODO DELETE THE FOLLOWING CODE - FOR TESTING ONLY
-        surf = pygame.Surface((self.rect.width, self.rect.height))
-        surf.fill((100, 100, 0))
-        self.screen.blit(surf, self.rect)
-        ###################################################
+        self.syncRects()
+
+        # ###################################################
+        # # TODO DELETE THE FOLLOWING CODE - FOR TESTING ONLY
+        # surf = pygame.Surface((self.rect.width, self.rect.height))
+        # surf.fill((100, 100, 0))
+        # self.screen.blit(surf, self.rect)
+
+        # surf = pygame.Surface((self.feet_rect.width, self.feet_rect.height))
+        # surf.fill((0, 100, 100))
+        # self.screen.blit(surf, self.feet_rect)
+        # ###################################################
 
         # Displaying current image at current position
         self.screen.blit(self.image[self.image_index], self.plot_rect)
@@ -355,12 +346,16 @@ class Character(pygame.sprite.Sprite):
 
         Based on code from Python Basics YouTube series
         https://www.youtube.com/watch?v=bQnEQvyS1Ns - Approx 4 minutes 
-        in.
+        in, and the pygame documentation.
+
+        Initially this was implemented with pygame.sprite.spritecollide
+        with the tiles_group, however this caused issues with any point 
+        of a sprite colliding with a tile causing it to cease to fall.
+        This means you could get characters awkwardly suspended by their
+        heads.  Instead we used pygame.Rect.collidelist
         '''
-        collisions = pygame.sprite.spritecollide(self,
-                                                    self.tiles_group,
-                                                    False)
-        if len(collisions) != 0:
+        
+        if self.feet_rect.collidelist(self.tile_rect) != -1:
             self.is_falling = False
             self.is_jumping = False
             self.jumps_in_action = 0
@@ -467,6 +462,28 @@ class Character(pygame.sprite.Sprite):
             else:
                 self.updateState('idle', self.state[1])
 
+    @property
+    def health(self):
+        return self.__health
+
+    @health.setter
+    def health(self, new):
+        self.__health = new
+        if self.health <= 0:
+            self.alive = False
+            #self.kill()
+            return
+        self.healthbar.updateHealth()
+
+    @property
+    def max_health(self):
+        return self.__max_health
+
+    @max_health.setter
+    def max_health(self, new):
+        self.healthbar.max_health = new
+        self.health += new - self.max_health
+        self.__max_health = new
 
 class HealthBar:
     ''' Health Bar class
@@ -484,7 +501,7 @@ class HealthBar:
         '''
         # Extracting Character variables
         self.character = character
-        self.max_health = character.initial_health
+        self.max_health = character.max_health
         self.health = character.health
         self.screen = self.character.screen
 
@@ -526,6 +543,8 @@ class HealthBar:
         # Blit foreground surface
         self.front_rect.topleft = self.back_rect.topleft
         self.screen.blit(self.front_surf, self.front_rect)
+
+        #print(f'{self.health} / {self.max_health} ')
 
     def generatePositions(self):
         ''' generate positions
