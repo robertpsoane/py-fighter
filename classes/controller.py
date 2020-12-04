@@ -202,7 +202,7 @@ class Controller():
         self.gt = Text(self.game_screen,
                         (110, self.game_screen.get_height() - 20),
                                         20, 'god mode activated')
-        self.player.speed *= 2
+        self.player.strength *= 10000
 
     def update(self):
         ''' Update function - Used to update positions of characters on
