@@ -43,6 +43,9 @@ class Camera:
     def addPlayer(self, player):
         self.sprites = [player]
 
+        # Locks the camera to the player sprite.
+        self.player = self.sprites[0]
+
     def addWeapon(self, weapon):
         pass
     
@@ -84,9 +87,6 @@ class Camera:
             # Moves the player and NPC sprites. Updates their x values.
             for sprite in self.sprites:
                 sprite.rect.centerx -= self.x
-
-            # Locks the camera to the player sprite.
-            self.player = self.sprites[0]
 
             self.x = (self.player.rect.centerx - self.map_view / 2)
 
