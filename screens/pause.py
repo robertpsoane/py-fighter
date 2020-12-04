@@ -1,5 +1,18 @@
 ''' Pause Screen
 
+Pause screen - This screen is displayed on top of the game when player
+presses escape during the game, and enters the pause menu.
+
+Each button is attached to a function, resume and quitToMainMenu output 
+a string which is interpreted by the screens loop, wheres quitgame just
+kills the game.
+
+The reason resume and main menu quits don't act themselves, is that they
+can't access the controller and game loop without having it passed into
+them (or making them global which may lead to weird bugs later on), as
+the Menu class we've written doesn't have the ability to pass arguments
+into button functions.
+
 @author: Robert
 '''
 
