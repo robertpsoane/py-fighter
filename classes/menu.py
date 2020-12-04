@@ -114,9 +114,9 @@ class Button:
     required.  For this reason, __position is private, so that it cannot 
     be edited from outside the function.
     '''
-    def __init__(self, screen, text, position, func, size = (128, 64),
-                            text_colour = 'white', highlight = 'yellow',
-                            font_size = 35):
+    def __init__(self, screen, text, position, func,
+                            font_size = 35, size = (128, 64),
+                            text_colour = 'white', highlight = 'yellow'):
         # Storing attributes
         self.screen = screen
         self.text = text
