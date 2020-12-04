@@ -4,25 +4,90 @@
 '''
 
 import pygame
+import os
 
 from classes.text import Text
+from classes.menu import Button
+from classes.menu import Menu
 
-def pauseScreen(screen):
-    height = screen.get_height() // 2
-    width = screen.get_width() // 2
-    paused_text = Text(screen, (width, height), 60, 'PAUSED', 'purple')
-    
+
+# Setup menu buttons
+
+def resume():
+    return 'resume'
+
+def quitToMainMenu():
+    return 'main_menu'
+
+def quitGame():
+    pygame.quit()
+    os._exit(0)
+
+
+
+def pauseScreen(screen, controller):
+    ''' Pause Screen function
+
+    Produces the pause screen and allows interaction with buttons.
+    '''
+    height = screen.get_height()
+    width = screen.get_width()
+    height_unit = height // 3
+    mid_x, mid_y = width // 2, height // 2
+    menu_height = 3 * height // 4
+    width_unit = width // 6
+
+    # Setup menu and buttons
+    paused_text = Text(screen, (mid_x, height_unit), 60, 'PAUSED', 'purple')
+
+    resume_button =  Button(screen, 'Resume', (width_unit, 2 * height_unit),
+                                                                    resume)
+
+    main_menu_button =  Button(screen, 'Main Menu',
+                            (3 * width_unit, 2 * height_unit),
+                                                quitToMainMenu)
+                            
+    quit_button =  Button(screen, 'Quit', (5 * width_unit,  2 * height_unit),
+                                                                    quitGame)
+
+    pause_menu = Menu(screen, paused_text, False, resume_button, 
+                                    main_menu_button, quit_button)
+
+    # load clock
+    clock = pygame.time.Clock()
+
     paused = True
     while paused:
+        clock.tick(controller.clock_delay)
 
+        # Get/action events
         for event in pygame.event.get():
-
-            if (event.type == pygame.KEYDOWN) and (event.key == pygame.K_ESCAPE):
+            # Send each event to the start menu
+            if event.type == pygame.QUIT:
+                # Detecting user pressing quit button, if X pressed,
+                # break loop and quit screen.
+                paused = False
+            elif (event.type == pygame.KEYDOWN) and \
+                        (event.key == pygame.K_ESCAPE):
                 paused = False
             
-                    
-        # Display Pause
-        paused_text.display()
+            # Here, we check whether the player has clicked the mouse,
+            # if they have, we pass the click into the pause menu and it 
+            # processes the click.  The button function returns a string
+            # 'resume' for resume game, or 'main_menu' to quit to main
+            # menu.
+            elif (event.type == pygame.MOUSEBUTTONDOWN) or \
+                            (event.type == pygame.MOUSEBUTTONUP):
+                button_press = pause_menu.do(event)
+                #print(button_press)
+                if button_press == 'resume':
+                    paused = False
+                elif button_press == 'main_menu':
+                    controller.run = False
+                    paused = False
+       
+        # Display Pause Menu
+        pause_menu.display()
 
         pygame.display.flip()
         

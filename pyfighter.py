@@ -64,7 +64,7 @@ def playMusic(music_path):
     #   https://riptutorial.com/pygame/example/24563/example-to-add-music-in-pygame
     pygame.mixer.init()
     pygame.mixer.music.load(music_path)
-    #dpygame.mixer.music.play(-1)
+    pygame.mixer.music.play(-1)
 
 def getHelp():
     webbrowser.open('https://sites.google.com/view/pyfighter/home',

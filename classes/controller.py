@@ -25,7 +25,8 @@ class Controller():
     
     
     
-    def __init__(self, game_display, game_screen, screen_dims, colour):
+    def __init__(self, game_display, game_screen, screen_dims, colour,
+                                                            clock_delay):
         self.run = True
         self.game_display = game_display
         self.game_screen = game_screen
@@ -40,6 +41,10 @@ class Controller():
         self.mid_height = self.game_screen.get_height() // 2
         self.god_mode = False
         self.cheats = 0
+        self.level_complete = False
+        self.clock_delay = clock_delay
+        self.level_complete_text_1 = Text(self.game_screen, (self.mid_width, self.mid_height - 40), 30, 'Level Complete')
+        self.level_complete_text_2 = Text(self.game_screen, (self.mid_width, self.mid_height), 30, 'Press Space to continue')
 
     def setupCameraMap(self):
         ''' 
@@ -123,30 +128,11 @@ class Controller():
         self.level.val += 1
         self.player.max_health += 10
         self.player.health = self.player.max_health
+        self.level_complete = False
         self.setupCameraMap()
         self.resetPlayer()
         self.generateLevel()
     
-    def levelComplete(self):
-        ''' levelComplete function
-
-        This is called whenever a level is complete and used to allow 
-        the player to trigger the start of the next level.
-        '''       
-        level_complete1 = Text(self.game_screen, (self.mid_width, self.mid_height - 40), 30, 'Level Complete')
-        level_complete2 = Text(self.game_screen, (self.mid_width, self.mid_height), 30, 'Press Space to continue')
-        level_complete1.display()
-        level_complete2.display()
-        pygame.display.flip()
-        waiting = True
-        while waiting:
-            for event in pygame.event.get():
-                if (event.type == pygame.KEYDOWN) and (event.key == pygame.K_SPACE):
-                    waiting = False
-                if event.type == pygame.QUIT:
-                    waiting = False
-                    self.run = False
-
     def keyboardInput(self, event):
         ''' keyboardInput
     
@@ -156,6 +142,7 @@ class Controller():
         The intention of god mode is for debugging without dying.
         '''
         if event.type == pygame.KEYDOWN:
+            # WASD for up/right/left, q for attack
             if event.key == pygame.K_w:
                 self.player.startMove("u")
             elif event.key == pygame.K_d:
@@ -164,11 +151,15 @@ class Controller():
                 self.player.startMove("l")
             elif event.key == pygame.K_q:
                 self.player.attack()
+            # When level complete, space to move to next level
+            elif (event.key == pygame.K_SPACE) and self.level_complete:
+                self.newLevel()
+            # Escape to pause game
             elif event.key == pygame.K_ESCAPE:
                 self.player.updateState('idle', self.player.state[1])
                 self.player.x_y_moving = False
-                pauseScreen(self.game_screen)
-            # Setting up god mode
+                pauseScreen(self.game_screen, self)
+            # Enter cheat code to enter god mode
             elif event.key == pygame.K_RSHIFT:
                 self.cheats = 1
             elif (event.key == pygame.K_1) and (self.cheats == 1):
@@ -179,10 +170,12 @@ class Controller():
                 self.cheats += 1            
 
         elif event.type == pygame.KEYUP:
+            # Toggle right/left moving
             if event.key == pygame.K_d:
                 self.player.stopMove("right")
             elif event.key == pygame.K_a:
                 self.player.stopMove("left")
+            # Lift right shift to submit code for god mode
             elif event.key == pygame.K_RSHIFT:
                 if self.cheats == 4:
                     self.initGodMode()
@@ -232,8 +225,7 @@ class Controller():
                 enemy.kill()
 
         if len(self.enemy_group) == 0:
-            self.levelComplete()
-            self.newLevel()
+            self.level_complete = True
 
         #self.score_string.text = f'Score = {self.player.score}'
         self.score.val = self.player.score
@@ -270,6 +262,11 @@ class Controller():
         # If in god mode, display text
         if self.god_mode:
             self.gt.display()
+
+        # If waiting to change level, display text
+        if self.level_complete:
+            self.level_complete_text_1.display()
+            self.level_complete_text_2.display()
 
         # Camera variable to create camera movement
 
