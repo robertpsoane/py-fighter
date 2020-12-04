@@ -241,6 +241,8 @@ class Tile(pygame.sprite.Sprite):
         - screen dims
         - tile_type '1' , '2' or '3'.
 
+    found rect.inflate_ip on pygame documentation
+
     Has a display function to blit to screen
     @author: Robert Soane
     """
@@ -267,7 +269,8 @@ class Tile(pygame.sprite.Sprite):
             self.image = PLATFORM
             self.rect = self.image.get_rect()
             # Making platform rect smaller
-            self.rect.inflate_ip(0, -31)
+            new_rect_height = - self.rect.height + 1 * (self.rect.height // 5)
+            self.rect.inflate_ip(0, new_rect_height)
             self.rect.topleft = [dims[0], dims[1]]
 
 

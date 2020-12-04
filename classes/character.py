@@ -131,6 +131,9 @@ class Character(pygame.sprite.Sprite):
         self.rect = pygame.Rect((0, 0, self.width, self.height))
         self.rect.center = self.plot_rect.center
 
+        self.feet_rect = pygame.Rect((0, 0, self.width, self.height // 10))
+        self.feet_rect.bottomleft = self.rect.bottomleft
+
         # setup score
         self.score = 0
 
@@ -166,6 +169,9 @@ class Character(pygame.sprite.Sprite):
         self.background = background
         self.map_matrix = background.map_matrix
         self.tiles_group = background.map_group
+        self.tile_rect = []
+        for tile in self.tiles_group:
+            self.tile_rect.append(tile.rect)
 
     def addSpritesheetJSON(self):
         ''' addSpritesheetJSON
@@ -292,6 +298,8 @@ class Character(pygame.sprite.Sprite):
                 move_speed = -1 * self.speed
                 self.moveX(move_speed)
 
+    def syncRects(self):
+        self.feet_rect.bottomleft = self.rect.bottomleft
         self.plot_rect.center = self.rect.center
 
     def display(self):
@@ -311,11 +319,17 @@ class Character(pygame.sprite.Sprite):
         if self.image_index >= len(self.image):
             self.incrementImage()
 
+        self.syncRects()
+
         ###################################################
         # TODO DELETE THE FOLLOWING CODE - FOR TESTING ONLY
         surf = pygame.Surface((self.rect.width, self.rect.height))
         surf.fill((100, 100, 0))
         self.screen.blit(surf, self.rect)
+
+        surf = pygame.Surface((self.feet_rect.width, self.feet_rect.height))
+        surf.fill((0, 100, 100))
+        self.screen.blit(surf, self.feet_rect)
         ###################################################
 
         # Displaying current image at current position
@@ -332,12 +346,16 @@ class Character(pygame.sprite.Sprite):
 
         Based on code from Python Basics YouTube series
         https://www.youtube.com/watch?v=bQnEQvyS1Ns - Approx 4 minutes 
-        in.
+        in, and the pygame documentation.
+
+        Initially this was implemented with pygame.sprite.spritecollide
+        with the tiles_group, however this caused issues with any point 
+        of a sprite colliding with a tile causing it to cease to fall.
+        This means you could get characters awkwardly suspended by their
+        heads.  Instead we used pygame.Rect.collidelist
         '''
-        collisions = pygame.sprite.spritecollide(self,
-                                                    self.tiles_group,
-                                                    False)
-        if len(collisions) != 0:
+        
+        if self.feet_rect.collidelist(self.tile_rect) != -1:
             self.is_falling = False
             self.is_jumping = False
             self.jumps_in_action = 0
