@@ -45,7 +45,7 @@ class Controller():
         ''' 
         Sets up camera and map for a given level
         '''
-        self.camera = Camera()
+        self.camera = Camera(self.game_screen)
         self.background = Background(self.game_display)
         self.game_map = Map(self.game_display, self.screen_dims, 32)
 
@@ -220,9 +220,6 @@ class Controller():
         for character in self.characters:
             character.update()
 
-        # Update camera position
-        self.camera.scroll()
-
         # Check if player is alive
         if self.player.alive == False:
             gameOver()
@@ -240,6 +237,9 @@ class Controller():
 
         #self.score_string.text = f'Score = {self.player.score}'
         self.score.val = self.player.score
+
+        # Update camera position
+        self.camera.scroll()
         
     def display(self):
         ''' Display
