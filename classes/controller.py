@@ -30,8 +30,7 @@ class Controller():
     player_x = PLAYER_X_VAL
 
     with open('json/settings.JSON') as settings:
-            settings = json.load(settings)
-            keys = settings["keys"]
+            keys = json.load(settings)
     
     
     def __init__(self, game_display, game_screen, screen_dims, colour,

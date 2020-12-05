@@ -340,9 +340,9 @@ class Character(pygame.sprite.Sprite):
         # surf.fill((100, 100, 0))
         # self.screen.blit(surf, self.rect)
 
-        surf = pygame.Surface((self.feet_rect.width, self.feet_rect.height))
-        surf.fill((0, 100, 100))
-        self.screen.blit(surf, self.feet_rect)
+        # surf = pygame.Surface((self.feet_rect.width, self.feet_rect.height))
+        # surf.fill((0, 100, 100))
+        # self.screen.blit(surf, self.feet_rect)
         # ###################################################
 
         # Displaying current image at current position

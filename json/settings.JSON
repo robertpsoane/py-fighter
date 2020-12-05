@@ -1,12 +1,7 @@
 {
-    "keys": {
         "up":"w",
         "left":"a",
         "right":"d",
         "attack":"space",
         "next_level":"e"
-    },
-    "sound": {
-        "music_volume": 0
-    }
 }

@@ -30,10 +30,6 @@ from classes.text import Text
 with open('json/config.JSON') as config_file:
     config = json.load(config_file)
 
-with open('json/settings.JSON') as settings:
-            settings = json.load(settings)
-            sound_settings = settings["sound"]
-
 # Colour tuples and font sizes
 colour = config['colour']
 font_size = config['font_size']
@@ -68,7 +64,6 @@ def playMusic(music_path):
     #   https://riptutorial.com/pygame/example/24563/example-to-add-music-in-pygame
     # - Found detail on setting volume on pygame docs
     pygame.mixer.init()
-    pygame.mixer.music.set_volume(sound_settings['music_volume'] / 100)
     pygame.mixer.music.load(music_path)
     pygame.mixer.music.play(-1)
     
