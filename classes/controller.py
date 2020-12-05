@@ -25,36 +25,57 @@ PLAYER_X_VAL = 50
 level_music = 'audio/prototype.wav'
 
 class Controller():
-    
+    # X position that player starts level at
+    player_x = PLAYER_X_VAL
     
     
     def __init__(self, game_display, game_screen, screen_dims, colour,
                                                             clock_delay):
+        # Run game - used to exit game loop
         self.run = True
+
+        # Add important game features to self
         self.game_display = game_display
         self.game_screen = game_screen
         self.screen_dims = screen_dims
         self.colour = colour
+        self.clock_delay = clock_delay
+
+        # Setup score and level displays
         self.score = Score(game_screen)
         self.level = Level(game_screen)
-        self.player_x = PLAYER_X_VAL
+        
+        # Setup key 
         self.spawn_area = (2 * self.player_x, screen_dims[0])
         self.mid_width = self.game_screen.get_width() // 2
         self.mid_height = self.game_screen.get_height() // 2
+        
+        # Setup level complete variables
+        self.level_complete = False
+        self.level_complete_text_1 = Text(self.game_screen,
+                                        (self.mid_width, self.mid_height - 40),
+                                        30,
+                                        'Level Complete'
+                                    )
+        self.level_complete_text_2 = Text(self.game_screen,
+                                        (self.mid_width, self.mid_height),
+                                        30,
+                                        'Press Space to continue'
+                                    )
+        
+        # Setup first level
+        self.firstLevel()
+
+        # Setup god mode capability - used for debugging
         self.god_mode = False
         self.cheats = 0
-        self.level_complete = False
-        self.clock_delay = clock_delay
-        self.level_complete_text_1 = Text(self.game_screen, (self.mid_width, self.mid_height - 40), 30, 'Level Complete')
-        self.level_complete_text_2 = Text(self.game_screen, (self.mid_width, self.mid_height), 30, 'Press Space to continue')
-        self.firstLevel()
 
         ### Setting up game music
         # - Music code inspired by code here:
         #   https://riptutorial.com/pygame/example/24563/example-to-add-music-in-pygame
         pygame.mixer.init()
         pygame.mixer.music.load(level_music)
-        pygame.mixer.music.play(-1)
+        #pygame.mixer.music.play(-1)
 
     def setupCameraMap(self):
         ''' 
@@ -102,7 +123,6 @@ class Controller():
         # Set up enemies for level.  Level number represents number of enemies
         for n in range(self.level.val):
             enemy_type = self.decideEnemyType()
-            print(self.spawn_area)
             position = random.randrange(self.spawn_area[0], self.spawn_area[1])
             enemy = NPC(self.game_display, self.game_map, position, -100, enemy_type)
             enemy.addTarget(self.player_group)
