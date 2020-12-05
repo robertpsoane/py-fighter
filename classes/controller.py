@@ -17,6 +17,7 @@ from classes.background import Background
 from classes.text import Text
 from screens.gameover import gameOver
 from screens.pause import pauseScreen
+from screens.intro import introScreen
 
 ENEMIES = ['isaac', 'thorsten']
 PLAYER_X_VAL = 50
@@ -36,7 +37,6 @@ class Controller():
         self.level = Level(game_screen)
         self.player_x = PLAYER_X_VAL
         self.spawn_area = (2 * self.player_x, screen_dims[0])
-        self.firstLevel()
         self.mid_width = self.game_screen.get_width() // 2
         self.mid_height = self.game_screen.get_height() // 2
         self.god_mode = False
@@ -45,6 +45,7 @@ class Controller():
         self.clock_delay = clock_delay
         self.level_complete_text_1 = Text(self.game_screen, (self.mid_width, self.mid_height - 40), 30, 'Level Complete')
         self.level_complete_text_2 = Text(self.game_screen, (self.mid_width, self.mid_height), 30, 'Press Space to continue')
+        self.firstLevel()
 
     def setupCameraMap(self):
         ''' 
@@ -116,6 +117,7 @@ class Controller():
     def firstLevel(self):
         ''' Sets up first level
         '''
+        introScreen(self.game_screen, self)
         self.setupCameraMap()
         self.setupPlayer()
         self.generateLevel()
