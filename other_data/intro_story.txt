@@ -11,8 +11,7 @@ MAIN tuition.
 MAIN But in the year 2020 COVID struck.
 MAIN All semester your modules have been 
 MAIN 100% online and you haven't seen
-MAIN your professors.
-MAIN So do they exist?
+MAIN your professors. So do they exist?
 MAIN Are they just a figment of your
 MAIN imagination?
 MAIN 
