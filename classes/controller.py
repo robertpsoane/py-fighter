@@ -82,7 +82,7 @@ class Controller():
         ### Setting up game music
         # - Music code inspired by code here:
         #   https://riptutorial.com/pygame/example/24563/example-to-add-music-in-pygame
-        pygame.mixer.init()
+        #pygame.mixer.init()
         pygame.mixer.music.load(level_music)
         pygame.mixer.music.play(-1)
 

@@ -5,5 +5,8 @@
         "right":"d",
         "attack":"space",
         "next_level":"e"
+    },
+    "sound": {
+        "music_volume": 0
     }
 }
