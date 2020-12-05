@@ -36,7 +36,7 @@ def introScreen(screen, controller):
         if line[0:5] == 'TITLE':
             title_element = line[6:-1]
             title.append(
-                Text(screen, (x_position, title_y), 40, title_element, 'blue')
+                Text(screen, (x_position, title_y), 40, title_element, 'turquoise')
             )
             title_y += 50
         elif line[0:4] == 'MAIN':
