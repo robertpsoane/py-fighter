@@ -46,17 +46,9 @@ def pyfighterGame():
     pygame.display.set_caption(game_name)
     clock = pygame.time.Clock()
 
-    ### Setting up game music
-    # - Music code inspired by code here:
-    #   https://riptutorial.com/pygame/example/24563/example-to-add-music-in-pygame
-    game_background_path = 'audio/prototype.wav'
-    pygame.mixer.init()
-    pygame.mixer.music.load(game_background_path)
-    #pygame.mixer.music.play(-1)
-
     # Setup game controller
     game_controller = Controller(game_display, game_screen, screen_dims,
-                                                                    colour)
+                                                                    colour, max_fps)
     #game_controller.firstGame()
 
     ########

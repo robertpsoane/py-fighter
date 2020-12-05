@@ -62,10 +62,11 @@ def playMusic(music_path):
     ### Setting up game music
     # - Music code inspired by code here:
     #   https://riptutorial.com/pygame/example/24563/example-to-add-music-in-pygame
+    # - Found detail on setting volume on pygame docs
     pygame.mixer.init()
     pygame.mixer.music.load(music_path)
-    #dpygame.mixer.music.play(-1)
-
+    pygame.mixer.music.play(-1)
+    
 def getHelp():
     webbrowser.open('https://sites.google.com/view/pyfighter/home',
                             new=2)
@@ -107,6 +108,10 @@ start_menu = Menu(menu_screen, title_obj, menu_background, play_button,
 # Start Music
 playMusic(menu_background_path)
 
+# Found on pygame docs
+# https://www.pygame.org/docs/ref/cursors.html
+# Believe it makes the cursor look nicer in the game
+pygame.mouse.set_cursor(*pygame.cursors.tri_left)
 
 ### Main Game Loop
 while start_menu.playing:
@@ -128,3 +133,5 @@ while start_menu.playing:
     pygame.display.flip()
 
 quitGame()
+
+

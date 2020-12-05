@@ -1,0 +1,7 @@
+{
+        "up":"w",
+        "left":"a",
+        "right":"d",
+        "attack":"space",
+        "next_level":"e"
+}

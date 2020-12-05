@@ -123,8 +123,9 @@ class NPC(Character):
         y_dif = self_y - target_y
 
         # If possible, attack
-        if pygame.sprite.collide_rect(self, self.target):
-            #print(self.attack_counter)
+        if pygame.sprite.collide_rect(self, self.target) \
+                        and self.isFacingTarget(self.target):
+            
             if self.attack_counter == self.attack_delay:
                 self.attack_counter = 0
                 self.attack(self.target)
