@@ -48,7 +48,8 @@ def introScreen(screen, controller):
                 Text(screen, (x_position, main_y), 20, main_element, 'yellow')
             )
             main_y += 30
-
+    story.close()
+    
     title_count = 300
     move = True
 
