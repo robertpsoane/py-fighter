@@ -75,7 +75,7 @@ class Controller():
         #   https://riptutorial.com/pygame/example/24563/example-to-add-music-in-pygame
         pygame.mixer.init()
         pygame.mixer.music.load(level_music)
-        #pygame.mixer.music.play(-1)
+        pygame.mixer.music.play(-1)
 
     def setupCameraMap(self):
         ''' 
