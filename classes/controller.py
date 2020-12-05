@@ -23,7 +23,7 @@ from screens.intro import introScreen
 ENEMIES = ['isaac', 'thorsten']
 PLAYER_X_VAL = 50
 
-level_music = 'audio/prototype.wav'
+level_music = 'audio/background/prototype.wav'
 
 class Controller():
     # X position that player starts level at
