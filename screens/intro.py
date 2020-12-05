@@ -16,6 +16,9 @@ story_location = 'other_data/intro_story.txt'
 
 def introScreen(screen, controller):
     ''' Produces the intro cut scene based on star wars
+
+    Obviously I took inspiration from the famous Star Wars intro, in
+    the layout of this.
     '''
     # Get important screen variables
     height = screen.get_height()

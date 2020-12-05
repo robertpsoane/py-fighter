@@ -22,6 +22,8 @@ from screens.intro import introScreen
 ENEMIES = ['isaac', 'thorsten']
 PLAYER_X_VAL = 50
 
+level_music = 'audio/prototype.wav'
+
 class Controller():
     
     
@@ -46,6 +48,13 @@ class Controller():
         self.level_complete_text_1 = Text(self.game_screen, (self.mid_width, self.mid_height - 40), 30, 'Level Complete')
         self.level_complete_text_2 = Text(self.game_screen, (self.mid_width, self.mid_height), 30, 'Press Space to continue')
         self.firstLevel()
+
+        ### Setting up game music
+        # - Music code inspired by code here:
+        #   https://riptutorial.com/pygame/example/24563/example-to-add-music-in-pygame
+        pygame.mixer.init()
+        pygame.mixer.music.load(level_music)
+        pygame.mixer.music.play(-1)
 
     def setupCameraMap(self):
         ''' 
