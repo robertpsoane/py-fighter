@@ -46,8 +46,9 @@ def introScreen(screen, controller):
             )
             main_y += 30
 
-    title_count = 100
-    
+    title_count = 300
+    move = True
+
     # load clock
     clock = pygame.time.Clock()
 
@@ -73,10 +74,15 @@ def introScreen(screen, controller):
             for element in title:
                 element.display()
                 title_count -= 1
+                
         else:
             for element in main_story:
                 element.display()
-                element.y -= 1
+                if move:
+                    element.y -= 1
+                    move = False
+                else:
+                    move = True
 
         if main_story[-1].y == 0:
             run_scene = False
