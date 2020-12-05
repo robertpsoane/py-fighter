@@ -9,6 +9,7 @@ This file also contains the main game score and level outputs.
 
 import pygame
 import random
+import json
 from classes.map import Map
 from classes.player import Player
 from classes.npc import NPC
@@ -50,6 +51,11 @@ class Controller():
         self.mid_width = self.game_screen.get_width() // 2
         self.mid_height = self.game_screen.get_height() // 2
         
+        # Load keybinding settings
+        with open('json/settings.JSON') as settings:
+            self.settings = json.load(settings)
+            self.keys = self.settings["keys"]
+
         # Setup level complete variables
         self.level_complete = False
         self.level_complete_text_1 = Text(self.game_screen,
@@ -57,10 +63,11 @@ class Controller():
                                         30,
                                         'Level Complete'
                                     )
+        continue_string =  f'Press {self.keys["next_level"]} to continue'
         self.level_complete_text_2 = Text(self.game_screen,
                                         (self.mid_width, self.mid_height),
                                         30,
-                                        'Press Space to continue'
+                                        continue_string
                                     )
         
         # Setup first level
@@ -171,19 +178,37 @@ class Controller():
         calling respective functions.
         Includes functionality to activate 'god mode'.
         The intention of god mode is for debugging without dying.
+        
+        We initially used the syntax:
+        if event.key == pygame.K_w:
+                self.player.startMove("u")
+        However by browing through the documentation, we discovered that
+        with pygame 2.0.0 there was a new feature:
+            pygame.key.key_code().
+        We can pass in the string of the key eg "space" for space, or
+        "w" for "w".
+        This allows us to easily produce a human readable JSON 
+        containing the keybindings so that the user can change the 
+        keybindings to those of their choice.
+
+        We load this JSON each time we instantiate this class, as the 
+        intention is that if we have time between now and submission, we
+        will produce a settings screen to allow the user to graphically
+        change the keybindings to their preference.
         '''
         if event.type == pygame.KEYDOWN:
             # WASD for up/right/left, q for attack
-            if event.key == pygame.K_w:
+            if event.key == pygame.key.key_code(self.keys['up']):
                 self.player.startMove("u")
-            elif event.key == pygame.K_d:
+            elif event.key == pygame.key.key_code(self.keys['right']):
                 self.player.startMove("r")
-            elif event.key == pygame.K_a:
+            elif event.key == pygame.key.key_code(self.keys['left']):
                 self.player.startMove("l")
-            elif event.key == pygame.K_q:
+            elif event.key == pygame.key.key_code(self.keys['attack']):
                 self.player.attack()
             # When level complete, space to move to next level
-            elif (event.key == pygame.K_SPACE) and self.level_complete:
+            elif (event.key == pygame.key.key_code(self.keys['next_level']))\
+                                            and self.level_complete:
                 self.newLevel()
             # Escape to pause game
             elif event.key == pygame.K_ESCAPE:
