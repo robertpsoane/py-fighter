@@ -53,17 +53,34 @@ def pauseScreen(screen, controller):
     # Setup menu and buttons
     paused_text = Text(screen, (mid_x, height_unit), 60, 'PAUSED', 'purple')
 
-    resume_button =  Button(screen, 'Resume', (width_unit, 2 * height_unit),
-                                                                    resume, 20, (192, 64))
+    resume_button =  Button(
+                        screen,
+                        'Resume',
+                        (width_unit, 2 * height_unit),
+                        resume,
+                        20,
+                        (192, 64)
+                    )
 
-    main_menu_button =  Button(screen, 'Main Menu',
-                            (3 * width_unit, 2 * height_unit),
-                                                quitToMainMenu, 18, (192, 64) )
+    main_menu_button = Button(
+                        screen,
+                        'Main Menu',
+                        (3 * width_unit, 2 * height_unit),
+                        quitToMainMenu,
+                        18,
+                        (192, 64)
+                    )
                             
-    quit_button =  Button(screen, 'Quit', (5 * width_unit,  2 * height_unit),
-                                                                    quitGame,20,  (192, 64))
+    quit_button =  Button(
+                        screen,
+                        'Quit',
+                        (5 * width_unit,  2 * height_unit),
+                        quitGame,
+                        20,
+                        (192, 64)
+                    )
 
-    pause_menu = Menu(screen, paused_text, False, resume_button, 
+    pause_menu = Menu(screen, paused_text, False, resume_button,
                                     main_menu_button, quit_button)
 
     # load clock
