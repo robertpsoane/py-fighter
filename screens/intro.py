@@ -83,9 +83,10 @@ def introScreen(screen, controller):
                 element.display()
                 if move:
                     element.y -= 1
-                    move = False
-                else:
-                    move = True
+        if move:
+            move = False
+        else:
+            move = True
 
         if main_story[-1].y == height//4:
             run_scene = False
