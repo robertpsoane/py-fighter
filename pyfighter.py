@@ -107,6 +107,10 @@ start_menu = Menu(menu_screen, title_obj, menu_background, play_button,
 # Start Music
 playMusic(menu_background_path)
 
+# Found on pygame docs
+# https://www.pygame.org/docs/ref/cursors.html
+# Believe it makes the cursor look nicer in the game
+pygame.mouse.set_cursor(*pygame.cursors.tri_left)
 
 ### Main Game Loop
 while start_menu.playing:

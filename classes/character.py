@@ -247,6 +247,19 @@ class Character(pygame.sprite.Sprite):
         self.score += self.strength
         target.recoil(self.strength, direction)
 
+    def isFacingTarget(self, target):
+        '''
+        Function to check whether self is facing a particular enemy
+        '''
+        if self.state[1] == 'left' and \
+            (self.rect.centerx > target.rect.centerx):
+            return True
+        elif self.state[1] == 'right' and \
+            (self.rect.centerx < target.rect.centerx):
+            return True
+        return False
+
+
     def recoil(self, force, direction):
         ''' Recoil function - Loses health from attack and sets recoil 
         counter
@@ -327,9 +340,9 @@ class Character(pygame.sprite.Sprite):
         # surf.fill((100, 100, 0))
         # self.screen.blit(surf, self.rect)
 
-        # surf = pygame.Surface((self.feet_rect.width, self.feet_rect.height))
-        # surf.fill((0, 100, 100))
-        # self.screen.blit(surf, self.feet_rect)
+        surf = pygame.Surface((self.feet_rect.width, self.feet_rect.height))
+        surf.fill((0, 100, 100))
+        self.screen.blit(surf, self.feet_rect)
         # ###################################################
 
         # Displaying current image at current position

@@ -28,6 +28,10 @@ level_music = 'audio/prototype.wav'
 class Controller():
     # X position that player starts level at
     player_x = PLAYER_X_VAL
+
+    with open('json/settings.JSON') as settings:
+            settings = json.load(settings)
+            keys = settings["keys"]
     
     
     def __init__(self, game_display, game_screen, screen_dims, colour,
@@ -52,9 +56,7 @@ class Controller():
         self.mid_height = self.game_screen.get_height() // 2
         
         # Load keybinding settings
-        with open('json/settings.JSON') as settings:
-            self.settings = json.load(settings)
-            self.keys = self.settings["keys"]
+        
 
         # Setup level complete variables
         self.level_complete = False
