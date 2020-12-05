@@ -76,7 +76,7 @@ from classes.sfxbox import SFXBox
 
 SFX = SFXBox()
 
-with open('json/spritesheet.JSON') as sprite_sheet_json:
+with open('json/spritesheet.json') as sprite_sheet_json:
             SPRITESHEET_JSON = json.load(sprite_sheet_json)
 
 
