@@ -240,27 +240,6 @@ class Character(pygame.sprite.Sprite):
         self.recoil_status = (True, direction)
         self.recoil_counter = 5
 
-    def loseHealth(self, amount):
-        ''' loses amount of health and updates health bar accordingly
-
-        Updates health, checks if dead, and updates health bar
-        '''
-        self.health = self.health - amount
-        self.score -= amount // 5
-        if self.health <= 0:
-            self.alive = False
-            #self.kill()
-            return
-        self.healthbar.updateHealth()
-    
-    def gainHealth(self, amount):
-        ''' Gains health and updates healthbar accordingly
-        
-        Updates health, and updates health bar
-        '''
-        self.health = self.health + amount
-        self.healthbar.updateHealth()
-
     def update(self):
         ''' Update function
 
