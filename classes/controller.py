@@ -25,6 +25,7 @@ PLAYER_X_VAL = 50
 
 with open('json/background_music.JSON') as music_locations:
     MUSIC_LOCATIONS = json.load(music_locations)
+    TRACKS = MUSIC_LOCATIONS['tracks']
 
 
 class Controller():
@@ -91,7 +92,7 @@ class Controller():
         # - Music code inspired by code here:
         #   https://riptutorial.com/pygame/example/24563/example-to-add-music-in-pygame
         
-        level_music = MUSIC_LOCATIONS[self.settings['music']]
+        level_music = MUSIC_LOCATIONS[TRACKS[self.settings['music']]]
 
         pygame.mixer.music.set_volume(level_music[1])
         pygame.mixer.music.load(level_music[0])

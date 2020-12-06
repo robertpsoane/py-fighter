@@ -22,7 +22,7 @@ import webbrowser
 import json
 import pygame
 from screens.game import pyfighterGame
-from screens.settings import settings
+from screens.settings import SettingsMenu
 from classes.menu import Menu
 from classes.menu import Button
 from classes.text import Text
@@ -138,7 +138,7 @@ while start_menu.playing:
         # Send each event to the start menu
         button_out = start_menu.do(event)
         if button_out == 'settings':
-            settings(menu_screen, max_fps)
+            SettingsMenu(menu_screen, max_fps)
         
     # Refresh screen
     menu_screen.fill(colour['black'])
