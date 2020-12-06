@@ -23,14 +23,16 @@ from screens.intro import introScreen
 ENEMIES = ['isaac', 'thorsten']
 PLAYER_X_VAL = 50
 
-level_music = 'audio/background/prototype.wav'
+with open('json/background_music.JSON') as music_locations:
+    MUSIC_LOCATIONS = json.load(music_locations)
+
 
 class Controller():
     # X position that player starts level at
     player_x = PLAYER_X_VAL
 
     with open('json/settings.JSON') as settings:
-            keys = json.load(settings)
+            settings = json.load(settings)
     
     
     def __init__(self, game_display, game_screen, screen_dims, colour,
@@ -64,7 +66,7 @@ class Controller():
                                         30,
                                         'Level Complete'
                                     )
-        continue_string =  f'Press {self.keys["next_level"]} to continue'
+        continue_string =  f'Press {self.settings["next_level"]} to continue'
         self.level_complete_text_2 = Text(self.game_screen,
                                         (self.mid_width, self.mid_height),
                                         30,
@@ -78,11 +80,20 @@ class Controller():
         self.god_mode = False
         self.cheats = 0
 
+        # Play game music
+        self.playMusic()
+        
+
+    def playMusic(self):
+
         ### Setting up game music
         # - Music code inspired by code here:
         #   https://riptutorial.com/pygame/example/24563/example-to-add-music-in-pygame
-        #pygame.mixer.init()
-        pygame.mixer.music.load(level_music)
+        
+        level_music = MUSIC_LOCATIONS[self.settings['music']]
+
+        pygame.mixer.music.set_volume(level_music[1])
+        pygame.mixer.music.load(level_music[0])
         pygame.mixer.music.play(-1)
 
     def setupCameraMap(self):
@@ -199,16 +210,16 @@ class Controller():
         '''
         if event.type == pygame.KEYDOWN:
             # WASD for up/right/left, q for attack
-            if event.key == pygame.key.key_code(self.keys['up']):
+            if event.key == pygame.key.key_code(self.settings['up']):
                 self.player.startMove("u")
-            elif event.key == pygame.key.key_code(self.keys['right']):
+            elif event.key == pygame.key.key_code(self.settings['right']):
                 self.player.startMove("r")
-            elif event.key == pygame.key.key_code(self.keys['left']):
+            elif event.key == pygame.key.key_code(self.settings['left']):
                 self.player.startMove("l")
-            elif event.key == pygame.key.key_code(self.keys['attack']):
+            elif event.key == pygame.key.key_code(self.settings['attack']):
                 self.player.attack()
             # When level complete, space to move to next level
-            elif (event.key == pygame.key.key_code(self.keys['next_level']))\
+            elif (event.key == pygame.key.key_code(self.settings['next_level']))\
                                             and self.level_complete:
                 self.newLevel()
             # Escape to pause game
@@ -305,9 +316,10 @@ class Controller():
         self.game_map.display()
 
         # Display characters
-        for character in self.characters:
-            character.display()
-
+        for enemy in self.enemy_group:
+            enemy.display()
+        self.player.display()
+        
         # scales the game_display to game_screen. Allows us to scale images
         scaled_surf = pygame.transform.scale(self.game_display,
                                                 self.screen_dims)
