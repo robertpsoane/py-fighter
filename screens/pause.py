@@ -92,7 +92,7 @@ def pauseScreen(screen, controller):
 
         # Get/action events
         for event in pygame.event.get():
-            # Send each event to the start menu
+            # Send each event to the menu
             if event.type == pygame.QUIT:
                 # Detecting user pressing quit button, if X pressed,
                 # break loop and quit screen.

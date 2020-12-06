@@ -30,15 +30,16 @@ with open('json/background_music.JSON') as music_locations:
 class Controller():
     # X position that player starts level at
     player_x = PLAYER_X_VAL
-
-    with open('json/settings.JSON') as settings:
-            settings = json.load(settings)
     
     
     def __init__(self, game_display, game_screen, screen_dims, colour,
                                                             clock_delay):
         # Run game - used to exit game loop
         self.run = True
+
+        # Load game settings
+        with open('json/settings.JSON') as settings:
+            self.settings = json.load(settings)
 
         # Add important game features to self
         self.game_display = game_display
@@ -239,9 +240,9 @@ class Controller():
 
         elif event.type == pygame.KEYUP:
             # Toggle right/left moving
-            if event.key == pygame.K_d:
+            if event.key == pygame.key.key_code(self.settings['right']):
                 self.player.stopMove("right")
-            elif event.key == pygame.K_a:
+            elif event.key == pygame.key.key_code(self.settings['left']):
                 self.player.stopMove("left")
             # Lift right shift to submit code for god mode
             elif event.key == pygame.K_RSHIFT:
@@ -319,7 +320,7 @@ class Controller():
         for enemy in self.enemy_group:
             enemy.display()
         self.player.display()
-        
+
         # scales the game_display to game_screen. Allows us to scale images
         scaled_surf = pygame.transform.scale(self.game_display,
                                                 self.screen_dims)
