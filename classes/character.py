@@ -158,6 +158,8 @@ class Character(pygame.sprite.Sprite):
         self.is_jumping = False
         self.jumps_in_action = 0
         self.max_jumps_in_action = 2
+
+        self.thrown_projectile = (False, )
     
     def changeMap(self, background):
         ''' changeMap(background) - used to update to new map
@@ -222,6 +224,9 @@ class Character(pygame.sprite.Sprite):
                     self.images[image_type][image_direction] += \
                                                             [specific_image]
 
+    def changeArms(self, arm_type):
+        self.arms = self.arms = WEAPON_TYPES[arm_type](self)
+
     def addTarget(self, target_group):
         ''' Adds group of enemies to player
         '''
@@ -244,8 +249,12 @@ class Character(pygame.sprite.Sprite):
             direction = 1
         else:
             direction = -1
-        self.score += self.strength
-        target.recoil(self.strength, direction)
+        attack_strength = self.arms.strength
+        if target.health < attack_strength:
+            self.score += target.health
+        else:
+            self.score += attack_strength
+        target.recoil(self.arms.strength, direction)
 
     def isFacingTarget(self, target):
         '''
@@ -350,6 +359,7 @@ class Character(pygame.sprite.Sprite):
         self.screen.blit(self.image[self.image_index], self.plot_rect)
 
         # Display arms and health bar
+        #print(self.arms)
         self.arms.display()
         self.healthbar.display()
 

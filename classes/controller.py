@@ -84,6 +84,9 @@ class Controller():
 
         # Play game music
         self.playMusic()
+
+        
+        self.projectiles = []
         
 
     def playMusic(self):
@@ -115,7 +118,7 @@ class Controller():
         self.characters = pygame.sprite.Group()
         self.characters.add(self.player)
 
-  def addCameraTracking(self):
+    def addCameraTracking(self):
         '''
         Method to add all blitted objects to camera
         '''
@@ -265,7 +268,7 @@ class Controller():
         self.gt = Text(self.game_screen,
                         (110, self.game_screen.get_height() - 20),
                                         20, 'god mode activated')
-        self.player.strength *= 10000
+        self.player.arms.strength *= 10000
 
     def update(self):
         ''' Update function - Used to update positions of characters on
@@ -279,9 +282,17 @@ class Controller():
             To avoid this, update functions were added to characters.
             These are called before we blit to the screen.
         '''
+        for projectile in self.projectiles:
+            projectile.update()
+
         # Updating player and enemy positions
         for character in self.characters:
             character.update()
+            if character.thrown_projectile[0]:
+                character.thrown_projectile[1].group = self.characters
+                self.projectiles.append(character.thrown_projectile[1])
+                
+
 
         # Check if player is alive
         if self.player.alive == False:
@@ -321,6 +332,10 @@ class Controller():
         for enemy in self.enemy_group:
             enemy.display()
         self.player.display()
+
+        #print(self.projectiles)
+        for projectile in self.projectiles:
+            projectile.display()
 
         # scales the game_display to game_screen. Allows us to scale images
         scaled_surf = pygame.transform.scale(self.game_display,
