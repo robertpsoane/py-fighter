@@ -48,7 +48,7 @@ class Camera:
 
     def addWeapon(self, weapon):
         pass
-    
+
     def add(self, sprite):
         ''' Access the variables of all Character class instance.'''
         self.sprites.append(sprite)
@@ -76,7 +76,11 @@ class Camera:
 
         # Camera moves, the values of x values of objects that are not the player get updated.
         else:
-
+            current_offset = (self.player.rect.centerx - self.map_view / 2)
+            if self.world_x + current_offset > map_width:
+                return
+            if self.world_x + current_offset < 0:
+                return
             # Moves the background objects. Updates their x value.
             self.background_scroll.move += self.x
 

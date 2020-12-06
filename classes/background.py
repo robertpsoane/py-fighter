@@ -8,6 +8,7 @@ camera Class starts updating the x values of each background object.
 
 
 import pygame
+import random
 
 # Creating information for each object which will be displayed on the background.
 
@@ -18,15 +19,27 @@ import pygame
 # x_position is where the object will be blited on x axes.
 # y_position is where the object will be blited on y axes.
 
-background_objects = [[0.25, [0, 0]], [0.25, [256, 0]], [0.5, [0, 64]], [0.5, [192, 64]],
-                      [0.5, [384, 64]], [0.5, [576, 64]]]
+background_objects = [[0.25, [0, 0], random.randint(0, 1)], [0.25, [256, 0], random.randint(0, 1)], [0.5, [0, 64], random.randint(0, 3)], [0.5, [192, 64], random.randint(0, 3)],
+                      [0.5, [384, 64], random.randint(0, 3)], [0.5, [576, 64], random.randint(0, 3)]]
 
 # Load the images used by the objects also scale the images to fit the size of the map.
 back1 = pygame.image.load('graphics/background_sprite/back_1.png')
 back1 = pygame.transform.scale(back1, (192, 192))
 
+back2 = pygame.image.load('graphics/background_sprite/back_2.png')
+back2 = pygame.transform.scale(back2, (192, 192))
+
+back3 = pygame.image.load('graphics/background_sprite/back_3.png')
+back3 = pygame.transform.scale(back3, (192, 192))
+
+back4 = pygame.image.load('graphics/background_sprite/back_4.png')
+back4 = pygame.transform.scale(back4, (192, 192))
+
 super_back1 = pygame.image.load('graphics/background_sprite/back_super_1.png')
 super_back1 = pygame.transform.scale(super_back1, (128 * 2, 128 * 2))
+
+super_back2 = pygame.image.load('graphics/background_sprite/back_super_2.png')
+super_back2 = pygame.transform.scale(super_back2, (128 * 2, 128 * 2))
 
 
 class Background:
@@ -58,9 +71,9 @@ class Background:
                             background_object[1][1])
 
             # TODO this will change to random choice of background images.
-            if background_object[0] == 0.5:
+            if background_object[0] == 0.5 and background_object[2] == 0:
                 self.display.blit(back1, self.objects)
-            if background_object[0] == 0.25:
+            elif background_object[0] == 0.25:
                 self.display.blit(super_back1, self.objects)
 
 
