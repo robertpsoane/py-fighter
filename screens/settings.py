@@ -39,10 +39,22 @@ class SettingsMenu:
 
 
     def loadSettings(self):
+        '''
+        Loads settings json as python dictionary and assigns to
+        self.settings_data
+
+        '''
         with open(SETTINGS_LOCATION) as settings_data:
             self.settings_data = json.load(settings_data)
 
     def refreshTexts(self):
+        '''
+        Re-loads settings JSON and refreshes the text elements.
+        The texts dictionary contains all text elements to display,
+        while the used_keys dictionary contains the data for all keys 
+        that have been assigned by the user.
+        '''
+
         self.loadSettings()
 
         texts = {}
