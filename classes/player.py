@@ -20,7 +20,7 @@ class Player(Character):
     on the screen.
     '''
 
-    def __init__(self, screen, background, x_position, y_position, arm_type = 'boomerang'):
+    def __init__(self, screen, background, x_position, y_position, arm_type = 'arms'):
         # Loading player data json, and converitng to python dictionary
         with open('json/basic_character.JSON') as player_json:
             character_data = json.load(player_json)
@@ -35,15 +35,13 @@ class Player(Character):
         them
         '''
         if self.arms.projectile:
-            #print('throw')
-            self.thrown_projectile = (True, self.arms)
-            self.arms.throw('left')
-            self.arms = Arms(self)
-
-        collision_enemies = pygame.sprite.spritecollide(self, self.target_group, False)
-        for collision_enemy in collision_enemies:
-            if self.isFacingTarget(collision_enemy):
-                Character.attack(self, collision_enemy)
+            boom = self.arms.throw(self.state[1])
+            self.thrown_projectiles.add(boom)
+        else:
+            collision_enemies = pygame.sprite.spritecollide(self, self.target_group, False)
+            for collision_enemy in collision_enemies:
+                if self.isFacingTarget(collision_enemy):
+                    Character.attack(self, collision_enemy)
     
     def update(self):
         ''' Update

@@ -38,7 +38,10 @@ class NPC(Character):
 
         # Attack delay - a delay of a number of frames to give player 
         # opportunity of attacking first
-        self.attack_delay = 15
+        if self.arms.projectile:
+            self.attack_delay = 100
+        else:
+            self.attack_delay = 15
         self.attack_counter = 0
 
         # Kill NPC if falls off map
@@ -122,15 +125,24 @@ class NPC(Character):
         x_dif = self_x - target_x
         y_dif = self_y - target_y
 
-        # If possible, attack
-        if pygame.sprite.collide_rect(self, self.target) \
-                        and self.isFacingTarget(self.target):
-            
-            if self.attack_counter == self.attack_delay:
-                self.attack_counter = 0
-                self.attack(self.target)
-            else:
-                self.attack_counter += 1
+        if self.arms.projectile:
+            if -10 < y_dif < 10:
+                if self.attack_counter == self.attack_delay:
+                    self.attack_counter = 0
+                    boom = self.arms.throw(self.state[1])
+                    self.thrown_projectiles.add(boom)
+                else:
+                    self.attack_counter += 1
+        else:
+            # If possible, attack
+            if pygame.sprite.collide_rect(self, self.target) \
+                            and self.isFacingTarget(self.target):
+                
+                if self.attack_counter == self.attack_delay:
+                    self.attack_counter = 0
+                    self.attack(self.target)
+                else:
+                    self.attack_counter += 1
         
         # move in right direction
         if x_dif > self.c2c_width:

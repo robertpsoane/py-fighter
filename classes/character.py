@@ -159,7 +159,7 @@ class Character(pygame.sprite.Sprite):
         self.jumps_in_action = 0
         self.max_jumps_in_action = 2
 
-        self.thrown_projectile = (False, )
+        self.thrown_projectiles = pygame.sprite.Group()
     
     def changeMap(self, background):
         ''' changeMap(background) - used to update to new map

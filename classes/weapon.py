@@ -123,7 +123,6 @@ class Sword(DroppableWeapon):
         self.weapon = pygame.image.load(SWORD_LOCATION)
         self.weapon.set_colorkey((0, 255, 0))
 
-
 class Boomerang(DroppableWeapon):
     sprite_sheet_location = BOOMERANG_ARMS_LOCATION
     strength = 15
@@ -133,19 +132,38 @@ class Boomerang(DroppableWeapon):
 
         self.weapon = pygame.image.load(BOOMERANG_LOCATION)
         self.weapon.set_colorkey((0, 255, 0))
+        
+    def throw(self, direction):
+        return BoomerangAmmo(self.owner, self.owner.target_group, self.strength, direction)
+
+class Arms(Weapon):
+    sprite_sheet_location = BASIC_ARMS_LOCATION
+    strength = 10
+    projectile = False
+    def __init__(self, owner):
+        Weapon.__init__(self, owner, self.sprite_sheet_location)
+
+class BoomerangAmmo(pygame.sprite.Sprite):
+    def __init__(self, owner, characters, strength, direction):
+        pygame.sprite.Sprite.__init__(self)
         self.loadFrames()
-        self.is_throwing = False
+        self.group = characters
+        self.owner = owner
+        self.strength = strength
+        self.screen = self.owner.screen
 
-        self.group = pygame.sprite.Group()
+        if direction == 'left':
+            self.speed = -2
+        else:
+            self.speed = 2
 
-        self.frame_rate = 100
+        self.frame_rate = 10
         self.frame_counter = 0
-        self.period = 10
+        self.period = 1
         self.period_counter = 0
-        self.speed = 1
-        self.return_distance = 100
-        self.return_counter = 0
-    
+
+        self.rect.center = self.owner.rect.center
+
     def loadFrames(self):
         self.frames = []
         self.spritesheet = SpriteSheet(BOOMERANG_LOCATION)
@@ -155,68 +173,36 @@ class Boomerang(DroppableWeapon):
         self.current_frame = 0
         self.num_frames = len(self.frames)
         self.image = self.frames[self.current_frame]
-        self.throw_rect = self.image.get_rect()
-
-    def throw(self, direction):
-        self.is_throwing = True
-        self.rect = self.throw_rect
-        self.rect.centerx = self.owner.rect.right
-        self.rect.centery = self.owner.rect.centery
+        self.rect = self.image.get_rect()
     
     def update(self):
-        if self.is_throwing == True:
-            self.period_counter += 1
-            if self.period_counter == self.period:
-                self.throw_rect.centerx += self.speed
-                print(self.speed)
-                self.period_counter = 0
-                self.return_counter += 1
-            self.frame_counter += 1
 
-            if self.frame_counter == self.frame_rate:
-                self.current_frame += 1
-                self.frame_counter = 0
-            
-            
-            if self.current_frame >= len(self.frames):
-                self.current_frame = 0
+        self.period_counter += 1
+        if self.period_counter == self.period:
+            self.rect.centerx += self.speed
+            self.period_counter = 0
+        self.frame_counter += 1
 
-            if self.return_counter == self.return_distance:
-                self.speed = self.speed * -1
-                self.return_counter = 0
-
-            
-            collisions = pygame.sprite.spritecollide(self, self.group, False)
-            #print(len(collisions))
-            if collisions != None:
-                for sprite in collisions:
-                    if sprite == self.owner:
-                        self.owner.changeArms('boomerang')
-                        self.owner.thrown_projectile = (False, None)
-                        self.kill()
-                    else:
-                        sprite.recoil(self.strength, 1)
-                        self.owner.score += self.strength
-                        self.speed = self.speed * -1
-            
-                
-            
-            
+        if self.frame_counter == self.frame_rate:
+            self.current_frame += 1
+            self.frame_counter = 0
         
+        
+        if self.current_frame >= len(self.frames):
+            self.current_frame = 0
+
+        collisions = pygame.sprite.spritecollide(self, self.group, False)
+        
+        if collisions != None:
+            for sprite in collisions:
+                sprite.recoil(self.strength, 1)
+                self.owner.score += self.strength
+                self.kill()
+            
+            
     def display(self):
-        if self.is_throwing:
-            self.image = self.frames[self.current_frame]
-            self.screen.blit(self.image, self.throw_rect)
-        else:
-            Weapon.display(self)
-
-
-class Arms(Weapon):
-    sprite_sheet_location = BASIC_ARMS_LOCATION
-    strength = 10
-    projectile = False
-    def __init__(self, owner):
-        Weapon.__init__(self, owner, self.sprite_sheet_location)
+        self.image = self.frames[self.current_frame]
+        self.screen.blit(self.image, self.rect)
 
 
 WEAPON_TYPES = {
