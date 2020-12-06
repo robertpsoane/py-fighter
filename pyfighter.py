@@ -72,6 +72,9 @@ def loadAbout():
     webbrowser.open('https://sites.google.com/view/pyfighter/home',
                             new=2)
 
+def runSettings():
+    return 'settings'
+
 def quitGame():
     pygame.quit()
     os._exit(0)
@@ -104,7 +107,7 @@ title_obj = Text(menu_screen, (title_x, title_y),
 play_button = Button(menu_screen, play_text, 
                     (1 * width_unit, height_unit), playGame, 35, major_button_dims)
 
-settings_button = Button(menu_screen, settings_text,(3 * width_unit, height_unit), settings, 30, major_button_dims)
+settings_button = Button(menu_screen, settings_text,(3 * width_unit, height_unit), runSettings, 30, major_button_dims)
 
 about_button = Button(menu_screen, about_text, 
                     about_position, loadAbout, 30)
@@ -133,7 +136,9 @@ while start_menu.playing:
     # Get/action events
     for event in pygame.event.get():
         # Send each event to the start menu
-        start_menu.do(event)
+        button_out = start_menu.do(event)
+        if button_out == 'settings':
+            settings(menu_screen, max_fps)
         
     # Refresh screen
     menu_screen.fill(colour['black'])
