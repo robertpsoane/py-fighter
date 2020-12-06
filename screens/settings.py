@@ -17,8 +17,11 @@ class SettingsMenu:
     def __init__(self, screen, max_fps):
         self.run = True
         
+        # Key game variables
         self.screen = screen
         self.max_fps = max_fps
+
+        # Size variables based on screen size
         self.height = screen.get_height()
         self.width = screen.get_width()
         self.height_unit = self.height // 9
@@ -27,9 +30,11 @@ class SettingsMenu:
         self.mid = self.width // 2
         self.default_button = (128, 64)
 
-        # Make texts:
+        # Make texts and menu
         self.refreshTexts()
         self.makeMenu()
+
+        # Run settings menu
         self.runSettings()
 
 
