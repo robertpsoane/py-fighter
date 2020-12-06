@@ -3,5 +3,6 @@
         "left":"a",
         "right":"d",
         "attack":"space",
-        "next_level":"e"
+        "next_level":"e",
+        "music": "r_fights"
 }
