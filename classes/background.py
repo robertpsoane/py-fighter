@@ -19,8 +19,7 @@ import random
 # x_position is where the object will be blited on x axes.
 # y_position is where the object will be blited on y axes.
 
-background_objects = [[0.25, [0, 0], random.randint(0, 1)], [0.25, [256, 0], random.randint(0, 1)], [0.5, [0, 64], random.randint(0, 3)], [0.5, [192, 64], random.randint(0, 3)],
-                      [0.5, [384, 64], random.randint(0, 3)], [0.5, [576, 64], random.randint(0, 3)]]
+
 
 # Load the images used by the objects also scale the images to fit the size of the map.
 back1 = pygame.image.load('graphics/background_sprite/back_1.png')
@@ -56,7 +55,19 @@ class Background:
         # Variable which gets updated with x scroll value from the Camera class.
         self.move = 0
 
+    def objectRandom(self):
+
+        background_objects = [[0.25, [0, 0], random.randint(0, 1)],
+                              [0.25, [256, 0], random.randint(0, 1)],
+                              [0.5, [0, 64], random.randint(0, 3)],
+                              [0.5, [192, 64], random.randint(0, 3)],
+                              [0.5, [384, 64], random.randint(0, 3)],
+                              [0.5, [576, 64], random.randint(0, 3)]]
+        return background_objects
+
     def displayQ(self):
+
+        background_objects = self.objectRandom()
         ''' Method which blits the background to the display'''
 
         # Reiterating through "background_objects" matrix to get all of the values for
@@ -73,8 +84,16 @@ class Background:
             # TODO this will change to random choice of background images.
             if background_object[0] == 0.5 and background_object[2] == 0:
                 self.display.blit(back1, self.objects)
-            elif background_object[0] == 0.25:
+            if background_object[0] == 0.5 and background_object[2] == 1:
+                self.display.blit(back2, self.objects)
+            if background_object[0] == 0.5 and background_object[2] == 2:
+                self.display.blit(back3, self.objects)
+            if background_object[0] == 0.5 and background_object[2] == 3:
+                self.display.blit(back4, self.objects)
+            if background_object[0] == 0.25 and background_object[2] == 0:
                 self.display.blit(super_back1, self.objects)
+            if background_object[0] == 0.25 and background_object[2] == 1:
+                self.display.blit(super_back2, self.objects)
 
 
 
