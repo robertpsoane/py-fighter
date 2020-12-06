@@ -18,7 +18,7 @@ class NPC(Character):
     '''
 
     def __init__(self, screen, background, x_position, y_position,
-                npc_type = 'basic', sleep_on_load = True):
+                npc_type = 'basic', arm_type = 'arms', sleep_on_load = True):
         # Loading player data json, and converitng to python dictionary
         json_location = f'json/{npc_type}_enemy.JSON'
         try:
@@ -31,7 +31,7 @@ class NPC(Character):
 
         # Initialising Character class
         Character.__init__(self, character_data, background, screen,
-                                                x_position, y_position)
+                                                x_position, y_position, arm_type)
 
         # Setup sleep variable
         self.asleep = sleep_on_load
