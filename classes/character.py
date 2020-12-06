@@ -88,7 +88,7 @@ class Character(pygame.sprite.Sprite):
     '''
 
     def __init__(self, character_data, background, screen,
-                                    x_position, y_position):
+                                    x_position, y_position, arm_type = 'arms'):
         ''' Init Character
         Function takes and unpacks relevat information from the 
         characters JSON dictionary
@@ -139,7 +139,7 @@ class Character(pygame.sprite.Sprite):
 
         # Get Character Arms TODO MAY need updating to reflect some 
         # enemies having own arms/other arms
-        self.arms = Arms(self)
+        self.arms = WEAPON_TYPES[arm_type](self)
         self.healthbar = HealthBar(self)
 
         # Important move variables
@@ -158,6 +158,8 @@ class Character(pygame.sprite.Sprite):
         self.is_jumping = False
         self.jumps_in_action = 0
         self.max_jumps_in_action = 2
+
+        self.thrown_projectiles = pygame.sprite.Group()
     
     def changeMap(self, background):
         ''' changeMap(background) - used to update to new map
@@ -222,6 +224,9 @@ class Character(pygame.sprite.Sprite):
                     self.images[image_type][image_direction] += \
                                                             [specific_image]
 
+    def changeArms(self, arm_type):
+        self.arms = self.arms = WEAPON_TYPES[arm_type](self)
+
     def addTarget(self, target_group):
         ''' Adds group of enemies to player
         '''
@@ -244,8 +249,12 @@ class Character(pygame.sprite.Sprite):
             direction = 1
         else:
             direction = -1
-        self.score += self.strength
-        target.recoil(self.strength, direction)
+        attack_strength = self.arms.strength
+        if target.health < attack_strength:
+            self.score += target.health
+        else:
+            self.score += attack_strength
+        target.recoil(self.arms.strength, direction)
 
     def isFacingTarget(self, target):
         '''
@@ -271,6 +280,7 @@ class Character(pygame.sprite.Sprite):
         self.score -= force // 5
         self.recoil_status = (True, direction)
         self.recoil_counter = 5 
+
 
     def update(self):
         ''' Update function
@@ -349,6 +359,7 @@ class Character(pygame.sprite.Sprite):
         self.screen.blit(self.image[self.image_index], self.plot_rect)
 
         # Display arms and health bar
+        #print(self.arms)
         self.arms.display()
         self.healthbar.display()
 

@@ -16,6 +16,7 @@ from classes.npc import NPC
 from classes.camera import Camera
 from classes.background import Background
 from classes.text import Text
+from classes.weapon import WEAPON_TYPES
 from screens.gameover import gameOver
 from screens.pause import pauseScreen
 from screens.intro import introScreen
@@ -58,8 +59,8 @@ class Controller():
         self.mid_width = self.game_screen.get_width() // 2
         self.mid_height = self.game_screen.get_height() // 2
         
-        # Load keybinding settings
         
+        self.weapon_types = list(WEAPON_TYPES.keys())
 
         # Setup level complete variables
         self.level_complete = False
@@ -84,6 +85,8 @@ class Controller():
 
         # Play game music
         self.playMusic()
+        
+        self.projectiles = pygame.sprite.Group()
         
 
     def playMusic(self):
@@ -134,6 +137,15 @@ class Controller():
         idx = random.randrange(len(ENEMIES))
         return ENEMIES[idx]
 
+    def decideRandomArm(self):
+        '''
+        Randomly determine which arms to give an enemy
+        '''
+        idx = random.randrange(len(self.weapon_types))
+        return self.weapon_types[idx]
+        
+
+
     def generateLevel(self):
         '''
         This function generates a new level, and enemies to fight
@@ -145,7 +157,7 @@ class Controller():
         for n in range(self.level.val):
             enemy_type = self.decideEnemyType()
             position = random.randrange(self.spawn_area[0], self.spawn_area[1])
-            enemy = NPC(self.game_display, self.game_map, position, -100, enemy_type)
+            enemy = NPC(self.game_display, self.game_map, position, -100, enemy_type, self.decideRandomArm())
             enemy.addTarget(self.player_group)
             self.enemy_group.add(enemy)      
             self.characters.add(enemy)
@@ -265,7 +277,7 @@ class Controller():
         self.gt = Text(self.game_screen,
                         (110, self.game_screen.get_height() - 20),
                                         20, 'god mode activated')
-        self.player.strength *= 10000
+        self.player.arms.strength *= 10000
 
     def update(self):
         ''' Update function - Used to update positions of characters on
@@ -279,9 +291,16 @@ class Controller():
             To avoid this, update functions were added to characters.
             These are called before we blit to the screen.
         '''
+        for projectile in self.projectiles:
+            projectile.update()
+
         # Updating player and enemy positions
         for character in self.characters:
             character.update()
+            for projectile in character.thrown_projectiles:
+                projectile.update()
+                
+
 
         # Check if player is alive
         if self.player.alive == False:
@@ -320,7 +339,16 @@ class Controller():
         # Display characters
         for enemy in self.enemy_group:
             enemy.display()
+            for projectile in enemy.thrown_projectiles:
+                projectile.display()
         self.player.display()
+        print(self.player.thrown_projectiles)
+        for projectile in self.player.thrown_projectiles:
+            projectile.display()
+
+        #print(self.projectiles)
+        for projectile in self.projectiles:
+            projectile.display()
 
         # scales the game_display to game_screen. Allows us to scale images
         scaled_surf = pygame.transform.scale(self.game_display,

@@ -12,6 +12,7 @@ built in to attack the player, whereas the player is fairly simple.
 import pygame
 import json
 from classes.character import Character
+from classes.weapon import Arms
 
 class Player(Character):
 
@@ -19,13 +20,13 @@ class Player(Character):
     on the screen.
     '''
 
-    def __init__(self, screen, background, x_position, y_position):
+    def __init__(self, screen, background, x_position, y_position, arm_type = 'arms'):
         # Loading player data json, and converitng to python dictionary
         with open('json/basic_character.JSON') as player_json:
             character_data = json.load(player_json)
 
         # Initialising Character class
-        Character.__init__(self, character_data, background, screen, x_position, y_position)
+        Character.__init__(self, character_data, background, screen, x_position, y_position, arm_type)
 
     def attack(self):
         ''' attack function
@@ -33,10 +34,14 @@ class Player(Character):
         Checks for any enemies in target group who have collided and attacks
         them
         '''
-        collision_enemies = pygame.sprite.spritecollide(self, self.target_group, False)
-        for collision_enemy in collision_enemies:
-            if self.isFacingTarget(collision_enemy):
-                Character.attack(self, collision_enemy)
+        if self.arms.projectile:
+            boom = self.arms.throw(self.state[1])
+            self.thrown_projectiles.add(boom)
+        else:
+            collision_enemies = pygame.sprite.spritecollide(self, self.target_group, False)
+            for collision_enemy in collision_enemies:
+                if self.isFacingTarget(collision_enemy):
+                    Character.attack(self, collision_enemy)
     
     def update(self):
         ''' Update
