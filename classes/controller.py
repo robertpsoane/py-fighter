@@ -115,8 +115,7 @@ class Controller():
         self.characters = pygame.sprite.Group()
         self.characters.add(self.player)
 
-
-    def addCameraTracking(self):
+  def addCameraTracking(self):
         '''
         Method to add all blitted objects to camera
         '''

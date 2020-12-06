@@ -9,9 +9,11 @@ the game.
 
 import pygame
 from classes.text import Text
+from classes.sfxbox import SFXBox
 
 button_location = 'graphics/menu/button.png'
 
+SFX = SFXBox()
 
 class Menu:
     ''' Menu
@@ -26,17 +28,20 @@ class Menu:
         self.title_obj = title_obj
         self.unpackButtons(buttons)
         
-        self.background = pygame.image.load(background_location)
-        self.background_rect = pygame.Rect((0, 0, 1, 1))
+        self.background_location = background_location
+        if background_location != False:
+            self.background = pygame.image.load(background_location)
+            self.background_rect = pygame.Rect((0, 0, 1, 1))
 
-        # Quitting Bool to determine whether to quit game
+        # Quitting Bool to determine whether to quit screen
         self.playing = True
 
     def display(self):
         '''
         Displays all buttons on the screen
         '''
-        self.screen.blit(self.background, self.background_rect)
+        if self.background_location != False:
+            self.screen.blit(self.background, self.background_rect)
         self.title_obj.display()
         # self.play_obj.display()
         # self.help_obj.display()
@@ -52,6 +57,11 @@ class Menu:
         The buttons have a record of whether they have been 
         'button-downed' yet.  If they have, then if they are als 
         'button-upped' will call their function
+
+        If button is pressed, will also return any output that the 
+        buttons functions may give.  This allows the menu to be used in
+        any scenario such as the pause button, where we want it to
+        return a string, to tell the pause screen what to do.
         '''
         if event.type == pygame.QUIT:
             # Detecting user pressing quit button, if X pressed,
@@ -64,8 +74,12 @@ class Menu:
         if event.type == pygame.MOUSEBUTTONUP:
             for button in self.buttons:
                 if self.checkPress(button, event.pos) and button.mouse_down:
-                    button.press()
+                    SFX.click()
+                    any_output = button.press()
+                    button.mouse_down = False
+                    return any_output
                 button.mouse_down = False
+                
                 
     def checkPress(self, button, pos):
         ''' 
@@ -100,9 +114,9 @@ class Button:
     required.  For this reason, __position is private, so that it cannot 
     be edited from outside the function.
     '''
-    def __init__(self, screen, text, position, func, size = (128, 64),
-                            text_colour = 'white', highlight = 'yellow',
-                            font_size = 35):
+    def __init__(self, screen, text, position, func,
+                            font_size = 35, size = (128, 64),
+                            text_colour = 'white', highlight = 'yellow'):
         # Storing attributes
         self.screen = screen
         self.text = text
@@ -123,9 +137,9 @@ class Button:
         self.makeImage()
 
     def press(self):
-        ''' Call button function when pressed
+        ''' Call button function when pressed, and return any output
         '''
-        self.func()
+        return self.func()
 
     def makeText(self):
         ''' Create text object

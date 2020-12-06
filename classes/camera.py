@@ -15,7 +15,7 @@ class Camera:
     '''
 
 
-    def __init__(self, x=0, y=0):
+    def __init__(self, screen, x=0, y=0):
 
         # x and y values used to update the x or y values of other blited objects.
         self.x = x
@@ -23,6 +23,12 @@ class Camera:
 
         # List used to save the name of character Class instances.
         self.sprites = []
+
+        # Map width
+        self.map_width = screen.get_width()
+        self.map_view = self.map_width // 2
+
+
         # Create a variable to follow Players position in the map when camera is not working.
         self.world_x = x
 
@@ -34,6 +40,15 @@ class Camera:
         ''' Access the variables of Map class instance.'''
         self.map = map_obj
 
+    def addPlayer(self, player):
+        self.sprites = [player]
+
+        # Locks the camera to the player sprite.
+        self.player = self.sprites[0]
+
+    def addWeapon(self, weapon):
+        pass
+    
     def add(self, sprite):
         ''' Access the variables of all Character class instance.'''
         self.sprites.append(sprite)
@@ -46,7 +61,7 @@ class Camera:
         ''' Method which updates the x values of objects which are blited to game_display'''
 
         # Creates a variable for the visible map width.
-        map_width = self.map.dims[0] - 400
+        map_width = self.map.dims[0] - self.map_view
 
         # Creating boarders for the camera view.
         # Stops the camera moving if the camera hits the left side of the level.
@@ -73,10 +88,7 @@ class Camera:
             for sprite in self.sprites:
                 sprite.rect.centerx -= self.x
 
-            # Locks the camera to the player sprite.
-            self.player = self.sprites[0]
-
-            self.x = (self.player.rect.centerx - 400 / 2)
+            self.x = (self.player.rect.centerx - self.map_view / 2)
 
             self.world_x += self.x
 

@@ -1,0 +1,5 @@
+{
+    "tracks": ["prototype", "r_fights"],
+    "prototype": ["audio/background/prototype.wav", 1],
+    "r_fights": ["audio/background/rokas_fighting.wav", 0.3]
+}

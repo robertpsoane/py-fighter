@@ -21,7 +21,8 @@ import os
 import webbrowser
 import json
 import pygame
-from game import pyfighterGame
+from screens.game import pyfighterGame
+from screens.settings import SettingsMenu
 from classes.menu import Menu
 from classes.menu import Button
 from classes.text import Text
@@ -30,7 +31,7 @@ from classes.text import Text
 with open('json/config.JSON') as config_file:
     config = json.load(config_file)
 
-# Colour tuples and font sizes
+# Colour tuples and font sizesd 
 colour = config['colour']
 font_size = config['font_size']
 
@@ -62,13 +63,17 @@ def playMusic(music_path):
     ### Setting up game music
     # - Music code inspired by code here:
     #   https://riptutorial.com/pygame/example/24563/example-to-add-music-in-pygame
+    # - Found detail on setting volume on pygame docs
     pygame.mixer.init()
     pygame.mixer.music.load(music_path)
     pygame.mixer.music.play(-1)
-
-def getHelp():
+    
+def loadAbout():
     webbrowser.open('https://sites.google.com/view/pyfighter/home',
                             new=2)
+
+def runSettings():
+    return 'settings'
 
 def quitGame():
     pygame.quit()
@@ -77,36 +82,51 @@ def quitGame():
 # String names
 menu_title = game_name
 play_text = 'Play'
-help_text = 'Help'
+about_text = 'About'
+settings_text = 'Settings'
 quit_text = 'Quit'
 
 # Title position
 title_x = screen_width // 2
 title_y = screen_height // 9
+
 # Calculating (x,y) coords of buttons
 width_unit = screen_width // 6
 height_unit = screen_height // 2
+
+major_button_dims = (192, 64)
+
+offset = 20
+
+about_position = (screen_width - 64 - offset, 32 + offset)
 
 # Creating pygame string objects
 title_obj = Text(menu_screen, (title_x, title_y),
                         font_size['title'], menu_title, 'purple')
 
 play_button = Button(menu_screen, play_text, 
-                    (1 * width_unit, height_unit,), playGame)
+                    (1 * width_unit, height_unit), playGame, 35, major_button_dims)
 
-help_button = Button(menu_screen, help_text, 
-                    (3 * width_unit, height_unit,), getHelp)
+settings_button = Button(menu_screen, settings_text,(3 * width_unit, height_unit), runSettings, 30, major_button_dims)
+
+about_button = Button(menu_screen, about_text, 
+                    about_position, loadAbout, 30)
 
 quit_button = Button(menu_screen, quit_text, 
-                    (5 * width_unit, height_unit), quitGame)
+                    (5 * width_unit, height_unit), quitGame, 35, major_button_dims)
+
 
 # Initialising StartMenu class
 start_menu = Menu(menu_screen, title_obj, menu_background, play_button, 
-                                                help_button, quit_button)
+                                                settings_button, about_button, quit_button)
 
 # Start Music
 playMusic(menu_background_path)
 
+# Found on pygame docs
+# https://www.pygame.org/docs/ref/cursors.html
+# Believe it makes the cursor look nicer in the game
+pygame.mouse.set_cursor(*pygame.cursors.tri_left)
 
 ### Main Game Loop
 while start_menu.playing:
@@ -116,7 +136,9 @@ while start_menu.playing:
     # Get/action events
     for event in pygame.event.get():
         # Send each event to the start menu
-        start_menu.do(event)
+        button_out = start_menu.do(event)
+        if button_out == 'settings':
+            SettingsMenu(menu_screen, max_fps)
         
     # Refresh screen
     menu_screen.fill(colour['black'])
@@ -128,3 +150,5 @@ while start_menu.playing:
     pygame.display.flip()
 
 quitGame()
+
+

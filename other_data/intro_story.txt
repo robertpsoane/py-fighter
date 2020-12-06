@@ -1,0 +1,28 @@
+This file includes the story at the beginning of the game.
+Lines starting with TITLE get built into a title, lines starting
+with MAIN get built into the story.  All other lines are ignored.
+
+TITLE A long time ago in a galaxy far,
+TITLE far away . . . .
+
+
+MAIN . . . . there existed 'in person'
+MAIN tuition.
+MAIN But in the year 2020 COVID struck.
+MAIN All semester your modules have been 
+MAIN 100% online and you haven't seen
+MAIN your professors. So do they exist?
+MAIN Are they just a figment of your
+MAIN imagination?
+MAIN 
+MAIN To cut costs, the university
+MAIN created AI professors to deliver
+MAIN your lectures and set your
+MAIN coursework.
+MAIN 
+MAIN Exam season approaches, and 
+MAIN the evil Darth Virus has hacked
+MAIN your professors, multiplying 
+MAIN them, making their exams harder.
+MAIN 
+MAIN Only you can save your MSc. . . .

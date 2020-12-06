@@ -35,7 +35,8 @@ class Player(Character):
         '''
         collision_enemies = pygame.sprite.spritecollide(self, self.target_group, False)
         for collision_enemy in collision_enemies:
-            Character.attack(self, collision_enemy)
+            if self.isFacingTarget(collision_enemy):
+                Character.attack(self, collision_enemy)
     
     def update(self):
         ''' Update

@@ -1,0 +1,5 @@
+# AUDIO DETAILS
+
+|		FILE NAME		|		AUTHOR		|		DESCRIPTION 
+|	prototype.wav		|	Robert Soane	|	Prototyping adding music functionality to main game play.  To be replaced at later date
+|	Indigo_Heart.wav	|	Daniel Birch	|	Added to test changing between two music tracks.  Will be replaced for production. Found on freemusicarchive.org.  Licensed under CC BY-NC 4.0 https://creativecommons.org/licenses/by-nc/4.0/

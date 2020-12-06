@@ -241,6 +241,8 @@ class Tile(pygame.sprite.Sprite):
         - screen dims
         - tile_type '1' , '2' or '3'.
 
+    found rect.inflate_ip on pygame documentation
+
     Has a display function to blit to screen
     @author: Robert Soane
     """
@@ -255,13 +257,23 @@ class Tile(pygame.sprite.Sprite):
 
         if self.type == 1:
             self.image = STONE
+            self.rect = self.image.get_rect()
+            self.rect.topleft = [dims[0], dims[1]]
+
         if self.type == 2:
             self.image = GRASS
+            self.rect = self.image.get_rect()
+            self.rect.topleft = [dims[0], dims[1]]
+
         if self.type == 3:
             self.image = PLATFORM
+            self.rect = self.image.get_rect()
+            # Making platform rect smaller
+            new_rect_height = - self.rect.height + 1 * (self.rect.height // 5)
+            self.rect.inflate_ip(0, new_rect_height)
+            self.rect.topleft = [dims[0], dims[1]]
 
-        self.rect = self.image.get_rect()
-        self.rect.topleft = [dims[0], dims[1]]
+
 
     def display(self):
         '''
@@ -271,11 +283,11 @@ class Tile(pygame.sprite.Sprite):
 
         self.screen.blit(self.image, self.rect)
 
-        ###################################################
-        # TODO DELETE THE FOLLOWING CODE - FOR TESTING ONLY
-        surf = pygame.Surface((self.rect.width, self.rect.height))
-        surf.fill((0, 100, 100))
-        surf.set_alpha(50)
-        self.screen.blit(surf, self.rect)
-        ###################################################
+        # ###################################################
+        # # TODO DELETE THE FOLLOWING CODE - FOR TESTING ONLY
+        # surf = pygame.Surface((self.rect.width, self.rect.height))
+        # surf.fill((0, 100, 100))
+        # surf.set_alpha(50)
+        # self.screen.blit(surf, self.rect)
+        # ###################################################
 
