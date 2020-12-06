@@ -85,8 +85,16 @@ class Weapon(pygame.sprite.Sprite):
                 self.rect.center = self.owner.rect.center
                 self.screen.blit(self.image[self.index], self.rect)
             else:
-                self.owned = False            
-                 
+                self.owned = False 
+        else:
+            pass
+            # Dispaly static weapon at death position
+            # Check for collision with a sprite with sprite.arms.droppable = False
+            #
+            # If collides - replace arms with self, and set self as owned by player
+            
+
+
             
         '''
         # Update dropped weapon
@@ -107,6 +115,7 @@ class Weapon(pygame.sprite.Sprite):
         
 
 class DroppableWeapon(Weapon):
+    droppable = True
     def display(self):
         Weapon.display(self)
         if not self.owned:
@@ -140,6 +149,7 @@ class Arms(Weapon):
     sprite_sheet_location = BASIC_ARMS_LOCATION
     strength = 10
     projectile = False
+    droppable = False
     def __init__(self, owner):
         Weapon.__init__(self, owner, self.sprite_sheet_location)
 
