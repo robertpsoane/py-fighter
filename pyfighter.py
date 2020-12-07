@@ -23,6 +23,7 @@ import json
 import pygame
 from screens.game import pyfighterGame
 from screens.settings import SettingsMenu
+from classes.generalfunctions import quitGame
 from classes.menu import Menu
 from classes.menu import Button
 from classes.text import Text
@@ -74,10 +75,6 @@ def loadAbout():
 
 def runSettings():
     return 'settings'
-
-def quitGame():
-    pygame.quit()
-    os._exit(0)
 
 # String names
 menu_title = game_name

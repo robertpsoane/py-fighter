@@ -1,0 +1,10 @@
+sample1/100
+sample2/200
+sample3/300
+sample4/400
+sample5/500
+sample6/600
+sample7/700
+sample8/800
+sample9/900
+sample10/1000
