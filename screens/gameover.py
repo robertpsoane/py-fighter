@@ -19,10 +19,6 @@ Game over screen needs:
 
 
 
-- Quit Game
-pygame.quit()
-os._exit(0)
-
 - Return to main menu
 run = False
 
