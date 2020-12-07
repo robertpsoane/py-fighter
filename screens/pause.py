@@ -19,6 +19,7 @@ into button functions.
 import pygame
 import os
 
+from classes.generalfunctions import quitGame
 from classes.text import Text
 from classes.menu import Button
 from classes.menu import Menu
@@ -31,12 +32,6 @@ def resume():
 
 def quitToMainMenu():
     return 'main_menu'
-
-def quitGame():
-    pygame.quit()
-    os._exit(0)
-
-
 
 def pauseScreen(screen, controller):
     ''' Pause Screen function
