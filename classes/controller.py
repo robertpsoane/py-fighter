@@ -306,7 +306,7 @@ class Controller():
         if self.player.alive == False:
             # End game
             self.run = False
-            gameOver()
+            gameOver(self.game_screen, self.player.score, self.clock_delay)
 
         for enemy in self.enemy_group:
             if enemy.rect.bottom > self.screen_dims[1]:
