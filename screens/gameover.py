@@ -2,6 +2,35 @@
 
 This screen is shown at end of game.
 Takes name, adds name and score to other_data/highscores.txt
+
+
+
+
+
+Game over screen needs:
+- Text saying Game Over
+- Input to take name if score within the top 10
+- Output of top 10 - stored in other_data/highscores.txt,
+    - name/score format
+- Button to return to main menu
+- Button to quit
+
+- Remember to call 'close' on file after making changes to it
+
+
+
+- Quit Game
+pygame.quit()
+os._exit(0)
+
+- Return to main menu
+run = False
+
+
+
+
+
+
 '''
 
 import pygame
@@ -23,7 +52,6 @@ def gameOver(screen, score, delay):
     height = screen.get_height()
 
     sample_text = Text(screen, (width // 2, height // 2), 20, 'Sample Text')
-    
     
     menu_title = Text(screen, (width // 2, height // 4), 50, 'Game Over', 'Purple')
     sample_button = Button(screen, 'Press me', (400, 500), randomFunc)
