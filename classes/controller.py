@@ -304,6 +304,8 @@ class Controller():
 
         # Check if player is alive
         if self.player.alive == False:
+            # End game
+            self.run = False
             gameOver()
 
         for enemy in self.enemy_group:
