@@ -35,6 +35,7 @@ run = False
 
 import pygame
 import os
+from classes.generalfunctions import quitGame
 from classes.text import Text
 from classes.menu import Button
 from classes.menu import Menu
@@ -68,9 +69,8 @@ def gameOver(screen, score, delay):
             if event.type == pygame.QUIT:
                 # Detecting user pressing quit button, if X pressed,
                 # break loop and quit screen.
-                pygame.quit()
-                os._exit(0)
-
+                quitGame()
+                
             # Do mouse up/down events
             elif (event.type == pygame.MOUSEBUTTONDOWN) or \
                 (event.type == pygame.MOUSEBUTTONUP):
