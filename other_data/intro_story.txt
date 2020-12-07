@@ -8,6 +8,7 @@ TITLE far away . . . .
 
 MAIN . . . . there existed 'in person'
 MAIN tuition.
+MAIN
 MAIN But in the year 2020 COVID struck.
 MAIN All semester your modules have been 
 MAIN 100% online and you haven't seen

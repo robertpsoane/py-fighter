@@ -52,10 +52,10 @@ def gameOver(screen, score, delay):
     width = screen.get_width()
     height = screen.get_height()
 
-    sample_text = Text(screen, (width // 2, height // 2), 20, 'Sample Text')
+    sample_text = Text(screen, (width // 2, height // 2), 20, f'score = {score}')
     
     menu_title = Text(screen, (width // 2, height // 4), 50, 'Game Over', 'Purple')
-    sample_button = Button(screen, 'Press me', (400, 500), randomFunc)
+    sample_button = Button(screen, 'Press me', (400, 500), (lambda : 'main_menu'))
     
     sample_menu = Menu(screen, menu_title, False, sample_button)
 
@@ -75,7 +75,10 @@ def gameOver(screen, score, delay):
             elif (event.type == pygame.MOUSEBUTTONDOWN) or \
                 (event.type == pygame.MOUSEBUTTONUP):
                 
-                sample_menu.do(event)
+                button_press = sample_menu.do(event)
+
+                if button_press == 'main_menu':
+                    run = False
 
         screen.fill('black')
 
