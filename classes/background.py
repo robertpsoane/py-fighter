@@ -54,6 +54,7 @@ class Background:
         self.display = screen
         # Variable which gets updated with x scroll value from the Camera class.
         self.move = 0
+        self.convertRandom()
 
     def objectRandom(self):
 
@@ -65,14 +66,38 @@ class Background:
                               [0.5, [576, 64], random.randint(0, 3)]]
         return background_objects
 
-    def displayQ(self):
+    def convertRandom(self):
+        '''
+        Converting the randomly generated int values in the list of lists
+        to loaded images which will be blited.
+        '''
 
-        background_objects = self.objectRandom()
+        # Create the list of lists with sublists containing a random int value.
+        self.background_objects = self.objectRandom()
+
+        # Checking the random values and assigning an image variable instead of it.
+        for image in self.background_objects:
+            if image[0] == 0.5 and image[2] == 0:
+                image[2] = back1
+            if image[0] == 0.5 and image[2] == 1:
+                image[2] = back2
+            if image[0] == 0.5 and image[2] == 2:
+                image[2] = back3
+            if image[0] == 0.5 and image[2] == 3:
+                image[2] = back4
+            if image[0] == 0.25 and image[2] == 0:
+                image[2] = super_back1
+            if image[0] == 0.25 and image[2] == 1:
+                image[2] = super_back2
+
+
+    def displayQ(self):
         ''' Method which blits the background to the display'''
 
         # Reiterating through "background_objects" matrix to get all of the values for
         # each individual background object.
-        for background_object in background_objects:
+
+        for background_object in self.background_objects:
 
             # x value of each object gets updated by the camera scroll stored in self.move
             # value when the camera scroll() method is active.
@@ -81,19 +106,8 @@ class Background:
             self.objects = (background_object[1][0] - self.move * background_object[0],
                             background_object[1][1])
 
-            # TODO this will change to random choice of background images.
-            if background_object[0] == 0.5 and background_object[2] == 0:
-                self.display.blit(back1, self.objects)
-            if background_object[0] == 0.5 and background_object[2] == 1:
-                self.display.blit(back2, self.objects)
-            if background_object[0] == 0.5 and background_object[2] == 2:
-                self.display.blit(back3, self.objects)
-            if background_object[0] == 0.5 and background_object[2] == 3:
-                self.display.blit(back4, self.objects)
-            if background_object[0] == 0.25 and background_object[2] == 0:
-                self.display.blit(super_back1, self.objects)
-            if background_object[0] == 0.25 and background_object[2] == 1:
-                self.display.blit(super_back2, self.objects)
+            # Blit the background images to the screen.
+            self.display.blit(background_object[2], self.objects)
 
 
 
