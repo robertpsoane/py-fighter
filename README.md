@@ -1,7 +1,7 @@
 
 # Pyfighter
 
-*A long time ago in a a galaxy far, far away there existed in person tuition.  But in the year 2020, COVID struck.  All semester modules have been 100% online and you haven't seen your professors.  So do they exist?  Are they just a figment of your imagination?*
+*A long time ago in a galaxy far, far away there existed in person tuition.  But in the year 2020, COVID struck.  All semester modules have been 100% online and you haven't seen your professors.  So do they exist?  Are they just a figment of your imagination?*
 
 *To cut costs, the university created AI professors to deliver your lectures and set your coursework.  Exam season approaches and the evil Darth Virus has hacked your professors, multiplying them and making your exams harder.*
 
