@@ -5,6 +5,7 @@ The class which creates a camera view for the game which fallows the player.
 @author: Rokas Danevicius (unless stated otherwise)
 '''
 
+import pygame
 
 class Camera:
     '''
@@ -22,12 +23,11 @@ class Camera:
         self.y = y
 
         # List used to save the name of character Class instances.
-        self.sprites = []
+        self.sprites = pygame.sprite.Group()
 
         # Map width
         self.map_width = screen.get_width()
         self.map_view = self.map_width // 2
-
 
         # Create a variable to follow Players position in the map when camera is not working.
         self.world_x = x
@@ -41,17 +41,18 @@ class Camera:
         self.map = map_obj
 
     def addPlayer(self, player):
-        self.sprites = [player]
+        self.sprites = pygame.sprite.Group()
+        self.sprites.add(player)
 
         # Locks the camera to the player sprite.
-        self.player = self.sprites[0]
+        self.player = player
 
     def addWeapon(self, weapon):
-        pass
+        self.sprites.add(weapon)
 
     def add(self, sprite):
         ''' Access the variables of all Character class instance.'''
-        self.sprites.append(sprite)
+        self.sprites.add(sprite)
         # self.init_player = self.sprites[0]
         # self.init_position = self.init_player.position[0]
 

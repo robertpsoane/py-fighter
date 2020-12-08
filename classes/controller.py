@@ -56,8 +56,10 @@ class Controller():
 
         # Setup key
         self.spawn_area = (2 * self.player_x, screen_dims[0])
-        self.mid_width = self.game_screen.get_width() // 2
+        self.map_width = self.game_screen.get_width()
+        self.mid_width = self.map_width // 2
         self.mid_height = self.game_screen.get_height() // 2
+        
 
 
         self.weapon_types = list(WEAPON_TYPES.keys())
@@ -112,7 +114,7 @@ class Controller():
     def setupPlayer(self):
         ''' Sets up player for the first level
         '''
-        self.player = Player(self.game_display, self.game_map, self.player_x, - 100)
+        self.player = Player(self.game_display, self.game_map, self.player_x, - 100, 'boomerang')
         self.player_group = pygame.sprite.Group()
         self.player_group.add(self.player)
         self.characters = pygame.sprite.Group()
@@ -144,8 +146,6 @@ class Controller():
         idx = random.randrange(len(self.weapon_types))
         return self.weapon_types[idx]
 
-
-
     def generateLevel(self):
         '''
         This function generates a new level, and enemies to fight
@@ -175,6 +175,8 @@ class Controller():
         self.player.center = self.player_x, -100
         self.player.updateState('idle', self.player.state[1])
         self.player.x_y_moving = False
+        self.player.max_health += 10
+        self.player.health = self.player.max_health
 
     def firstLevel(self):
         ''' Sets up first level
@@ -190,8 +192,6 @@ class Controller():
         Increments the level counter, and adjusts player health
         '''
         self.level.val += 1
-        self.player.max_health += 10
-        self.player.health = self.player.max_health
         self.level_complete = False
         self.setupCameraMap()
         self.resetPlayer()
@@ -291,16 +291,20 @@ class Controller():
             To avoid this, update functions were added to characters.
             These are called before we blit to the screen.
         '''
-        for projectile in self.projectiles:
-            projectile.update()
+        
 
         # Updating player and enemy positions
         for character in self.characters:
             character.update()
             for projectile in character.thrown_projectiles:
-                projectile.update()
-
-
+                if not self.projectiles.has(projectile):
+                    self.projectiles.add(projectile)
+                    self.camera.addWeapon(projectile)
+        
+        for projectile in self.projectiles:
+            if (projectile.rect.centerx < 0) or (projectile.rect.centerx > self.map_width):
+                projectile.kill()
+            projectile.update()
 
         # Check if player is alive
         if self.player.alive == False:
@@ -344,7 +348,6 @@ class Controller():
             for projectile in enemy.thrown_projectiles:
                 projectile.display()
         self.player.display()
-        print(self.player.thrown_projectiles)
         for projectile in self.player.thrown_projectiles:
             projectile.display()
 
