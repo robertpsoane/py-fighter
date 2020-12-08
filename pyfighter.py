@@ -78,7 +78,7 @@ def playMusic(music_path):
     pygame.mixer.music.play(-1)
     
 def loadAbout():
-    webbrowser.open('https://sites.google.com/view/pyfighter/home',
+    webbrowser.open('https://www.pyfighter.xyz/',
                             new=2)
 
 def runSettings():
