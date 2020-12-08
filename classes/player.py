@@ -34,6 +34,7 @@ class Player(Character):
         Checks for any enemies in target group who have collided and attacks
         them
         '''
+        self.attacking = True
         if self.arms.projectile:
             boom = self.arms.throw(self.state[1])
             self.thrown_projectiles.add(boom)
