@@ -66,7 +66,8 @@ class Weapon(pygame.sprite.Sprite):
                             )
                     specific_image.set_colorkey(background_colour)
 
-                    self.images[image_type][image_direction] += [specific_image]
+                    self.images[image_type][image_direction] += \
+                                                             [specific_image]
 
     def display(self):
         ''' display function
@@ -75,6 +76,7 @@ class Weapon(pygame.sprite.Sprite):
         gives a list of images
         '''
 
+        
         # Get owner variables
         self.state = self.owner.state
         self.index = self.owner.image_index
@@ -83,55 +85,34 @@ class Weapon(pygame.sprite.Sprite):
         # Select Image
         self.image = self.images[action][direction]
 
-        if (self.owned):
-            # Rect position alive
-            if self.owner.alive:
-                self.rect.center = self.owner.rect.center
-                self.screen.blit(self.image[self.index], self.rect)
-            else:
-                self.owned = False 
-        
-        # Dispaly static weapon at death position
-        if (not self.owned) and self.droppable:
-            self.screen.blit(self.weapon, self.rect.center)
-        else:
-            self.kill()
-        
-        # Checking collision
-           # sprite.arms.droppable = False 
-
-            # Check for collision with a sprite with sprite.arms.droppable = False
-            #
-            # If collides - replace arms with self, and set self as owned by player
+        self.rect.center = self.owner.rect.center
+    
+        # Rect position alive
+        if self.owner.alive:
             
-
-
-            
-        '''
-        # Update dropped weapon
-        if owner.alive:
-            self.rect_death = self.rect
             self.screen.blit(self.image[self.index], self.rect)
+        else:
+            self.owned = False 
         
-        if not self.owner.alive:
-            self.owned = False
-            self.rect_death.bottom = 100
-            if self.owner.sate[0] != 'idle':
-                if self.owner[1] == 'right':
-                    self.rect.right -= 2
-                if self.owner.state[1] == 'left':
-                self.rect_death.right += 2
-            self.screen.blit(self.weapon, self.rect_death)
-        '''
+
         
 
 class DroppableWeapon(Weapon):
     droppable = True
     def display(self):
-        Weapon.display(self)
-        if not self.owned:
+        if self.owned:
+            Weapon.display(self)
+        else:
             self.screen.blit(self.weapon, self.rect) 
 
+    def update(self):
+        # Check for collisiosn of characters
+        # If character.arms.droppable = False
+        #       self.kill()
+        #       character.arms=self
+        #       self.owned = True
+        #       self.owner = character
+        pass
 
 class Sword(DroppableWeapon):
     sprite_sheet_location = SWORD_ARMS_LOCATION
@@ -154,7 +135,8 @@ class Boomerang(DroppableWeapon):
         self.weapon.set_colorkey((0, 255, 0))
         
     def throw(self, direction):
-        return BoomerangAmmo(self.owner, self.owner.target_group, self.strength, direction)
+        return BoomerangAmmo(self.owner, self.owner.target_group,
+                            self.strength, direction)
 
 class Arms(Weapon):
     sprite_sheet_location = BASIC_ARMS_LOCATION
@@ -174,9 +156,9 @@ class BoomerangAmmo(pygame.sprite.Sprite):
         self.screen = self.owner.screen
 
         if direction == 'left':
-            self.speed = -2
+            self.speed = -3
         else:
-            self.speed = 2
+            self.speed = 3
 
         self.frame_rate = 10
         self.frame_counter = 0
