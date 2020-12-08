@@ -32,8 +32,8 @@ with open('json/background_music.JSON') as music_locations:
 class Controller():
     # X position that player starts level at
     player_x = PLAYER_X_VAL
-    
-    
+
+
     def __init__(self, game_display, game_screen, screen_dims, colour,
                                                             clock_delay):
         # Run game - used to exit game loop
@@ -53,13 +53,15 @@ class Controller():
         # Setup score and level displays
         self.score = Score(game_screen)
         self.level = Level(game_screen)
-        
-        # Setup key 
+
+        # Setup key
         self.spawn_area = (2 * self.player_x, screen_dims[0])
-        self.mid_width = self.game_screen.get_width() // 2
+        self.map_width = self.game_screen.get_width()
+        self.mid_width = self.map_width // 2
         self.mid_height = self.game_screen.get_height() // 2
         
-        
+
+
         self.weapon_types = list(WEAPON_TYPES.keys())
 
         # Setup level complete variables
@@ -75,7 +77,7 @@ class Controller():
                                         30,
                                         continue_string
                                     )
-        
+
         # Setup first level
         self.firstLevel()
 
@@ -85,16 +87,16 @@ class Controller():
 
         # Play game music
         self.playMusic()
-        
+
         self.projectiles = pygame.sprite.Group()
-        
+
 
     def playMusic(self):
 
         ### Setting up game music
         # - Music code inspired by code here:
         #   https://riptutorial.com/pygame/example/24563/example-to-add-music-in-pygame
-        
+
         level_music = MUSIC_LOCATIONS[TRACKS[self.settings['music']]]
 
         pygame.mixer.music.set_volume(level_music[1])
@@ -102,7 +104,7 @@ class Controller():
         #pygame.mixer.music.play(-1)
 
     def setupCameraMap(self):
-        ''' 
+        '''
         Sets up camera and map for a given level
         '''
         self.camera = Camera(self.game_screen)
@@ -127,7 +129,7 @@ class Controller():
         self.camera.addPlayer(self.player)
         for enemy in self.enemy_group:
             self.camera.add(enemy)
-    
+
     def decideEnemyType(self):
         '''
         Randomly returns an enemy from the enemies list
@@ -143,8 +145,6 @@ class Controller():
         '''
         idx = random.randrange(len(self.weapon_types))
         return self.weapon_types[idx]
-        
-
 
     def generateLevel(self):
         '''
@@ -159,7 +159,7 @@ class Controller():
             position = random.randrange(self.spawn_area[0], self.spawn_area[1])
             enemy = NPC(self.game_display, self.game_map, position, -100, enemy_type, self.decideRandomArm())
             enemy.addTarget(self.player_group)
-            self.enemy_group.add(enemy)      
+            self.enemy_group.add(enemy)
             self.characters.add(enemy)
 
         # Tell player about enemies
@@ -167,7 +167,7 @@ class Controller():
 
         # Setup tracking
         self.addCameraTracking()
-    
+
     def resetPlayer(self):
         ''' Resets player to start point for new level
         '''
@@ -175,6 +175,8 @@ class Controller():
         self.player.center = self.player_x, -100
         self.player.updateState('idle', self.player.state[1])
         self.player.x_y_moving = False
+        self.player.max_health += 10
+        self.player.health = self.player.max_health
 
     def firstLevel(self):
         ''' Sets up first level
@@ -190,21 +192,19 @@ class Controller():
         Increments the level counter, and adjusts player health
         '''
         self.level.val += 1
-        self.player.max_health += 10
-        self.player.health = self.player.max_health
         self.level_complete = False
         self.setupCameraMap()
         self.resetPlayer()
         self.generateLevel()
-    
+
     def keyboardInput(self, event):
         ''' keyboardInput
-    
-        Called by game loop, and checking events from keyboard, and 
+
+        Called by game loop, and checking events from keyboard, and
         calling respective functions.
         Includes functionality to activate 'god mode'.
         The intention of god mode is for debugging without dying.
-        
+
         We initially used the syntax:
         if event.key == pygame.K_w:
                 self.player.startMove("u")
@@ -213,11 +213,11 @@ class Controller():
             pygame.key.key_code().
         We can pass in the string of the key eg "space" for space, or
         "w" for "w".
-        This allows us to easily produce a human readable JSON 
-        containing the keybindings so that the user can change the 
+        This allows us to easily produce a human readable JSON
+        containing the keybindings so that the user can change the
         keybindings to those of their choice.
 
-        We load this JSON each time we instantiate this class, as the 
+        We load this JSON each time we instantiate this class, as the
         intention is that if we have time between now and submission, we
         will produce a settings screen to allow the user to graphically
         change the keybindings to their preference.
@@ -249,7 +249,7 @@ class Controller():
             elif (event.key == pygame.K_2) and (self.cheats == 2):
                 self.cheats += 1
             elif (event.key == pygame.K_3) and (self.cheats == 3):
-                self.cheats += 1            
+                self.cheats += 1
 
         elif event.type == pygame.KEYUP:
             # Toggle right/left moving
@@ -264,7 +264,7 @@ class Controller():
                     self.cheats = 0
                 else:
                     self.cheats = 0
-        
+
     def initGodMode(self):
         ''' God Mode
 
@@ -291,20 +291,26 @@ class Controller():
             To avoid this, update functions were added to characters.
             These are called before we blit to the screen.
         '''
-        for projectile in self.projectiles:
-            projectile.update()
+        
 
         # Updating player and enemy positions
         for character in self.characters:
             character.update()
             for projectile in character.thrown_projectiles:
-                projectile.update()
-                
-
+                if not self.projectiles.has(projectile):
+                    self.projectiles.add(projectile)
+                    self.camera.addWeapon(projectile)
+        
+        for projectile in self.projectiles:
+            if (projectile.rect.centerx < 0) or (projectile.rect.centerx > self.map_width):
+                projectile.kill()
+            projectile.update()
 
         # Check if player is alive
         if self.player.alive == False:
-            gameOver()
+            # End game
+            self.run = False
+            gameOver(self.game_screen, self.player.score, self.clock_delay)
 
         for enemy in self.enemy_group:
             if enemy.rect.bottom > self.screen_dims[1]:
@@ -322,11 +328,11 @@ class Controller():
 
         # Update camera position
         self.camera.scroll()
-        
+
     def display(self):
         ''' Display
 
-        This displays all our objects to the screen in order.  This 
+        This displays all our objects to the screen in order.  This
         takes place each frame.
         '''
 
@@ -346,6 +352,7 @@ class Controller():
 
         for weapon in self.dropped_weapons:
             weapon.display()
+
 
         for projectile in self.player.thrown_projectiles:
             projectile.display()
@@ -386,8 +393,8 @@ class GameOutput():
     font_size = 30
 
     def __init__(self, screen):
-        ''' 
-        Initialises a Text object on the screen which can be updated 
+        '''
+        Initialises a Text object on the screen which can be updated
         when required
         '''
         self.text_output = Text(screen, (self.position), self.font_size,
@@ -411,20 +418,20 @@ class GameOutput():
         '''
         self.text_output.display()
 
-    
+
 class Score(GameOutput):
     '''
     Shows score on screen at top left.
 
-    We store the value as a private variable, this is so we can use the 
+    We store the value as a private variable, this is so we can use the
     setter decorator to control how it is updated.  To avoid making our
     characters depend on this class, they never update the object.
     Instead the controller updates the value with each update.
-    To avoid having to re-render the Text object every update, we check 
+    To avoid having to re-render the Text object every update, we check
     whether the score has changed, if it has we update it and re-render
     the Text object.
     '''
-    
+
     def __init__(self, screen):
         self.position = (100, 50)
         self.__val = 0
@@ -446,8 +453,8 @@ class Score(GameOutput):
 class Level(GameOutput):
     '''
     Used to display Level we are on to top right hand side of screen
-    
-    Frustratingly we had to copy and paste the @property method and 
+
+    Frustratingly we had to copy and paste the @property method and
     couldn't use inheritance.  This is because the __val attribute is
     private and cannot be accessed outside of the Level class.
     (Sorry about copying code! We really didn't have a choice :'( )
