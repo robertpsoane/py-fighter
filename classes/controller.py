@@ -254,9 +254,9 @@ class Controller():
         elif event.type == pygame.KEYUP:
             # Toggle right/left moving
             if event.key == pygame.key.key_code(self.settings['right']):
-                self.player.stopMove("right")
+                self.player.stopMoveX("right")
             elif event.key == pygame.key.key_code(self.settings['left']):
-                self.player.stopMove("left")
+                self.player.stopMoveX("left")
             # Lift right shift to submit code for god mode
             elif event.key == pygame.K_RSHIFT:
                 if self.cheats == 4:
