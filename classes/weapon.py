@@ -4,15 +4,18 @@
 '''
 import pygame
 from classes.spritesheet import SpriteSheet
-# from spritesheet import SpriteSheet
-# arms spirtesheets
+# From spritesheet import SpriteSheet
+# Arms spirtesheets
 BASIC_ARMS_LOCATION = 'graphics/spritesheets/basic-arms.png'
 SWORD_ARMS_LOCATION = 'graphics/spritesheets/sword-arms.png'
 BOOMERANG_ARMS_LOCATION = 'graphics/spritesheets/boomerang-arms.png'
 
-#static images
+# Boomerang Animation
+BOOMERANG_ANIMATION_LOCATION = 'graphics/weapons/boomerang.png'
+
+# Static images
 SWORD_LOCATION = 'graphics/weapons/sword.png'
-BOOMERANG_LOCATION = 'graphics/weapons/boomerang.png'
+BOOMERANG_LOCATION = 'graphics/weapons/boomerang-static.png'
 
 
 
@@ -35,7 +38,7 @@ class Weapon(pygame.sprite.Sprite):
 
         # Setting up initial image
         self.state = owner.state
-        self.image = self.images[self.state[0]][self.state[1 ]]
+        self.image = self.images[self.state[0]][self.state[1]]
         self.index = owner.image_index
         self.rect = self.image[self.index].get_rect()
         self.rect.centerx = self.owner.rect.centerx
@@ -68,7 +71,8 @@ class Weapon(pygame.sprite.Sprite):
     def display(self):
         ''' display function
 
-        state takes form [action, direction], images[action][direction] gives a list of images
+        state takes form [action, direction], images[action][direction]
+        gives a list of images
         '''
 
         # Get owner variables
@@ -79,16 +83,23 @@ class Weapon(pygame.sprite.Sprite):
         # Select Image
         self.image = self.images[action][direction]
 
-        if self.owned:
+        if (self.owned):
             # Rect position alive
             if self.owner.alive:
                 self.rect.center = self.owner.rect.center
                 self.screen.blit(self.image[self.index], self.rect)
             else:
                 self.owned = False 
+        
+        # Dispaly static weapon at death position
+        if (not self.owned) and self.droppable:
+            self.screen.blit(self.weapon, self.rect.center)
         else:
-            pass
-            # Dispaly static weapon at death position
+            self.kill()
+        
+        # Checking collision
+           # sprite.arms.droppable = False 
+
             # Check for collision with a sprite with sprite.arms.droppable = False
             #
             # If collides - replace arms with self, and set self as owned by player
@@ -176,7 +187,7 @@ class BoomerangAmmo(pygame.sprite.Sprite):
 
     def loadFrames(self):
         self.frames = []
-        self.spritesheet = SpriteSheet(BOOMERANG_LOCATION)
+        self.spritesheet = SpriteSheet(BOOMERANG_ANIMATION_LOCATION)
         for i in range(4):
             frame = self.spritesheet.image_at((i, 0), (32, 32), (0, 255, 0))
             self.frames.append(frame)
