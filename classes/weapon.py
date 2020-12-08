@@ -4,6 +4,11 @@
 '''
 import pygame
 from classes.spritesheet import SpriteSheet
+from classes.sfxbox import SFXBox
+
+
+SFX = SFXBox()
+
 # From spritesheet import SpriteSheet
 # Arms spirtesheets
 BASIC_ARMS_LOCATION = 'graphics/spritesheets/basic-arms.png'
@@ -99,8 +104,14 @@ class Weapon(pygame.sprite.Sprite):
         else:
             self.owned = False 
         
+    def attack(self, direction, target):
+        if target.health < self.strength:
+            self.owner.score += target.health
+        else:
+            self.owner.score += self.strength
+        self.sound()
+        target.recoil(self.strength, direction)
 
-        
 
 class DroppableWeapon(Weapon):
     droppable = True
@@ -109,6 +120,13 @@ class DroppableWeapon(Weapon):
             Weapon.display(self)
         else:
             self.screen.blit(self.weapon, self.rect) 
+
+    def updateUses(self):
+        self.uses+=1
+        if self.uses == self.owner.max_uses:
+            self.kill()
+            self.owner.arms = Arms(self.owner)
+
 
     def update(self):
         # Check for collisiosn of characters
@@ -133,28 +151,32 @@ class Sword(DroppableWeapon):
     strength = 15
     projectile = False
     uses = 0
+    sound = SFX.wind
     def __init__(self, owner):
         Weapon.__init__(self, owner, self.sprite_sheet_location)
     
         self.weapon = pygame.image.load(SWORD_LOCATION)
         self.weapon.set_colorkey((0, 255, 0))
 
+    def attack(self, direction, target):
+        self.updateUses()
+        Weapon.attack(self, direction, target)
+
 class Boomerang(DroppableWeapon):
     sprite_sheet_location = BOOMERANG_ARMS_LOCATION
     strength = 15
     projectile = True
     uses = 0
+    sound = SFX.wind
     def __init__(self, owner):
         Weapon.__init__(self, owner, self.sprite_sheet_location)
 
         self.weapon = pygame.image.load(BOOMERANG_LOCATION)
         self.weapon.set_colorkey((0, 255, 0))
-        
+    
     def throw(self, direction):
-        self.uses+=1
-        if self.uses == self.owner.max_uses:
-            self.kill()
-            self.owner.arms = Arms(self.owner)
+        self.updateUses()
+        self.sound()
         return BoomerangAmmo(self.owner, self.owner.target_group,
                             self.strength, direction)
 
@@ -163,6 +185,7 @@ class Arms(Weapon):
     strength = 10
     projectile = False
     droppable = False
+    sound = SFX.punch
     def __init__(self, owner):
         Weapon.__init__(self, owner, self.sprite_sheet_location)
 
