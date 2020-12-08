@@ -72,9 +72,7 @@ import pygame
 import json
 from classes.spritesheet import SpriteSheet
 from classes.weapon import *
-from classes.sfxbox import SFXBox
 
-SFX = SFXBox()
 
 with open('json/spritesheet.JSON') as sprite_sheet_json:
             SPRITESHEET_JSON = json.load(sprite_sheet_json)
@@ -247,17 +245,13 @@ class Character(pygame.sprite.Sprite):
         Causes player being attacked to recoil in opposite direction, 
         and lose health.
         '''
-        SFX.wind()
         if self.rect[0] < target.rect[0]:
             direction = 1
         else:
             direction = -1
-        attack_strength = self.arms.strength
-        if target.health < attack_strength:
-            self.score += target.health
-        else:
-            self.score += attack_strength
-        target.recoil(self.arms.strength, direction)
+        self.arms.attack(direction, target)
+        
+        
 
     def isFacingTarget(self, target):
         '''

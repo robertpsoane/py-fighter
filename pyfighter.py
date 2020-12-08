@@ -1,16 +1,24 @@
 ''' Pyfighter (working title)
 
-A Steampunk 2D streetfighting game built with PyGame.
 
-[ More details to go here before release :), big it up and that! ]
+A long time ago in a galaxy far, far away there existed in person 
+tuition.  But in the year 2020, COVID struck.  All semester modules have
+been 100% online and you haven't seen your professors.  
+So do they exist?  Are they just a figment of your imagination?
+To cut costs, the university created AI professors to deliver your 
+lectures and set your coursework.  Exam season approaches and the evil 
+Darth Virus has hacked your professors, multiplying them and making your
+exams harder.
+Only you can save your degree...
 
-Produced as an MSc Computer Science project by R. Soane, 
-S. Mistrey and R. Danevicius   
-
-###########################################################  #############
+Pyfighter is an 8-bit side scrolling, infinite level platform game, 
+produced in python using PyGame as part on an MSc by R. Soane, R. 
+Danevicius, and S. Mistry.  Inspired by super street fighter, super 
+smash bros and Mario, they created a customisable and addictive game 
+that gets progressively harder.
 
 This file forms a start menu for the game.  When selected, the game 
-fun ction is loaded as a new instance of pygame within the same window.  
+function is loaded as a new instance of pygame within the same window.  
 Implemented in this way so that whenever the player quits the game, it 
 goes back to the menu.
 

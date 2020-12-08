@@ -306,6 +306,9 @@ class Controller():
                 projectile.kill()
             projectile.update()
 
+        for weapon in self.dropped_weapons:
+            weapon.update()
+
         # Check if player is alive
         if self.player.alive == False:
             # End game
@@ -318,6 +321,7 @@ class Controller():
             if enemy.alive == False:
                 self.camera.addWeapon(enemy.arms)
                 self.dropped_weapons.add(enemy.arms)
+                enemy.arms.addCharacterGroup(self.characters)
                 enemy.kill()
 
         if len(self.enemy_group) == 0:
@@ -346,16 +350,11 @@ class Controller():
         # Display characters
         for enemy in self.enemy_group:
             enemy.display()
-            for projectile in enemy.thrown_projectiles:
-                projectile.display()
+        
         self.player.display()
 
         for weapon in self.dropped_weapons:
             weapon.display()
-
-
-        for projectile in self.player.thrown_projectiles:
-            projectile.display()
 
         #print(self.projectiles)
         for projectile in self.projectiles:

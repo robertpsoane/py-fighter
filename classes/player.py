@@ -19,6 +19,8 @@ class Player(Character):
     ''' Player Class - Used to display and animate human controlled characters
     on the screen.
     '''
+    
+    max_uses = 5
 
     def __init__(self, screen, background, x_position, y_position, arm_type = 'arms'):
         # Loading player data json, and converitng to python dictionary
