@@ -16,7 +16,7 @@ class NPC(Character):
     The NPC uses some very basic logic to give the NPCs some apparent 
     autonomy. With each display of the screen,
     '''
-
+    max_uses = -1
     def __init__(self, screen, background, x_position, y_position,
                 npc_type = 'basic', arm_type = 'arms', sleep_on_load = True):
         # Loading player data json, and converitng to python dictionary
@@ -113,7 +113,7 @@ class NPC(Character):
         Use simple comparison of positions to decide whether or not to 
         attack
         '''
-
+        
         # If asleep, don't check for moves
         if self.stillAsleep():
             return
@@ -129,6 +129,7 @@ class NPC(Character):
             if -10 < y_dif < 10:
                 if self.attack_counter == self.attack_delay:
                     self.attack_counter = 0
+                    self.attacking = True
                     boom = self.arms.throw(self.state[1])
                     self.thrown_projectiles.add(boom)
                 else:
@@ -140,6 +141,7 @@ class NPC(Character):
                 
                 if self.attack_counter == self.attack_delay:
                     self.attack_counter = 0
+                    self.attacking = True
                     self.attack(self.target)
                 else:
                     self.attack_counter += 1
@@ -151,8 +153,7 @@ class NPC(Character):
             self.startMove('r')
         elif (not self.is_jumping) and y_dif > self.c2c_width:
             self.startMove('u')
-        
-
+    
     def withinWakeDistance(self):
         ''' withinWakeDistance - returns whether target is within NPCs 
         wake

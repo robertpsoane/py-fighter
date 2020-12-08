@@ -4,15 +4,23 @@
 '''
 import pygame
 from classes.spritesheet import SpriteSheet
-# from spritesheet import SpriteSheet
-# arms spirtesheets
+from classes.sfxbox import SFXBox
+
+
+SFX = SFXBox()
+
+# From spritesheet import SpriteSheet
+# Arms spirtesheets
 BASIC_ARMS_LOCATION = 'graphics/spritesheets/basic-arms.png'
 SWORD_ARMS_LOCATION = 'graphics/spritesheets/sword-arms.png'
 BOOMERANG_ARMS_LOCATION = 'graphics/spritesheets/boomerang-arms.png'
 
-#static images
+# Boomerang Animation
+BOOMERANG_ANIMATION_LOCATION = 'graphics/weapons/boomerang.png'
+
+# Static images
 SWORD_LOCATION = 'graphics/weapons/sword.png'
-BOOMERANG_LOCATION = 'graphics/weapons/boomerang.png'
+BOOMERANG_LOCATION = 'graphics/weapons/boomerang-static.png'
 
 
 
@@ -35,7 +43,7 @@ class Weapon(pygame.sprite.Sprite):
 
         # Setting up initial image
         self.state = owner.state
-        self.image = self.images[self.state[0]][self.state[1 ]]
+        self.image = self.images[self.state[0]][self.state[1]]
         self.index = owner.image_index
         self.rect = self.image[self.index].get_rect()
         self.rect.centerx = self.owner.rect.centerx
@@ -63,14 +71,22 @@ class Weapon(pygame.sprite.Sprite):
                             )
                     specific_image.set_colorkey(background_colour)
 
-                    self.images[image_type][image_direction] += [specific_image]
+                    self.images[image_type][image_direction] += \
+                                                             [specific_image]
+
+
+    def addCharacterGroup(self, char_group):
+        self.characters = char_group
+
 
     def display(self):
         ''' display function
 
-        state takes form [action, direction], images[action][direction] gives a list of images
+        state takes form [action, direction], images[action][direction]
+        gives a list of images
         '''
 
+        
         # Get owner variables
         self.state = self.owner.state
         self.index = self.owner.image_index
@@ -79,67 +95,97 @@ class Weapon(pygame.sprite.Sprite):
         # Select Image
         self.image = self.images[action][direction]
 
-        if self.owned:
-            # Rect position alive
-            if self.owner.alive:
-                self.rect.center = self.owner.rect.center
-                self.screen.blit(self.image[self.index], self.rect)
-            else:
-                self.owned = False            
-                 
+        self.rect.center = self.owner.rect.center
+    
+        # Rect position alive
+        if self.owner.alive:
             
-        '''
-        # Update dropped weapon
-        if owner.alive:
-            self.rect_death = self.rect
             self.screen.blit(self.image[self.index], self.rect)
+        else:
+            self.owned = False 
         
-        if not self.owner.alive:
-            self.owned = False
-            self.rect_death.bottom = 100
-            if self.owner.sate[0] != 'idle':
-                if self.owner[1] == 'right':
-                    self.rect.right -= 2
-                if self.owner.state[1] == 'left':
-                self.rect_death.right += 2
-            self.screen.blit(self.weapon, self.rect_death)
-        '''
-        
+    def attack(self, direction, target):
+        if target.health < self.strength:
+            self.owner.score += target.health
+        else:
+            self.owner.score += self.strength
+        self.sound()
+        target.recoil(self.strength, direction)
+
 
 class DroppableWeapon(Weapon):
+    droppable = True
     def display(self):
-        Weapon.display(self)
-        if not self.owned:
+        if self.owned:
+            Weapon.display(self)
+        else:
             self.screen.blit(self.weapon, self.rect) 
 
+    def updateUses(self):
+        self.uses+=1
+        if self.uses == self.owner.max_uses:
+            self.kill()
+            self.owner.arms = Arms(self.owner)
+
+
+    def update(self):
+        # Check for collisiosn of characters
+        # If character.arms.droppable = False
+        #       self.kill()
+        #       character.arms=self
+        #       self.owned = True
+        #       self.owner = character
+        collisions = pygame.sprite.spritecollide(self, self.characters, False)
+        if len(collisions) > 0:
+            for character in collisions:
+                if not character.arms.droppable:
+                    self.kill()
+                    character.arms = self
+                    self.owned = True
+                    self.owner = character
+                    self.uses = 0
+                    return
 
 class Sword(DroppableWeapon):
     sprite_sheet_location = SWORD_ARMS_LOCATION
     strength = 15
     projectile = False
+    uses = 0
+    sound = SFX.wind
     def __init__(self, owner):
         Weapon.__init__(self, owner, self.sprite_sheet_location)
     
         self.weapon = pygame.image.load(SWORD_LOCATION)
         self.weapon.set_colorkey((0, 255, 0))
 
+    def attack(self, direction, target):
+        self.updateUses()
+        Weapon.attack(self, direction, target)
+
 class Boomerang(DroppableWeapon):
     sprite_sheet_location = BOOMERANG_ARMS_LOCATION
     strength = 15
     projectile = True
+    uses = 0
+    sound = SFX.wind
     def __init__(self, owner):
         Weapon.__init__(self, owner, self.sprite_sheet_location)
 
         self.weapon = pygame.image.load(BOOMERANG_LOCATION)
         self.weapon.set_colorkey((0, 255, 0))
-        
+    
     def throw(self, direction):
-        return BoomerangAmmo(self.owner, self.owner.target_group, self.strength, direction)
+        self.updateUses()
+        self.sound()
+        return BoomerangAmmo(self.owner, self.owner.target_group,
+                            self.strength, direction)
 
 class Arms(Weapon):
     sprite_sheet_location = BASIC_ARMS_LOCATION
     strength = 10
     projectile = False
+    droppable = False
+    sound = SFX.punch
     def __init__(self, owner):
         Weapon.__init__(self, owner, self.sprite_sheet_location)
 
@@ -153,9 +199,9 @@ class BoomerangAmmo(pygame.sprite.Sprite):
         self.screen = self.owner.screen
 
         if direction == 'left':
-            self.speed = -2
+            self.speed = -3
         else:
-            self.speed = 2
+            self.speed = 3
 
         self.frame_rate = 10
         self.frame_counter = 0
@@ -166,7 +212,7 @@ class BoomerangAmmo(pygame.sprite.Sprite):
 
     def loadFrames(self):
         self.frames = []
-        self.spritesheet = SpriteSheet(BOOMERANG_LOCATION)
+        self.spritesheet = SpriteSheet(BOOMERANG_ANIMATION_LOCATION)
         for i in range(4):
             frame = self.spritesheet.image_at((i, 0), (32, 32), (0, 255, 0))
             self.frames.append(frame)

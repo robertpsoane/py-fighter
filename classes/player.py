@@ -19,6 +19,8 @@ class Player(Character):
     ''' Player Class - Used to display and animate human controlled characters
     on the screen.
     '''
+    
+    max_uses = 5
 
     def __init__(self, screen, background, x_position, y_position, arm_type = 'arms'):
         # Loading player data json, and converitng to python dictionary
@@ -34,6 +36,7 @@ class Player(Character):
         Checks for any enemies in target group who have collided and attacks
         them
         '''
+        self.attacking = True
         if self.arms.projectile:
             boom = self.arms.throw(self.state[1])
             self.thrown_projectiles.add(boom)
