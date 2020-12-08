@@ -69,6 +69,11 @@ class Weapon(pygame.sprite.Sprite):
                     self.images[image_type][image_direction] += \
                                                              [specific_image]
 
+
+    def addCharacterGroup(self, char_group):
+        self.characters = char_group
+
+
     def display(self):
         ''' display function
 
@@ -112,12 +117,22 @@ class DroppableWeapon(Weapon):
         #       character.arms=self
         #       self.owned = True
         #       self.owner = character
-        pass
+        collisions = pygame.sprite.spritecollide(self, self.characters, False)
+        if len(collisions) > 0:
+            for character in collisions:
+                if not character.arms.droppable:
+                    self.kill()
+                    character.arms = self
+                    self.owned = True
+                    self.owner = character
+                    self.uses = 0
+                    return
 
 class Sword(DroppableWeapon):
     sprite_sheet_location = SWORD_ARMS_LOCATION
     strength = 15
     projectile = False
+    uses = 0
     def __init__(self, owner):
         Weapon.__init__(self, owner, self.sprite_sheet_location)
     
@@ -128,6 +143,7 @@ class Boomerang(DroppableWeapon):
     sprite_sheet_location = BOOMERANG_ARMS_LOCATION
     strength = 15
     projectile = True
+    uses = 0
     def __init__(self, owner):
         Weapon.__init__(self, owner, self.sprite_sheet_location)
 
@@ -135,6 +151,10 @@ class Boomerang(DroppableWeapon):
         self.weapon.set_colorkey((0, 255, 0))
         
     def throw(self, direction):
+        self.uses+=1
+        if self.uses == self.owner.max_uses:
+            self.kill()
+            self.owner.arms = Arms(self.owner)
         return BoomerangAmmo(self.owner, self.owner.target_group,
                             self.strength, direction)
 
