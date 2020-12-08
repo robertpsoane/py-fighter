@@ -16,7 +16,7 @@ class NPC(Character):
     The NPC uses some very basic logic to give the NPCs some apparent 
     autonomy. With each display of the screen,
     '''
-
+    max_uses = -1
     def __init__(self, screen, background, x_position, y_position,
                 npc_type = 'basic', arm_type = 'arms', sleep_on_load = True):
         # Loading player data json, and converitng to python dictionary
