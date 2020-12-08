@@ -156,8 +156,11 @@ class Character(pygame.sprite.Sprite):
         ##### TO GO TO JSON
         self.is_falling = False
         self.is_jumping = False
+        self.attacking = False
+        self.init_attacking = False
         self.jumps_in_action = 0
         self.max_jumps_in_action = 2
+        self.attack_frame_counter = 0
 
         self.thrown_projectiles = pygame.sprite.Group()
     
@@ -287,6 +290,23 @@ class Character(pygame.sprite.Sprite):
 
         Updates position of characters subject to state.
         '''
+
+        # Check if attacking, if attacking change state to attacking for one 
+        # frame
+        if (self.attacking) and (self.init_attacking == False):
+            self.pre_attack_action, self.pre_attack_direction = self.state
+            self.updateState('attack', self.pre_attack_direction)
+            self.init_attacking = True
+            #self.incrementImage()
+        elif self.init_attacking:
+            self.attack_frame_counter += 1    
+
+        if self.attack_frame_counter == self.refresh_rate:
+            self.attack_frame_counter = 0
+            self.attacking = False
+            self.init_attacking = False
+            self.updateState(self.pre_attack_action, self.pre_attack_direction)
+
         # Update verticle subject to jumping
         #if self.state[0] == 'jumping':
         if self.is_jumping:
@@ -321,6 +341,7 @@ class Character(pygame.sprite.Sprite):
                 move_speed = -1 * self.speed
                 self.moveX(move_speed)
 
+
     def syncRects(self):
         self.feet_rect.bottomleft = self.rect.bottomleft
         self.plot_rect.center = self.rect.center
@@ -335,7 +356,7 @@ class Character(pygame.sprite.Sprite):
 
         # Updating counter, and if necessary incrementing image
         self.refresh_counter += 1
-        if self.refresh_counter % self.refresh_rate == 0:
+        if self.refresh_counter == self.refresh_rate:
             self.incrementImage()
 
         # Catch frames changed mid refresh
@@ -422,7 +443,7 @@ class Character(pygame.sprite.Sprite):
 
         # Returning to 0 when image index > length
         n_images = len(self.image)
-        if self.image_index == n_images:
+        if self.image_index >= n_images:
             self.image_index = 0
 
     def updateState(self, action, direction):
@@ -473,9 +494,6 @@ class Character(pygame.sprite.Sprite):
         ''' stopMove()
         Returns state to idle when no longer moving.  Purpose of 
         function is to stop running animation.
-
-        WILL NEED CHANGING WHEN WEAPONS ARE IMPLEMENTED! Will need to 
-        choose state based on weapon!
         '''
         if self.state == ['running', direction]:
             self.updateState('idle', direction)
@@ -485,6 +503,9 @@ class Character(pygame.sprite.Sprite):
                 self.state[0] = 'running'
             else:
                 self.updateState('idle', self.state[1])
+        elif self.state[0] == 'attack':
+            self.pre_attack_action == 'idle'
+            self.x_y_moving = False
 
     @property
     def health(self):
