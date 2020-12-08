@@ -114,7 +114,7 @@ class Controller():
     def setupPlayer(self):
         ''' Sets up player for the first level
         '''
-        self.player = Player(self.game_display, self.game_map, self.player_x, - 100, 'boomerang')
+        self.player = Player(self.game_display, self.game_map, self.player_x, - 100)
         self.player_group = pygame.sprite.Group()
         self.player_group.add(self.player)
         self.characters = pygame.sprite.Group()
