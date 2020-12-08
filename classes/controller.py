@@ -101,7 +101,7 @@ class Controller():
 
         pygame.mixer.music.set_volume(level_music[1])
         pygame.mixer.music.load(level_music[0])
-        pygame.mixer.music.play(-1)
+        #pygame.mixer.music.play(-1)
 
     def setupCameraMap(self):
         '''
@@ -152,7 +152,7 @@ class Controller():
         '''
         # Setup enemy group for level
         self.enemy_group = pygame.sprite.Group()
-
+        self.dropped_weapons = pygame.sprite.Group()
         # Set up enemies for level.  Level number represents number of enemies
         for n in range(self.level.val):
             enemy_type = self.decideEnemyType()
@@ -317,6 +317,7 @@ class Controller():
                 enemy.kill()
             if enemy.alive == False:
                 self.camera.addWeapon(enemy.arms)
+                self.dropped_weapons.add(enemy.arms)
                 enemy.kill()
 
         if len(self.enemy_group) == 0:
@@ -348,6 +349,11 @@ class Controller():
             for projectile in enemy.thrown_projectiles:
                 projectile.display()
         self.player.display()
+
+        for weapon in self.dropped_weapons:
+            weapon.display()
+
+
         for projectile in self.player.thrown_projectiles:
             projectile.display()
 
