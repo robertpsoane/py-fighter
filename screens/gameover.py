@@ -82,13 +82,30 @@ def gameOver(screen, score, delay):
     your_score = Text(screen, (width // 2, 300), 30, f'YOUR SCORE')
     sample_text = Text(screen, (width // 2, 335), 25, f'{score}')
 
-
     menu_title = Text(screen, (width // 2, height // 4), 50, 'Game Over', 'Purple')
-    back_to_menu = Button(screen, 'Main menu', (400, 500), (lambda: 'main_menu'), 25, (200, 64))
-    exit_game = Button(screen, 'Quit', (600, 500), quitGame, 25, (200, 64))
-    all_scores = Button(screen, 'New game', (600, 500), quitGame, 25, (200, 64))
+    back_to_menu = Button(screen, 'Main menu', (400, 550), (lambda: 'main_menu'), 25, (200, 64))
+    exit_game = Button(screen, 'Quit', (650, 550), quitGame, 25, (200, 64))
 
-    sample_menu = Menu(screen, menu_title, False, back_to_menu, exit_game, all_scores)
+
+
+    base_font = pygame.font.Font(None, 30)
+    user_name = 'Write your name'
+    input_rect = pygame.Rect(width // 2 - 90, 370, 140, 32)
+    color_active = pygame.Color('lightskyblue3')
+    color_passive = pygame.Color('gray15')
+    color = color_passive
+    active = False
+
+    def saveScore():
+
+        saves = open(HIGH_SCORE_LOCATION, 'a', encoding='utf-8')
+        saved_score = user_name + '/' + str(score)
+        saves.write(saved_score)
+        saves.close()
+
+    save_score = Button(screen, 'Save Score', (width // 2, 450), saveScore, 25, (200, 64))
+
+    sample_menu = Menu(screen, menu_title, False, back_to_menu, exit_game, save_score)
 
     run = True
     while run:
@@ -97,10 +114,23 @@ def gameOver(screen, score, delay):
         # Get/action events
         for event in pygame.event.get():
             # Send each event to the start menu
+
             if event.type == pygame.QUIT:
                 # Detecting user pressing quit button, if X pressed,
                 # break loop and quit screen.
                 quitGame()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if input_rect.collidepoint(event.pos):
+                    active = True
+                else:
+                    active = False
+            if event.type == pygame.KEYDOWN:
+                if active == True:
+                    if event.key == pygame.K_BACKSPACE:
+                        user_name = user_name[0: -1]
+                    else:
+                        user_name += event.unicode
+
 
             # Do mouse up/down events
             elif (event.type == pygame.MOUSEBUTTONDOWN) or \
@@ -113,6 +143,14 @@ def gameOver(screen, score, delay):
 
         screen.fill('black')
 
+        if active:
+            color = color_active
+        else:
+            color = color_passive
+        pygame.draw.rect(screen, color, input_rect, 2)
+        text_surface = base_font.render(user_name, True, (255, 255, 255))
+        screen.blit(text_surface, (input_rect.x + 5, input_rect.y + 5))
+        input_rect.w = max(100, text_surface.get_width() + 10)
         # Display menu here - this will display all buttons included in
         # the menu
         # menu.display()
