@@ -55,14 +55,12 @@ def gameOver(screen, score, delay):
     right = 4 * left
     height_unit = height // 20
 
-    print(width)
-
     # Load previous scores and calculate highscore
     scores = loadScoreList()
-    if scores[-1][-1] > score:
-        highscore_string = f'{scores[-1][0]} : {scores[-1][-1]}'
+    if (len(scores) > 0) and (scores[-1][-1] >= score):
+        highscore_string = f'{scores[-1][0]} : {scores[-1][-1]}'        
     else:
-        highscore_string = f'You! : {score}'    
+        highscore_string = f'You! : {score}'
 
     # Text input is active
     active = True

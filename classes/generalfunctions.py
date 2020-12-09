@@ -1,6 +1,9 @@
 '''
 File for storing any general functions that get regularly reused
 
+Code for conditional read/create found at 
+https://www.w3schools.com/python/ref_func_open.asp
+
 '''
 
 import os
@@ -19,7 +22,15 @@ def quitGame():
 def loadScoreList():
     scores = []
     # Opening scores file and transferring scores from the file to a list.
+    # Opens or creates file depending on need
+    try:
+        # Create file if doens't exist
+        open(HIGH_SCORE_LOCATION, 'x')
+    except:
+        pass
+    
     f = open(HIGH_SCORE_LOCATION, 'r')
+
     #temp = f.read().splitlines()
 
     for line in f:

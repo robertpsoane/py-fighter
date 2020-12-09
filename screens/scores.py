@@ -32,22 +32,24 @@ def scoreBoard(screen, delay):
     # loading a list from game over screen with the newest scores.
     score_list = loadScoreList()
 
-    # Creating text objects for 10 highest scores.
-    Header = Text(screen, (width // 2, height // 8), 50, f'PLAYER TOP 10 SCORE')
-    player1 = Text(screen, (width // 2, 120), 35, f'{score_list[-1][0]} = {score_list[-1][1]}')
-    player2 = Text(screen, (width // 2, 160), 35, f'{score_list[-2][0]} = {score_list[-2][1]}')
-    player3 = Text(screen, (width // 2, 200), 35, f'{score_list[-3][0]} = {score_list[-3][1]}')
-    player4 = Text(screen, (width // 2, 240), 35, f'{score_list[-4][0]} = {score_list[-4][1]}')
-    player5 = Text(screen, (width // 2, 280), 35, f'{score_list[-5][0]} = {score_list[-5][1]}')
-    player6 = Text(screen, (width // 2, 320), 35, f'{score_list[-6][0]} = {score_list[-6][1]}')
-    player7 = Text(screen, (width // 2, 360), 35, f'{score_list[-7][0]} = {score_list[-7][1]}')
-    player8 = Text(screen, (width // 2, 400), 35, f'{score_list[-8][0]} = {score_list[-8][1]}')
-    player9 = Text(screen, (width // 2, 440), 35, f'{score_list[-9][0]} = {score_list[-9][1]}')
-    player10 = Text(screen, (width // 2, 480), 35, f'{score_list[-10][0]} = {score_list[-10][1]}')
+    print(len(score_list))
+    if len(score_list) < 10:
+        n_scores = len(score_list)
+    else:
+        n_scores = 10
 
+    # Creating text objects for n highest scores.
+    Header = Text(screen, (width // 2, height // 8), 50, f'TOP {n_scores} SCORES', 'purple')
+    score_objects = []
+    for k in range(n_scores):
+        index = - 1 * (k + 1)
+        score_objects.append(
+            Text(screen, (width // 2, 120 + (k * 40)), 35, f'{score_list[index][0]} = {score_list[index][1]}')
+        )
+    
     # Creating a button for going back to the game over screen.
     back = Button(screen, 'Back', (400, 585), (lambda: 'go_back'), 25, (126, 64))
-    sample_menu = Menu(screen, Header, False, back)
+    menu = Menu(screen, Header, False, back)
 
     # Creating a loop for the scoreboard screen.
     run = True
@@ -66,7 +68,7 @@ def scoreBoard(screen, delay):
             elif (event.type == pygame.MOUSEBUTTONDOWN) or \
                 (event.type == pygame.MOUSEBUTTONUP):
 
-                button_press = sample_menu.do(event)
+                button_press = menu.do(event)
 
                 if button_press == 'go_back':
                     run = False
@@ -75,17 +77,9 @@ def scoreBoard(screen, delay):
         screen.blit(background, (0, 0))
 
         # Bliting text objects and button to screen.
-        Header.display()
-        player1.display()
-        player2.display()
-        player3.display()
-        player4.display()
-        player5.display()
-        player6.display()
-        player7.display()
-        player8.display()
-        player9.display()
-        player10.display()
-        sample_menu.display()
+        
+        for score_object in score_objects:
+            score_object.display()
+        menu.display()
         pygame.display.flip()
 
