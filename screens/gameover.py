@@ -30,7 +30,7 @@ ALPHABET = {'a', 'A', 'b', 'B', 'c', 'C', 'd', 'D', 'e', 'E', 'f', 'F',
             'm', 'M', 'n', 'N', 'o', 'O', 'p', 'P', 'q', 'Q', 'r', 'R', 
             's', 'S', 't', 'T', 'u', 'U', 'v', 'V', 'w', 'W', 'x', 'X', 
             'y', 'Y', 'z', 'Z', '1', '2', '3', '4', '5', '6', '7', '8',
-            '9', '0', ' '}
+            '9', '0', '-'}
 
 
 def gameOver(screen, score, delay):
@@ -51,8 +51,8 @@ def gameOver(screen, score, delay):
     width = screen.get_width()
     height = screen.get_height()
     mid = width // 2
-    left = width // 4
-    right = 3 * left
+    left = width // 5
+    right = 4 * left
     height_unit = height // 20
 
     print(width)
@@ -66,6 +66,7 @@ def gameOver(screen, score, delay):
 
     # Text input is active
     active = True
+    started = False
 
      # Creating text for the main header.
     menu_title = Text(screen, (mid, 2 * height_unit), 70, 'Game Over', 'Purple')
@@ -83,20 +84,20 @@ def gameOver(screen, score, delay):
     score = Text(screen, (mid, 8 * height_unit), 25, f'{score}')
 
     player_name_center = (mid, 9 * height_unit)
-    player_name = Text(screen, player_name_center, 30, ' ', 'yellow')
+    player_name = Text(screen, player_name_center, 30, '[Enter Name Here]', 'yellow')
 
     save_score = Button(screen, 'Save Score', (mid, 11 * height_unit), (lambda : 'save'), 25, (200, 64))
         
 
 
     # Creating a button for scoreboard.
-    score_board = Button(screen, 'Scoreboard', (left, 18*height_unit), (lambda: 'scoreboard'), 25, (200, 64))
+    score_board = Button(screen, 'Scoreboard', (left, 18.5*height_unit//1), (lambda: 'scoreboard'), 25, (200, 64))
 
     # Creating a button for main menu.
-    back_to_menu = Button(screen, 'Main menu', (mid, 18*height_unit), (lambda: 'main_menu'), 25, (200, 64))
+    back_to_menu = Button(screen, 'Main menu', (mid, 18.5*height_unit//1), (lambda: 'main_menu'), 25, (200, 64))
 
     # Creating a button to exit the game
-    exit_game = Button(screen, 'Quit', (right, 18*height_unit), quitGame, 25, (200, 64))
+    exit_game = Button(screen, 'Quit', (right, 18.5*height_unit//1), quitGame, 25, (200, 64))
 
 
     menu = Menu(screen, menu_title, BACKGROUND_LOCATION, back_to_menu, score_board, exit_game, save_score)
@@ -120,11 +121,14 @@ def gameOver(screen, score, delay):
             # If so user can input text in to the box and
             # save it to the variable user_name.
             if event.type == pygame.KEYDOWN:
-                if active == True:
+                if active:
                     if event.key == pygame.K_BACKSPACE:
                         player_name.text = player_name.text[0: -1]
                         player_name.position = player_name.position
                     elif pygame.key.name(event.key) in ALPHABET:
+                        if not started:
+                            player_name.text = ''
+                            started = True
                         player_name.text += event.unicode
                         player_name.position = player_name_center[0], \
                                                 player_name_center[1]
