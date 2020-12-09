@@ -226,7 +226,7 @@ class Character(pygame.sprite.Sprite):
                                                             [specific_image]
 
     def changeArms(self, arm_type):
-        self.arms = self.arms = WEAPON_TYPES[arm_type](self)
+        self.arms = WEAPON_TYPES[arm_type](self)
 
     def addTarget(self, target_group):
         ''' Adds group of enemies to player
@@ -251,8 +251,6 @@ class Character(pygame.sprite.Sprite):
             direction = -1
         self.arms.attack(direction, target)
         
-        
-
     def isFacingTarget(self, target):
         '''
         Function to check whether self is facing a particular enemy
@@ -264,7 +262,6 @@ class Character(pygame.sprite.Sprite):
             (self.rect.centerx < target.rect.centerx):
             return True
         return False
-
 
     def recoil(self, force, direction):
         ''' Recoil function - Loses health from attack and sets recoil 
@@ -278,7 +275,6 @@ class Character(pygame.sprite.Sprite):
         self.recoil_status = (True, direction)
         self.recoil_counter = 5 
 
-
     def update(self):
         ''' Update function
 
@@ -288,18 +284,16 @@ class Character(pygame.sprite.Sprite):
         # Check if attacking, if attacking change state to attacking for one 
         # frame
         if (self.attacking) and (self.init_attacking == False):
-            self.pre_attack_action, self.pre_attack_direction = self.state
-            self.updateState('attack', self.pre_attack_direction)
+            self.pre_attack_action, self.pre_action_direction = self.state
+            self.updateState('attack', self.state[1])
             self.init_attacking = True
-            #self.incrementImage()
         elif self.init_attacking:
             self.attack_frame_counter += 1    
-
         if self.attack_frame_counter == self.refresh_rate:
             self.attack_frame_counter = 0
             self.attacking = False
             self.init_attacking = False
-            self.updateState(self.pre_attack_action, self.pre_attack_direction)
+            self.updateState(self.pre_attack_action, self.state[1])
 
         # Update verticle subject to jumping
         #if self.state[0] == 'jumping':
@@ -320,9 +314,6 @@ class Character(pygame.sprite.Sprite):
                 self.recoil_status = (False, 0)
             self.moveX(15 * self.recoil_status[1])
             self.recoil_counter = self.recoil_counter - 1
-
-        
-        #self.collidesWithAny()
 
         # Update x/y subject to status
         if self.x_y_moving:
@@ -398,7 +389,7 @@ class Character(pygame.sprite.Sprite):
             self.is_falling = False
             self.is_jumping = False
             self.jumps_in_action = 0
-            self.stopMove()
+            self.stopMoveY()
             return True
         else:
             return False
@@ -484,22 +475,25 @@ class Character(pygame.sprite.Sprite):
                 self.jumps_in_action += 1
             
 
-    def stopMove(self, direction = 'none'):
+    def stopMoveX(self, direction = 'none'):
         ''' stopMove()
         Returns state to idle when no longer moving.  Purpose of 
-        function is to stop running animation.
+        function is to stop running animation, and prevent piece from 
+        continueing to move after a jump if player ahs taken hand off
         '''
         if self.state == ['running', direction]:
             self.updateState('idle', direction)
             self.x_y_moving = False
-        elif self.is_falling:
-            if self.x_y_moving == True:
-                self.state[0] = 'running'
-            else:
-                self.updateState('idle', self.state[1])
-        elif self.state[0] == 'attack':
+        elif (self.state[0] == 'attack') and direction == self.state[1]:
             self.pre_attack_action == 'idle'
             self.x_y_moving = False
+
+    def stopMoveY(self):
+        ''' Sets state to idle to ensure animation matches with lack of
+        moving
+        '''
+        if (not self.x_y_moving) and (self.state[0] != 'attack'):
+            self.state[0] = 'idle'
 
     @property
     def health(self):
@@ -582,8 +576,6 @@ class HealthBar:
         # Blit foreground surface
         self.front_rect.topleft = self.back_rect.topleft
         self.screen.blit(self.front_surf, self.front_rect)
-
-        #print(f'{self.health} / {self.max_health} ')
 
     def generatePositions(self):
         ''' generate positions
