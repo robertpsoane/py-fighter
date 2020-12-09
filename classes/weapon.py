@@ -127,14 +127,9 @@ class DroppableWeapon(Weapon):
             self.kill()
             self.owner.arms = Arms(self.owner)
 
-
+    
     def update(self):
-        # Check for collisiosn of characters
-        # If character.arms.droppable = False
-        #       self.kill()
-        #       character.arms=self
-        #       self.owned = True
-        #       self.owner = character
+      
         collisions = pygame.sprite.spritecollide(self, self.characters, False)
         if len(collisions) > 0:
             for character in collisions:
