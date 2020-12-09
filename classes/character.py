@@ -499,6 +499,9 @@ class Character(pygame.sprite.Sprite):
         if (not self.x_y_moving) and (self.state[0] != 'attack'):
             self.state[0] = 'idle'
 
+    def setArms(self, new_arms):
+        self.arms = new_arms
+
     @property
     def health(self):
         return self.__health

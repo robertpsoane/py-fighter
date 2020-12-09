@@ -34,7 +34,6 @@ def scoreBoard(screen, delay):
     # loading a list from game over screen with the newest scores.
     score_list = loadScoreList()
 
-    print(len(score_list))
     if len(score_list) < 10:
         n_scores = len(score_list)
     else:

@@ -36,13 +36,7 @@ class NPC(Character):
         # Setup sleep variable
         self.asleep = sleep_on_load
 
-        # Attack delay - a delay of a number of frames to give player 
-        # opportunity of attacking first
-        if self.arms.projectile:
-            self.attack_delay = 100
-        else:
-            self.attack_delay = 15
-        self.attack_counter = 0
+        self.setAttackDelay()
 
         # Kill NPC if falls off map
         self.max_depth = screen.get_size()[1]
@@ -67,6 +61,18 @@ class NPC(Character):
         self.c2c_width = 0.5 * (self.width + self.target.width)
         self.c2c_height = 0.5 * (self.height + self.target.height)
 
+    def setAttackDelay(self):
+        '''
+        Sets attack delay based on type of arms
+        '''
+        # Attack delay - a delay of a number of frames to give player 
+        # opportunity of attacking first
+        if self.arms.projectile:
+            self.attack_delay = 50
+        else:
+            self.attack_delay = 15
+        self.attack_counter = 0
+
     def update(self):
         ''' NPC update function
 
@@ -80,6 +86,11 @@ class NPC(Character):
 
         Character.update(self)
         
+    def setArms(self, new_arms):
+        ''' Sets arms and updates npc delay accordingly
+        '''
+        Character.setArms(self, new_arms)
+        self.setAttackDelay()
 
     
     def display(self):

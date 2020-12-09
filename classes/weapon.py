@@ -115,12 +115,16 @@ class Weapon(pygame.sprite.Sprite):
 class DroppableWeapon(Weapon):
     droppable = True
     def display(self):
+        ''' Display function used to blit weapon where npc dies
+        '''
         if self.owned:
             Weapon.display(self)
         else:
             self.screen.blit(self.weapon, self.rect) 
 
     def updateUses(self):
+        ''' Sets a weapon use capacity
+        '''
         self.uses+=1
         if self.uses == self.owner.max_uses:
             self.kill()
@@ -128,13 +132,15 @@ class DroppableWeapon(Weapon):
 
     # Collisions between player and weapon
     def update(self):
-      
+        ''' Ensures that when the player collides with a dropped weapon,
+        it picks it up for use
+        '''
         collisions = pygame.sprite.spritecollide(self, self.characters, False)
         if len(collisions) > 0:
             for character in collisions:
                 if not character.arms.droppable:
                     self.kill()
-                    character.arms = self
+                    character.setArms(self)
                     self.owned = True
                     self.owner = character
                     self.uses = 0
@@ -236,7 +242,11 @@ class BoomerangAmmo(pygame.sprite.Sprite):
         
         if collisions != None:
             for sprite in collisions:
-                sprite.recoil(self.strength, 1)
+                if self.rect.centerx < sprite.rect.centerx:
+                    direction = 1
+                else:
+                    direction = -1
+                sprite.recoil(self.strength, direction)
                 self.owner.score += self.strength
                 self.kill()
             
