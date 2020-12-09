@@ -100,7 +100,7 @@ class Controller():
 
         pygame.mixer.music.set_volume(level_music[1])
         pygame.mixer.music.load(level_music[0])
-        #pygame.mixer.music.play(-1)
+        pygame.mixer.music.play(-1)
 
     def setupCameraMap(self):
         '''
