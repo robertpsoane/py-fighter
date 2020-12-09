@@ -1,6 +1,7 @@
 ''' Weapon Class
 - To have a subclass for each weapon.
 @author: Shaylen Mistry (unless stated otherwise)
+worked with Robert to help prototype code
 '''
 import pygame
 from classes.spritesheet import SpriteSheet
@@ -50,14 +51,11 @@ class Weapon(pygame.sprite.Sprite):
         self.rect.centery = self.owner.rect.centery
 
 
-    
+   # Assinging animation images to self 
     def loadSpriteSheets(self, image_types, image_directions, scaled_size, 
                         char_size, coords, sprite_sheet_location,
                         background_colour = (0, 255, 0)):
-        ''' Assigns animation images to self
-
-
-        '''
+            
         self.spritesheet = SpriteSheet(sprite_sheet_location)
         self.images = {}
         for image_type in image_types:
@@ -104,6 +102,7 @@ class Weapon(pygame.sprite.Sprite):
         else:
             self.owned = False 
         
+    # Attack function for weapon
     def attack(self, direction, target):
         if target.health < self.strength:
             self.owner.score += target.health
@@ -112,7 +111,7 @@ class Weapon(pygame.sprite.Sprite):
         self.sound()
         target.recoil(self.strength, direction)
 
-
+# Drops weapon where npc dies
 class DroppableWeapon(Weapon):
     droppable = True
     def display(self):
@@ -127,7 +126,7 @@ class DroppableWeapon(Weapon):
             self.kill()
             self.owner.arms = Arms(self.owner)
 
-    
+    # Collisions between player and weapon
     def update(self):
       
         collisions = pygame.sprite.spritecollide(self, self.characters, False)
@@ -184,6 +183,7 @@ class Arms(Weapon):
     def __init__(self, owner):
         Weapon.__init__(self, owner, self.sprite_sheet_location)
 
+# Animation for boomerang throw
 class BoomerangAmmo(pygame.sprite.Sprite):
     def __init__(self, owner, characters, strength, direction):
         pygame.sprite.Sprite.__init__(self)

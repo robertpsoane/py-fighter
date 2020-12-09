@@ -5,7 +5,12 @@ Class to display string output to screen.
 Based on code in documentation: https://www.pygame.org/docs/ref/font.html
 
 I used this article for help with using @property setters.
-https://www.datacamp.com/community/tutorials/property-getters-setters?utm_source=adwords_ppc&utm_campaignid=898687156&utm_adgroupid=48947256715&utm_device=c&utm_keyword=&utm_matchtype=b&utm_network=g&utm_adpostion=&utm_creative=229765585186&utm_targetid=dsa-429603003980&utm_loc_interest_ms=&utm_loc_physical_ms=1006965&gclid=Cj0KCQiAzZL-BRDnARIsAPCJs70-ZtDSBvtA2CwIwzeCHEkTeOUqXFRxOSjL7FOKNb1asCXRpVBG9oEaAkBjEALw_wcB
+https://www.datacamp.com/community/tutorials/property-getters-setters?ut
+m_source=adwords_ppc&utm_campaignid=898687156&utm_adgroupid=48947256715&
+utm_device=c&utm_keyword=&utm_matchtype=b&utm_network=g&utm_adpostion=&u
+tm_creative=229765585186&utm_targetid=dsa-429603003980&utm_loc_interest_
+ms=&utm_loc_physical_ms=1006965&gclid=Cj0KCQiAzZL-BRDnARIsAPCJs70-ZtDSBvt
+A2CwIwzeCHEkTeOUqXFRxOSjL7FOKNb1asCXRpVBG9oEaAkBjEALw_wcB
 
 I implemented property setters mainly because I read about them and 
 wanted to implement them to fully get my head around how they work, 
