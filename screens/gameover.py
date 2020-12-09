@@ -39,6 +39,7 @@ from operator import itemgetter
 from screens.scores import scoreBoard
 
 HIGH_SCORE_LOCATION = 'other_data/highscores.txt'
+background = pygame.image.load('graphics\menu\gamedead.png')
 
 def gameOver(screen, score, delay):
     # load clock
@@ -72,22 +73,22 @@ def gameOver(screen, score, delay):
 
     # print(res_score)
 
-    score_header = Text(screen, (width // 2, height // 3), 30, f'HIGHEST SCORE')
-    high_score = Text(screen, (width // 2, 250), 25,
+    score_header = Text(screen, (width // 2, height // 4), 30, f'HIGHEST SCORE')
+    high_score = Text(screen, (width // 2, 190), 25,
                       f'{res_score[-1][0]} = {res_score[-1][-1]}')
-    your_score = Text(screen, (width // 2, 300), 30, f'YOUR SCORE')
-    sample_text = Text(screen, (width // 2, 335), 25, f'{score}')
+    your_score = Text(screen, (width // 2, 235), 30, f'YOUR SCORE')
+    sample_text = Text(screen, (width // 2, 265), 25, f'{score}')
 
-    score_board = Button(screen, 'Scoreboard', (150, 550), (lambda: 'scoreboard'), 25, (200, 64))
-    menu_title = Text(screen, (width // 2, height // 4), 50, 'Game Over', 'Purple')
-    back_to_menu = Button(screen, 'Main menu', (400, 550), (lambda: 'main_menu'), 25, (200, 64))
-    exit_game = Button(screen, 'Quit', (650, 550), quitGame, 25, (200, 64))
+    score_board = Button(screen, 'Scoreboard', (150, 580), (lambda: 'scoreboard'), 25, (200, 64))
+    menu_title = Text(screen, (width // 2, height // 6), 50, 'Game Over', 'Purple')
+    back_to_menu = Button(screen, 'Main menu', (400, 580), (lambda: 'main_menu'), 25, (200, 64))
+    exit_game = Button(screen, 'Quit', (650, 580), quitGame, 25, (200, 64))
 
 
 
     base_font = pygame.font.Font(None, 30)
     user_name = 'Write your name'
-    input_rect = pygame.Rect(width // 2 - 90, 370, 140, 32)
+    input_rect = pygame.Rect(width // 2 - 85, 285, 140, 32)
     color_active = pygame.Color('lightskyblue3')
     color_passive = pygame.Color('gray15')
     color = color_passive
@@ -100,7 +101,7 @@ def gameOver(screen, score, delay):
         saves.write(saved_score)
         saves.close()
 
-    save_score = Button(screen, 'Save Score', (width // 2, 450), saveScore, 25, (200, 64))
+    save_score = Button(screen, 'Save Score', (width // 2, 365), saveScore, 25, (200, 64))
 
     sample_menu = Menu(screen, menu_title, False, back_to_menu, score_board, exit_game, save_score)
 
@@ -143,13 +144,13 @@ def gameOver(screen, score, delay):
                     scoreBoard(screen,delay,res_score)
 
 
-        screen.fill('black')
+        screen.blit(background, (0, 0))
 
         if active:
             color = color_active
         else:
             color = color_passive
-        pygame.draw.rect(screen, color, input_rect, 2)
+        pygame.draw.rect(screen, color, input_rect)
         text_surface = base_font.render(user_name, True, (255, 255, 255))
         screen.blit(text_surface, (input_rect.x + 5, input_rect.y + 5))
         input_rect.w = max(100, text_surface.get_width() + 10)
