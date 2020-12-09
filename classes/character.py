@@ -57,7 +57,8 @@ data about the specific character.
 
 The main source of inspiration for this class and its sub class was the
 website on producing a chess game:
-https://ehmatthes.github.io/pcc_2e/beyond_pcc/pygame_sprite_sheets/#a-simple-sprite-sheet
+https://ehmatthes.github.io/pcc_2e/beyond_pcc/pygame_sprite_sheets/#a-
+simple-sprite-sheet
 This site shows how to blit images to a screen, and ways to split up
 a sprites sheet.
 
@@ -209,7 +210,9 @@ class Character(pygame.sprite.Sprite):
         self.images = {}
 
         # Importing images into self.images dictionary
-        # This interacts with spritesheet code from https://ehmatthes.github.io/pcc_2e/beyond_pcc/pygame_sprite_sheets/#a-simple-sprite-sheet
+        # This interacts with spritesheet code from https://ehmatthes.gi
+        # thub.io/pcc_2e/beyond_pcc/pygame_sprite_sheets/#a-simple-sprit
+        # e-sheet
         # to load sprites into a dictinoary
         for image_type in image_types:
             self.images[image_type] = {}
@@ -281,8 +284,8 @@ class Character(pygame.sprite.Sprite):
         Updates position of characters subject to state.
         '''
 
-        # Check if attacking, if attacking change state to attacking for one 
-        # frame
+        # Check if attacking, if attacking change state to attacking for
+        # one frame
         if (self.attacking) and (self.init_attacking == False):
             self.pre_attack_action, self.pre_action_direction = self.state
             self.updateState('attack', self.state[1])
@@ -356,7 +359,8 @@ class Character(pygame.sprite.Sprite):
         # surf.fill((100, 100, 0))
         # self.screen.blit(surf, self.rect)
 
-        # surf = pygame.Surface((self.feet_rect.width, self.feet_rect.height))
+        # surf = pygame.Surface((self.feet_rect.width, self.feet_rect.he
+        # ight))
         # surf.fill((0, 100, 100))
         # self.screen.blit(surf, self.feet_rect)
         # ###################################################

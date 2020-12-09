@@ -7,7 +7,9 @@ Text object for user to input name - idea taken from here:
 https://www.youtube.com/watch?v=Rvcyf4HsWiw
 
 
+Used Roberts Text, Menu and Button functions
 
+@author: Rokas
 
 '''
 
@@ -37,7 +39,8 @@ def gameOver(screen, score, delay):
     
     def saveScore():
         '''
-        Function which takes user name and current score and stores it in a text file.
+        Function which takes user name and current score and stores it 
+        in a text file.
         '''
         saves = open(HIGH_SCORE_LOCATION, 'a')
         saved_score = f'{player_name.text}/{score.text}\n'
@@ -67,7 +70,8 @@ def gameOver(screen, score, delay):
     started = False
 
      # Creating text for the main header.
-    menu_title = Text(screen, (mid, 2 * height_unit), 70, 'Game Over', 'Purple')
+    menu_title = Text(screen, (mid, 2 * height_unit), 70, 'Game Over', 
+                                                                'Purple')
 
     # Creating a header for the score.
     score_header = Text(screen, (mid, 4 * height_unit), 30, f'HIGHSCORE')
@@ -82,24 +86,31 @@ def gameOver(screen, score, delay):
     score = Text(screen, (mid, 8 * height_unit), 25, f'{score}')
 
     player_name_center = (mid, 9 * height_unit)
-    player_name = Text(screen, player_name_center, 30, '[Enter Name Here]', 'yellow')
+    player_name = Text(screen, player_name_center, 30, '[Enter Name Here]',
+                                                                    'yellow')
 
-    save_score = Button(screen, 'Save Score', (mid, 11 * height_unit), (lambda : 'save'), 25, (200, 64))
+    save_score = Button(screen, 'Save Score', (mid, 11 * height_unit), 
+                                        (lambda : 'save'), 25, (200, 64))
         
 
 
     # Creating a button for scoreboard.
-    score_board = Button(screen, 'Scoreboard', (left, 18.5*height_unit//1), (lambda: 'scoreboard'), 25, (200, 64))
+    score_board = Button(screen, 'Scoreboard', (left, 18.5*height_unit//1), 
+                                        (lambda: 'scoreboard'), 25, (200, 64))
 
     # Creating a button for main menu.
-    back_to_menu = Button(screen, 'Main menu', (mid, 18.5*height_unit//1), (lambda: 'main_menu'), 25, (200, 64))
+    back_to_menu = Button(screen, 'Main menu', (mid, 18.5*height_unit//1), 
+                                        (lambda: 'main_menu'), 25, (200, 64))
 
     # Creating a button to exit the game
-    exit_game = Button(screen, 'Quit', (right, 18.5*height_unit//1), quitGame, 25, (200, 64))
+    exit_game = Button(screen, 'Quit', (right, 18.5*height_unit//1), quitGame, 
+                                                                25, (200, 64))
 
 
-    menu = Menu(screen, menu_title, BACKGROUND_LOCATION, back_to_menu, score_board, exit_game, save_score)
-    saved_menu = Menu(screen, menu_title, BACKGROUND_LOCATION, back_to_menu, score_board, exit_game)
+    menu = Menu(screen, menu_title, BACKGROUND_LOCATION, back_to_menu, 
+                                    score_board, exit_game, save_score)
+    saved_menu = Menu(screen, menu_title, BACKGROUND_LOCATION, back_to_menu, 
+                                                    score_board, exit_game)
 
     # Game over screen loop which checks for inputs of buttons and user text input.
     run = True

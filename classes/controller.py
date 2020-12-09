@@ -59,8 +59,6 @@ class Controller():
         self.map_width = self.game_screen.get_width()
         self.mid_width = self.map_width // 2
         self.mid_height = self.game_screen.get_height() // 2
-        
-
 
         self.weapon_types = list(WEAPON_TYPES.keys())
 
@@ -95,7 +93,8 @@ class Controller():
 
         ### Setting up game music
         # - Music code inspired by code here:
-        #   https://riptutorial.com/pygame/example/24563/example-to-add-music-in-pygame
+        #   https://riptutorial.com/pygame/example/24563/example-to-add-
+        #   music-in-pygame
 
         level_music = MUSIC_LOCATIONS[TRACKS[self.settings['music']]]
 
@@ -114,7 +113,8 @@ class Controller():
     def setupPlayer(self):
         ''' Sets up player for the first level
         '''
-        self.player = Player(self.game_display, self.game_map, self.player_x, - 100)
+        self.player = Player(self.game_display, self.game_map, 
+                                            self.player_x, - 100)
         self.player_group = pygame.sprite.Group()
         self.player_group.add(self.player)
         self.characters = pygame.sprite.Group()
@@ -153,11 +153,13 @@ class Controller():
         # Setup enemy group for level
         self.enemy_group = pygame.sprite.Group()
         self.dropped_weapons = pygame.sprite.Group()
-        # Set up enemies for level.  Level number represents number of enemies
+        # Set up enemies for level.  Level number represents number of 
+        # enemies
         for n in range(self.level.val):
             enemy_type = self.decideEnemyType()
             position = random.randrange(self.spawn_area[0], self.spawn_area[1])
-            enemy = NPC(self.game_display, self.game_map, position, -100, enemy_type, self.decideRandomArm())
+            enemy = NPC(self.game_display, self.game_map, position, -100, 
+                                        enemy_type, self.decideRandomArm())
             enemy.addTarget(self.player_group)
             self.enemy_group.add(enemy)
             self.characters.add(enemy)
@@ -302,7 +304,8 @@ class Controller():
                     self.camera.addWeapon(projectile)
         
         for projectile in self.projectiles:
-            if (projectile.rect.centerx < 0) or (projectile.rect.centerx > self.map_width):
+            if (projectile.rect.centerx < 0) or \
+                    (projectile.rect.centerx > self.map_width):
                 projectile.kill()
             projectile.update()
 
@@ -360,7 +363,8 @@ class Controller():
         for projectile in self.projectiles:
             projectile.display()
 
-        # scales the game_display to game_screen. Allows us to scale images
+        # scales the game_display to game_screen. Allows us to scale 
+        # images
         scaled_surf = pygame.transform.scale(self.game_display,
                                                 self.screen_dims)
         self.game_screen.blit(scaled_surf, (0, 0))
@@ -380,8 +384,8 @@ class Controller():
         # Camera variable to create camera movement
 
 
-# These three classes are used to produce a score and level output on the
-# screen during gameplay
+# These three classes are used to produce a score and level output on 
+# the screen during gameplay
 # Refactored from main Controller class by Robert
 
 class GameOutput():

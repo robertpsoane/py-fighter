@@ -3,6 +3,8 @@
 This screen is shown at end of game after pressing on scoreboard button.
 Takes data from other_data/highscores.txt and creates a score board of top 10 players.
 
+Used Roberts Text, Menu and Button functions
+
 @author: Rokas
 '''
 
@@ -18,8 +20,8 @@ background = pygame.image.load('graphics\menu\scoreboard.png')
 
 def scoreBoard(screen, delay):
     '''
-    Function which creates a screen where a score bored is displayed by using the values from
-    highscores.txt.
+    Function which creates a screen where a score bored is displayed by
+    using the values from highscores.txt.
     '''
 
     # establishing a clock for the screen
@@ -39,16 +41,19 @@ def scoreBoard(screen, delay):
         n_scores = 10
 
     # Creating text objects for n highest scores.
-    Header = Text(screen, (width // 2, height // 8), 50, f'TOP {n_scores} SCORES', 'purple')
+    Header = Text(screen, (width // 2, height // 8), 50, 
+                        f'TOP {n_scores} SCORES', 'purple')
     score_objects = []
     for k in range(n_scores):
         index = - 1 * (k + 1)
         score_objects.append(
-            Text(screen, (width // 2, 120 + (k * 40)), 35, f'{score_list[index][0]} = {score_list[index][1]}')
+            Text(screen, (width // 2, 120 + (k * 40)), 35, 
+            f'{score_list[index][0]} = {score_list[index][1]}')
         )
     
     # Creating a button for going back to the game over screen.
-    back = Button(screen, 'Back', (400, 585), (lambda: 'go_back'), 25, (126, 64))
+    back = Button(screen, 'Back', (400, 585), (lambda: 'go_back'), 25, 
+                                                            (126, 64))
     menu = Menu(screen, Header, False, back)
 
     # Creating a loop for the scoreboard screen.

@@ -2,8 +2,8 @@
 
 This SpriteSheet class is based on a SpriteSheet class found in the
 Python Crash Course, 2nd Edition linked below.  The code taken is from
-a chess game.  This code is adapted to give more flexibility with extracting
-images from spritesheets so that it can be used in our game.
+a chess game.  This code is adapted to give more flexibility with 
+extracting images from spritesheets so that it can be used in our game.
 
 To make it clear what code has been copied, and what is produced by the
 group, we have copied the complete code we used as a starting point into
@@ -12,7 +12,8 @@ block comments at the bottom of this file.
 
 
 Python Crash Course, 2nd Edition
-https://ehmatthes.github.io/pcc_2e/beyond_pcc/pygame_sprite_sheets/#a-simple-sprite-sheet
+https://ehmatthes.github.io/pcc_2e/beyond_pcc/pygame_sprite_sheets/#a-si
+mple-sprite-sheet
 '''
 
 import pygame
@@ -33,8 +34,8 @@ class SpriteSheet:
         """Load a specific image from a specific rectangle."""
         # Loads image from x, y, x+offset, y+offset.
 
-        # Position is a grid position, we need to multiply that by size to 
-        # extract correct position
+        # Position is a grid position, we need to multiply that by size 
+        # to extract correct position
         y = position[0] * size[0]
         x = position[1] * size[1]
         rectangle = (x, y, size[0], size[1])

@@ -72,7 +72,8 @@ def playGame():
 def playMusic(music_path):
     ### Setting up game music
     # - Music code inspired by code here:
-    #   https://riptutorial.com/pygame/example/24563/example-to-add-music-in-pygame
+    #   https://riptutorial.com/pygame/example/24563/example-to-add-musi
+    #   c-in-pygame
     # - Found detail on setting volume on pygame docs
     pygame.mixer.init()
     pygame.mixer.music.load(music_path)

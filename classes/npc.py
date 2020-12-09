@@ -30,8 +30,8 @@ class NPC(Character):
             raise Exception(err_string)
 
         # Initialising Character class
-        Character.__init__(self, character_data, background, screen,
-                                                x_position, y_position, arm_type)
+        Character.__init__(self, character_data, background, screen, 
+                                    x_position, y_position, arm_type)
 
         # Setup sleep variable
         self.asleep = sleep_on_load

@@ -23,7 +23,7 @@ SWORD_LOCATION = 'graphics/weapons/sword.png'
 BOOMERANG_LOCATION = 'graphics/weapons/boomerang-static.png'
 
 
-
+# Superclass of weapon
 class Weapon(pygame.sprite.Sprite):
     def __init__(self, owner, sprite_sheet_location):
         pygame.sprite.Sprite.__init__(self)

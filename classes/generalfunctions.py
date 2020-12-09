@@ -20,6 +20,10 @@ def quitGame():
     os._exit(0)
 
 def loadScoreList():
+    '''
+    Load score list from text file
+    - If no file exists, create that file
+    '''
     scores = []
     # Opening scores file and transferring scores from the file to a list.
     # Opens or creates file depending on need
