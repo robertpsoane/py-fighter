@@ -31,15 +31,17 @@ run = False
 
 import pygame
 import os
+
 from classes.generalfunctions import quitGame
+from classes.generalfunctions import loadScoreList
 from classes.text import Text
 from classes.menu import Button
 from classes.menu import Menu
-from operator import itemgetter
 from screens.scores import scoreBoard
 
 HIGH_SCORE_LOCATION = 'other_data/highscores.txt'
-background = pygame.image.load('graphics\menu\gamedead.png')
+
+BACKGROUND_LOCATION = 'graphics\menu\gamedead.png'
 
 def gameOver(screen, score, delay):
     # load clock
@@ -48,35 +50,14 @@ def gameOver(screen, score, delay):
     width = screen.get_width()
     height = screen.get_height()
 
-    scores = []
-    sub_scores = []
-
-    # Opening scores file and transferring scores from the file to a list.
-    f = open(HIGH_SCORE_LOCATION, 'r', encoding='utf-8')
-    temp = f.read().splitlines()
-
-    for line in temp:
-        scores.append(line)
-    f.close()
-
-    # Separating each score and name in to a sublist.
-    for el in scores:
-        sub = el.split(', ')
-        sub_scores.append(sub)
-
-    # Separating each name and score in a separate element in a sub list.
-    res_score = [sub.split('/') for subl in sub_scores for sub in subl]
-
-    for i in range(len(res_score)):
-        res_score[i][1] = int(res_score[i][1])
-    res_score.sort(key=itemgetter(1))
+    scores= loadScoreList()
 
     # Creating a header for the score.
-    score_header = Text(screen, (width // 2, height // 4), 30, f'HIGHEST SCORE')
+    score_header = Text(screen, (width // 2, height // 4), 30, f'HIGHSCORE')
 
     # Creating text object for the highest score of the game
     high_score = Text(screen, (width // 2, 190), 25,
-                      f'{res_score[-1][0]} = {res_score[-1][-1]}')
+                      f'{scores[-1][0]} = {scores[-1][-1]}')
 
     # Creating text object for the current score of the game
     your_score = Text(screen, (width // 2, 235), 30, f'YOUR SCORE')
@@ -100,26 +81,24 @@ def gameOver(screen, score, delay):
 
     # Creating a text object where a user can store his name.
     # Idea taken from here: https://www.youtube.com/watch?v=Rvcyf4HsWiw
-    base_font = pygame.font.Font(None, 30)
-    user_name = 'Write your name'
-    input_rect = pygame.Rect(width // 2 - 85, 285, 140, 32)
-    color_active = pygame.Color('lightskyblue3')
-    color_passive = pygame.Color('gray15')
-    color = color_passive
-    active = False
+    active = True
+    started_typing = False
+    player_name = Text(screen, (width // 2 - 85, 285), 30, '[INPUT NAME]', 'yellow')
 
     def saveScore():
         '''
         Function which takes user name and current score and stores it in a text file.
         '''
-        saves = open(HIGH_SCORE_LOCATION, 'a', encoding='utf-8')
-        saved_score = f'{user_name}/{str(score)}\n'
+        saves = open(HIGH_SCORE_LOCATION, 'a')
+        saved_score = f'{player_name.text}/{str(score)}\n'
         saves.write(saved_score)
         saves.close()
+        
 
     # Creating a button which will activate saveScore function.
-    save_score = Button(screen, 'Save Score', (width // 2, 365), saveScore, 25, (200, 64))
-    sample_menu = Menu(screen, menu_title, False, back_to_menu, score_board, exit_game, save_score)
+    save_score = Button(screen, 'Save Score', (width // 2, 365), (lambda : 'save'), 25, (200, 64))
+    menu = Menu(screen, menu_title, BACKGROUND_LOCATION, back_to_menu, score_board, exit_game, save_score)
+    saved_menu = Menu(screen, menu_title, BACKGROUND_LOCATION, back_to_menu, score_board, exit_game)
 
     # Game over screen loop which checks for inputs of buttons and user text input.
     run = True
@@ -138,58 +117,63 @@ def gameOver(screen, score, delay):
             # Check if the text box is pressed on.
             # If so user can input text in to the box and
             # save it to the variable user_name.
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if input_rect.collidepoint(event.pos):
-                    active = True
-                else:
-                    active = False
             if event.type == pygame.KEYDOWN:
+                if not started_typing:
+                    started_typing = True
+                    player_name.text = ''
                 if active == True:
                     if event.key == pygame.K_BACKSPACE:
-                        user_name = user_name[0: -1]
+                        player_name.text = player_name.text[0: -1]
+                        player_name.position = player_name.position
                     else:
-                        user_name += event.unicode
+                        player_name.text += event.unicode
+                        player_name.position = player_name.position
 
 
             # Do mouse up/down events
             elif (event.type == pygame.MOUSEBUTTONDOWN) or \
                 (event.type == pygame.MOUSEBUTTONUP):
 
-                button_press = sample_menu.do(event)
+                button_press = menu.do(event)
 
                 if button_press == 'main_menu':
                     run = False
 
-                if button_press == 'scoreboard':
-                    scoreBoard(screen,delay,res_score)
+                elif button_press == 'scoreboard':
+                    scoreBoard(screen,delay)
+
+                elif button_press == 'save':
+                    saveScore()
+                    active = False
+                    menu = saved_menu
+                    player_name.colour = 'white'
 
         # Blit the background image to the screen.
-        screen.blit(background, (0, 0))
-
-        # If user is using the text box, the box will change color depending on the
-        # boolean value of active variable.
-        if active:
-            color = color_active
-        else:
-            color = color_passive
+        screen.fill('black')
 
         # Make a rect for the text box
-        pygame.draw.rect(screen, color, input_rect)
+        #pygame.draw.rect(screen, color, input_rect)
         # Render the text inputted by the user.
-        text_surface = base_font.render(user_name, True, (255, 255, 255))
+        #text_surface = base_font.render(user_name, True, (255, 255, 255))
         # Blit the text to screen
-        screen.blit(text_surface, (input_rect.x + 5, input_rect.y + 5))
+        #screen.blit(text_surface, (input_rect.x + 5, input_rect.y + 5))
         # Place the text on the rectangle
-        input_rect.w = max(100, text_surface.get_width() + 10)
+        #input_rect.w = max(100, text_surface.get_width() + 10)
         # Display menu here - this will display all buttons included in
         # the menu
         # menu.display()
         # Text (apart from menu title text) needs to be displayed
         # separately
+
+        
+        menu.display()
+        player_name.display()
+
         score_header.display()
         sample_text.display()
-        sample_menu.display()
         high_score.display()
         your_score.display()
+
+        
 
         pygame.display.flip()
