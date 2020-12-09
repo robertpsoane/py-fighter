@@ -1,7 +1,9 @@
 ''' Background Class
 
 The Class creates and blits a background which is then capable of parallax scrolling once
-camera Class starts updating the x values of each background object.
+camera Class starts updating the x values of each background object. The idea for the parallax
+background was take from here: https://www.youtube.com/watch?v=5q7tmIlXROg
+The class also randomises the images of the background.
 
 @author: Rokas Danevicius (unless stated otherwise)
 '''
@@ -43,7 +45,8 @@ super_back2 = pygame.transform.scale(super_back2, (128 * 2, 128 * 2))
 
 class Background:
     """ Class reiterates through a matrix containing the increment and x/y positions of each object
-    and blits an image using those values."""
+    and blits an image using those values. The idea for the parallax background was take
+    from here: https://www.youtube.com/watch?v=5q7tmIlXROg"""
 
 
     def __init__(self, screen):

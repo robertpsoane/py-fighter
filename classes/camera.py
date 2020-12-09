@@ -1,6 +1,7 @@
 ''' Camera Class
 
 The class which creates a camera view for the game which fallows the player.
+The idea for the camera was taken from here: https://www.youtube.com/watch?v=5q7tmIlXROg
 
 @author: Rokas Danevicius (unless stated otherwise)
 '''
@@ -12,7 +13,8 @@ class Camera:
     The class which creates a camera view for the game which fallows the player on the x axes.
     The class does so by updating the x value of each objects drawn of the game_display. The
     position of the camera view is determined by the position of player character position on x
-    axes. The class is also able to fallow the player on y axes if one wishes to.
+    axes. The class is also able to fallow the player on y axes if one wishes to. The idea
+    for the camera was taken from here: https://www.youtube.com/watch?v=5q7tmIlXROg
     '''
 
 

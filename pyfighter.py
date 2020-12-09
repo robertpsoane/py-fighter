@@ -10,7 +10,7 @@ lectures and set your coursework.  Exam season approaches and the evil
 Darth Virus has hacked your professors, multiplying them and making your
 exams harder.
 Only you can save your degree...
-
+  
 Pyfighter is an 8-bit side scrolling, infinite level platform game, 
 produced in python using PyGame as part on an MSc by R. Soane, R. 
 Danevicius, and S. Mistry.  Inspired by super street fighter, super 
@@ -29,6 +29,7 @@ import os
 import webbrowser
 import json
 import pygame
+
 from screens.game import pyfighterGame
 from screens.settings import SettingsMenu
 from classes.generalfunctions import quitGame
