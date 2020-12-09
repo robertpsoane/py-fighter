@@ -43,6 +43,14 @@ HIGH_SCORE_LOCATION = 'other_data/highscores.txt'
 
 BACKGROUND_LOCATION = 'graphics\menu\gamedead.png'
 
+ALPHABET = {'a', 'A', 'b', 'B', 'c', 'C', 'd', 'D', 'e', 'E', 'f', 'F', 
+            'g', 'G', 'h', 'H', 'i', 'I', 'j', 'J', 'k', 'K', 'l', 'L', 
+            'm', 'M', 'n', 'N', 'o', 'O', 'p', 'P', 'q', 'Q', 'r', 'R', 
+            's', 'S', 't', 'T', 'u', 'U', 'v', 'V', 'w', 'W', 'x', 'X', 
+            'y', 'Y', 'z', 'Z', '1', '2', '3', '4', '5', '6', '7', '8',
+            '9', '0'}
+
+
 def gameOver(screen, score, delay):
     # load clock
     clock = pygame.time.Clock()
@@ -82,8 +90,7 @@ def gameOver(screen, score, delay):
     # Creating a text object where a user can store his name.
     # Idea taken from here: https://www.youtube.com/watch?v=Rvcyf4HsWiw
     active = True
-    started_typing = False
-    player_name = Text(screen, (width // 2 - 85, 285), 30, '[INPUT NAME]', 'yellow')
+    player_name = Text(screen, (width // 2 - 85, 285), 30, '', 'yellow')
 
     def saveScore():
         '''
@@ -118,14 +125,11 @@ def gameOver(screen, score, delay):
             # If so user can input text in to the box and
             # save it to the variable user_name.
             if event.type == pygame.KEYDOWN:
-                if not started_typing:
-                    started_typing = True
-                    player_name.text = ''
                 if active == True:
                     if event.key == pygame.K_BACKSPACE:
                         player_name.text = player_name.text[0: -1]
                         player_name.position = player_name.position
-                    else:
+                    elif pygame.key.name(event.key) in ALPHABET:
                         player_name.text += event.unicode
                         player_name.position = player_name.position
 
