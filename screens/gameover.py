@@ -36,13 +36,9 @@ from classes.text import Text
 from classes.menu import Button
 from classes.menu import Menu
 from operator import itemgetter
+from screens.scores import scoreBoard
 
 HIGH_SCORE_LOCATION = 'other_data/highscores.txt'
-
-
-def randomFunc():
-    print('ahhhhhhhh')
-
 
 def gameOver(screen, score, delay):
     # load clock
@@ -74,7 +70,7 @@ def gameOver(screen, score, delay):
         res_score[i][1] = int(res_score[i][1])
     res_score.sort(key=itemgetter(1))
 
-    print(res_score)
+    # print(res_score)
 
     score_header = Text(screen, (width // 2, height // 3), 30, f'HIGHEST SCORE')
     high_score = Text(screen, (width // 2, 250), 25,
@@ -82,6 +78,7 @@ def gameOver(screen, score, delay):
     your_score = Text(screen, (width // 2, 300), 30, f'YOUR SCORE')
     sample_text = Text(screen, (width // 2, 335), 25, f'{score}')
 
+    score_board = Button(screen, 'Scoreboard', (150, 550), (lambda: 'scoreboard'), 25, (200, 64))
     menu_title = Text(screen, (width // 2, height // 4), 50, 'Game Over', 'Purple')
     back_to_menu = Button(screen, 'Main menu', (400, 550), (lambda: 'main_menu'), 25, (200, 64))
     exit_game = Button(screen, 'Quit', (650, 550), quitGame, 25, (200, 64))
@@ -105,7 +102,8 @@ def gameOver(screen, score, delay):
 
     save_score = Button(screen, 'Save Score', (width // 2, 450), saveScore, 25, (200, 64))
 
-    sample_menu = Menu(screen, menu_title, False, back_to_menu, exit_game, save_score)
+    sample_menu = Menu(screen, menu_title, False, back_to_menu, score_board, exit_game, save_score)
+
 
     run = True
     while run:
@@ -140,6 +138,10 @@ def gameOver(screen, score, delay):
 
                 if button_press == 'main_menu':
                     run = False
+
+                if button_press == 'scoreboard':
+                    scoreBoard(screen,delay,res_score)
+
 
         screen.fill('black')
 
