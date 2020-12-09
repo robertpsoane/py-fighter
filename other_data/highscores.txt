@@ -5,9 +5,6 @@
 [EMPTY]/0
 [EMPTY]/0
 [EMPTY]/0
-[EMPTY]/0
-[EMPTY]/0
-[EMPTY]/0
 Robert/1406
 Rokas/1538
 Shaylen/1166
