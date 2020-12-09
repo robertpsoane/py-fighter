@@ -3,7 +3,7 @@
 This screen is shown at end of game.
 Takes name, adds name and score to other_data/highscores.txt
 
-
+@author: Robert
 
 
 

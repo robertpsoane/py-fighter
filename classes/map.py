@@ -1,8 +1,8 @@
 ''' Map Class
 
-The class has the capability to generate a map and display it.
-###At the moment the map is generated with a hard coded matrix.### TODO - Change to dynamically generated one
-
+The class has the capability to generate a map with random platforms and display it.
+The idea of storing a map in to matrix is
+take from here: https://www.youtube.com/watch?v=HCWI2f7tQnY&t=58s
 @author: Rokas Danevicius (unless stated otherwise)
 '''
 
@@ -28,7 +28,8 @@ class Map:
     checks the values of each element in it. Depending on the values of each element in the matrix
     the generateMap() method adds the position, tile type and the surface to which the tile should
     be printed on to the pygame.sprite.Group saved in map_group variable. Then the map_group is the
-    passed to the Tile class writen by Robert Soane.'''
+    passed to the Tile class writen by Robert Soane. The idea of storing a map in to matrix is
+    take from here: https://www.youtube.com/watch?v=HCWI2f7tQnY&t=58s'''
 
     def __init__(self, screen, dims, cell):
 
