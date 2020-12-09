@@ -96,6 +96,7 @@ def gameOver(screen, score, delay):
     # Creating a button to exit the game
     exit_game = Button(screen, 'Quit', (650, 580), quitGame, 25, (200, 64))
 
+    
 
     # Creating a text object where a user can store his name.
     # Idea taken from here: https://www.youtube.com/watch?v=Rvcyf4HsWiw
@@ -112,7 +113,7 @@ def gameOver(screen, score, delay):
         Function which takes user name and current score and stores it in a text file.
         '''
         saves = open(HIGH_SCORE_LOCATION, 'a', encoding='utf-8')
-        saved_score = user_name + '/' + str(score)
+        saved_score = f'{user_name}/{str(score)}\n'
         saves.write(saved_score)
         saves.close()
 
