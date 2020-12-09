@@ -30,7 +30,7 @@ def scoreBoard(screen, delay):
     height = screen.get_height()
 
     # loading a list from game over screen with the newest scores.
-    score_list = scores= loadScoreList()
+    score_list = loadScoreList()
 
     # Creating text objects for 10 highest scores.
     Header = Text(screen, (width // 2, height // 8), 50, f'PLAYER TOP 10 SCORE')

@@ -3,26 +3,8 @@
 This screen is shown at end of game.
 Takes name, adds name and score to other_data/highscores.txt
 
-@author: Robert
-
-
-
-Game over screen needs:
-- Text saying Game Over
-- Input to take name if score within the top 10
-- Output of top 10 - stored in other_data/highscores.txt,
-    - name/score format
-- Button to return to main menu
-- Button to quit
-
-- Remember to call 'close' on file after making changes to it
-
-
-
-- Return to main menu
-run = False
-
-
+Text object for user to input name - idea taken from here: 
+https://www.youtube.com/watch?v=Rvcyf4HsWiw
 
 
 
@@ -48,62 +30,75 @@ ALPHABET = {'a', 'A', 'b', 'B', 'c', 'C', 'd', 'D', 'e', 'E', 'f', 'F',
             'm', 'M', 'n', 'N', 'o', 'O', 'p', 'P', 'q', 'Q', 'r', 'R', 
             's', 'S', 't', 'T', 'u', 'U', 'v', 'V', 'w', 'W', 'x', 'X', 
             'y', 'Y', 'z', 'Z', '1', '2', '3', '4', '5', '6', '7', '8',
-            '9', '0'}
+            '9', '0', ' '}
 
 
 def gameOver(screen, score, delay):
-    # load clock
-    clock = pygame.time.Clock()
-
-    width = screen.get_width()
-    height = screen.get_height()
-
-    scores= loadScoreList()
-
-    # Creating a header for the score.
-    score_header = Text(screen, (width // 2, height // 4), 30, f'HIGHSCORE')
-
-    # Creating text object for the highest score of the game
-    high_score = Text(screen, (width // 2, 190), 25,
-                      f'{scores[-1][0]} = {scores[-1][-1]}')
-
-    # Creating text object for the current score of the game
-    your_score = Text(screen, (width // 2, 235), 30, f'YOUR SCORE')
-
-    # Creating object for the current score.
-    sample_text = Text(screen, (width // 2, 265), 25, f'{score}')
-
-    # Creating a button for scoreboard.
-    score_board = Button(screen, 'Scoreboard', (150, 580), (lambda: 'scoreboard'), 25, (200, 64))
-
-    # Creating text for the main header.
-    menu_title = Text(screen, (width // 2, height // 6), 50, 'Game Over', 'Purple')
-
-    # Creating a button for main menu.
-    back_to_menu = Button(screen, 'Main menu', (400, 580), (lambda: 'main_menu'), 25, (200, 64))
-
-    # Creating a button to exit the game
-    exit_game = Button(screen, 'Quit', (650, 580), quitGame, 25, (200, 64))
-
     
-
-    # Creating a text object where a user can store his name.
-    # Idea taken from here: https://www.youtube.com/watch?v=Rvcyf4HsWiw
-    active = True
-    player_name = Text(screen, (width // 2 - 85, 285), 30, '', 'yellow')
-
     def saveScore():
         '''
         Function which takes user name and current score and stores it in a text file.
         '''
         saves = open(HIGH_SCORE_LOCATION, 'a')
-        saved_score = f'{player_name.text}/{str(score)}\n'
+        saved_score = f'{player_name.text}/{score.text}\n'
         saves.write(saved_score)
         saves.close()
+    
+    # load clock
+    clock = pygame.time.Clock()
+
+    # Generate useful positions
+    width = screen.get_width()
+    height = screen.get_height()
+    mid = width // 2
+    left = width // 4
+    right = 3 * left
+    height_unit = height // 20
+
+    print(width)
+
+    # Load previous scores and calculate highscore
+    scores = loadScoreList()
+    if scores[-1][-1] > score:
+        highscore_string = f'{scores[-1][0]} : {scores[-1][-1]}'
+    else:
+        highscore_string = f'You! : {score}'    
+
+    # Text input is active
+    active = True
+
+     # Creating text for the main header.
+    menu_title = Text(screen, (mid, 2 * height_unit), 70, 'Game Over', 'Purple')
+
+    # Creating a header for the score.
+    score_header = Text(screen, (mid, 4 * height_unit), 30, f'HIGHSCORE')
+
+    # Creating text object for the highest score of the game
+    high_score = Text(screen, (mid, 5 * height_unit), 25, highscore_string)
+
+    # Creating text object for the current score of the game
+    your_score = Text(screen, (mid, 7 * height_unit), 30, f'YOUR SCORE')
+    
+    # Creating object for the current score.
+    score = Text(screen, (mid, 8 * height_unit), 25, f'{score}')
+
+    player_name_center = (mid, 9 * height_unit)
+    player_name = Text(screen, player_name_center, 30, ' ', 'yellow')
+
+    save_score = Button(screen, 'Save Score', (mid, 11 * height_unit), (lambda : 'save'), 25, (200, 64))
         
 
-    # Creating a button which will activate saveScore function.
-    save_score = Button(screen, 'Save Score', (width // 2, 365), (lambda : 'save'), 25, (200, 64))
+
+    # Creating a button for scoreboard.
+    score_board = Button(screen, 'Scoreboard', (left, 18*height_unit), (lambda: 'scoreboard'), 25, (200, 64))
+
+    # Creating a button for main menu.
+    back_to_menu = Button(screen, 'Main menu', (mid, 18*height_unit), (lambda: 'main_menu'), 25, (200, 64))
+
+    # Creating a button to exit the game
+    exit_game = Button(screen, 'Quit', (right, 18*height_unit), quitGame, 25, (200, 64))
+
+
     menu = Menu(screen, menu_title, BACKGROUND_LOCATION, back_to_menu, score_board, exit_game, save_score)
     saved_menu = Menu(screen, menu_title, BACKGROUND_LOCATION, back_to_menu, score_board, exit_game)
 
@@ -131,7 +126,10 @@ def gameOver(screen, score, delay):
                         player_name.position = player_name.position
                     elif pygame.key.name(event.key) in ALPHABET:
                         player_name.text += event.unicode
-                        player_name.position = player_name.position
+                        player_name.position = player_name_center[0], \
+                                                player_name_center[1]
+                        player_name.makeRect()
+
 
 
             # Do mouse up/down events
@@ -174,7 +172,7 @@ def gameOver(screen, score, delay):
         player_name.display()
 
         score_header.display()
-        sample_text.display()
+        score.display()
         high_score.display()
         your_score.display()
 
