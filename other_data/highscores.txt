@@ -1,12 +1,12 @@
-sample1/100
-sample2/200
-sample3/300
-sample4/400
+sample1/20
+sample2/22
+sample3/36
+sample4/6
 Poopty/2124
-sample5/500
-sample6/600
-sample7/700
-sample8/800
-sample9/900
+sample5/2
+Thorsten/-100
+sample7/32
+sample8/12
+sample9/9
 sample10/1000
-I GOT TOASTED/-20
+TEST/-21
