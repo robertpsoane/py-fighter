@@ -16,7 +16,7 @@ from classes.menu import Button
 from classes.menu import Menu
 
 # Loading the background image in to a variable.
-background = pygame.image.load('graphics\menu\scoreboard.png')
+background = pygame.image.load('graphics/menu/scoreboard.png')
 
 def scoreBoard(screen, delay):
     '''

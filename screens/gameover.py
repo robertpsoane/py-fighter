@@ -25,7 +25,7 @@ from screens.scores import scoreBoard
 
 HIGH_SCORE_LOCATION = 'other_data/highscores.txt'
 
-BACKGROUND_LOCATION = 'graphics\menu\gamedead.png'
+BACKGROUND_LOCATION = 'graphics/menu/gamedead.png'
 
 ALPHABET = {'a', 'A', 'b', 'B', 'c', 'C', 'd', 'D', 'e', 'E', 'f', 'F', 
             'g', 'G', 'h', 'H', 'i', 'I', 'j', 'J', 'k', 'K', 'l', 'L', 
