@@ -25,14 +25,6 @@ from classes.menu import Button
 from classes.menu import Menu
 
 
-# Setup menu buttons
-
-def resume():
-    return 'resume'
-
-def quitToMainMenu():
-    return 'main_menu'
-
 def pauseScreen(screen, controller):
     ''' Pause Screen function
 
@@ -52,7 +44,7 @@ def pauseScreen(screen, controller):
                         screen,
                         'Resume',
                         (width_unit, 2 * height_unit),
-                        resume,
+                        (lambda : 'resume'),
                         20,
                         (192, 64)
                     )
@@ -61,7 +53,7 @@ def pauseScreen(screen, controller):
                         screen,
                         'Main Menu',
                         (3 * width_unit, 2 * height_unit),
-                        quitToMainMenu,
+                        (lambda : 'main_menu'),
                         18,
                         (192, 64)
                     )
