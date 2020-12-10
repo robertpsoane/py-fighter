@@ -1,7 +1,7 @@
 import cx_Freeze
 
 # Based on: https://stackoverflow.com/questions/29650935/cx-freeze-help-is-there-a-way-to-not-make-console-open
-executables = [cx_Freeze.Executable("pyfighter.py", base = "Win32GUI", icon="graphics/logo/logo.ico")]
+executables = [cx_Freeze.Executable("pyfighter.py", base = "Win32GUI", icon = "graphics/logo/logo.ico")]
 
 # Run python setup.py bdist_msi
 

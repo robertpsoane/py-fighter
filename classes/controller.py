@@ -4,7 +4,7 @@ The controller class.  This class controls the main game.
 
 This file also contains the main game score and level outputs.
 
-@author: Robert, Shaylen, Rokas (predominantly coded collaboratively)
+@author: All - Prototyped by Shaylen, finished collaboratively
 '''
 
 import pygame
@@ -21,7 +21,10 @@ from screens.gameover import gameOver
 from screens.pause import pauseScreen
 from screens.intro import introScreen
 
+# Possible enemies
 ENEMIES = ['isaac', 'thorsten']
+
+# Player starting x value
 PLAYER_X_VAL = 50
 
 with open('json/background_music.JSON') as music_locations:
@@ -54,7 +57,7 @@ class Controller():
         self.score = Score(game_screen)
         self.level = Level(game_screen)
 
-        # Setup key
+        # Setup key distances
         self.spawn_area = (2 * self.player_x, screen_dims[0])
         self.map_width = self.game_screen.get_width()
         self.mid_width = self.map_width // 2
@@ -95,12 +98,14 @@ class Controller():
         # - Music code inspired by code here:
         #   https://riptutorial.com/pygame/example/24563/example-to-add-
         #   music-in-pygame
-
-        level_music = MUSIC_LOCATIONS[TRACKS[self.settings['music']]]
-
-        pygame.mixer.music.set_volume(level_music[1])
-        pygame.mixer.music.load(level_music[0])
-        pygame.mixer.music.play(-1)
+        track = TRACKS[self.settings['music']]
+        if track == 'Mute':
+            pygame.mixer.music.stop()
+        else:        
+            level_music = MUSIC_LOCATIONS[track]
+            pygame.mixer.music.set_volume(level_music[1])
+            pygame.mixer.music.load(level_music[0])
+            pygame.mixer.music.play(-1)
 
     def setupCameraMap(self):
         '''
@@ -295,15 +300,18 @@ class Controller():
         '''
         
 
-        # Updating player and enemy positions
+        # Updating character positions
         for character in self.characters:
             character.update()
             for projectile in character.thrown_projectiles:
+                # Get any new projectiles and add to camera
                 if not self.projectiles.has(projectile):
                     self.projectiles.add(projectile)
                     self.camera.addWeapon(projectile)
         
+        # update tracked projectiles
         for projectile in self.projectiles:
+            # If projectile off screen, remove from sprite groups
             if (projectile.rect.centerx < 0) or \
                     (projectile.rect.centerx > self.map_width):
                 projectile.kill()

@@ -1,5 +1,5 @@
 {
-    "tracks": [ "r_fights","prototype", "r_menu"],
+    "tracks": [ "r_fights","prototype", "r_menu", "Mute"],
     "prototype": ["audio/background/prototype.wav", 1],
     "r_fights": ["audio/background/rokas_fighting.wav", 0.3],
     "r_menu": ["audio/background/rokas_menu.wav", 0.3],
