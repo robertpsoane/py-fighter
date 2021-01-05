@@ -8,7 +8,8 @@
 *Only you can save your degree...*
 
 ## The Game
-Pyfighter is an 8-bit side scrolling, infinite level platform game, produced in python using PyGame as part on an MSc by R. Soane, R. Danevicius, and S. Mistry.  Inspired by super street fighter, super smash bros and Mario, they created a customisable and addictive game that gets progressively harder.  Ranked second of 2020 submissions.
+Pyfighter is an 8-bit side scrolling, infinite level platform game, produced in python using PyGame as part on an MSc by R. Soane, R. Danevicius, and S. Mistry.  Inspired by super street fighter, super smash bros and Mario, they created a customisable and addictive game that gets progressively harder.  Ranked second of 2020 submissions, and scored 89%.
+
 #### Main Menu
 On loading the game, you are met with the main menu.  The play button will lead you to an intro cutscene followed by the game, while settings opens the settings menu.  You can quit game from here, and the about button leads to this web page.
 #### Gameplay
