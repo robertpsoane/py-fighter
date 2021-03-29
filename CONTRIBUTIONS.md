@@ -1,7 +1,7 @@
 # Contributions
 
 Pyfighter was built as part of a university group project 
-by (Robert Soane)[https://github.com/robertpsoane], (Shaylen Mistry)[https://github.com/ShayLn], and (Rokas Danevicius)[https://github.com/RokasDan].
+by [Robert Soane](https://github.com/robertpsoane), [Shaylen Mistry](https://github.com/ShayLn), and [Rokas Danevicius](https://github.com/RokasDan).
 This file contains a general overview of contributions from each member of the group.
 
 - Controller
